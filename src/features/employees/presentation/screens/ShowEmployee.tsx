@@ -1,7 +1,7 @@
-import { CustomFilledButton, Spinner } from "@/features/shared/shared";
+import { CustomFilledButton, Spinner, useNotification } from "@/features/shared/shared";
 import { EmployeeLevels, employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
-import { ArrowLeft, Building2, CalendarClock, EditIcon, Hash, IdCard, ShieldCheck, User, UserPen, UserPlus } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, Building2, CalendarClock, EditIcon, Hash, IdCard, ShieldCheck, User, UserMinus, UserPen, UserPlus } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
 const formatDate = (value?: string | null) => value ? new Date(value).toLocaleString('es-GT') : '—';
@@ -24,12 +24,35 @@ function PropertyList({ items }: { items: Row[] }) {
 export function ShowEmployee() {
     const params = useParams();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const notification = useNotification();
     const id = params.id!;
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['getEmployeeById', id],
         queryFn: () => employeesRepositoryProvider.getEmployeeById(id)
     });
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: () => employeesRepositoryProvider.inactiveEmployee(id),
+        onSuccess: (message) => {
+            notification.success(message);
+            queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
+            queryClient.removeQueries({ queryKey: ['getEmployeeById', id] });
+            queryClient.removeQueries({ queryKey: ['getEmployeeLevels', id] });
+            navigate('/empleados');
+        },
+        onError: (err) => {
+            notification.error(err.message);
+        }
+    });
+
+    const handleInactive = () => notification.question(
+        '¿Desea dar de baja al empleado?',
+        'Dar de baja',
+        'El empleado será dado de baja en ZKBioAccess',
+        () => mutate()
+    );
 
     if (isLoading) return <Spinner />
     if (error) return (
@@ -81,6 +104,22 @@ export function ShowEmployee() {
                 </section>
 
                 <EmployeeLevels employeeId={id} />
+
+                <div className="flex flex-col gap-4 rounded-2xl border border-red-200 p-5 sm:flex-row sm:items-center sm:justify-between dark:border-red-500/30">
+                    <div>
+                        <h2 className="text-sm font-semibold text-red-700 dark:text-red-300">Dar de baja empleado</h2>
+                        <p className="mt-1 text-sm text-slate-600 dark:text-gray-400">El empleado será dado de baja en ZKBioAccess.</p>
+                    </div>
+                    <CustomFilledButton
+                        label="Dar de baja"
+                        type="button"
+                        icon={<UserMinus className="h-4 w-4 text-white" />}
+                        disabled={isPending}
+                        loading={isPending}
+                        className="flex-none bg-red-600! hover:bg-red-700! focus:ring-red-500!"
+                        onClick={handleInactive}
+                    />
+                </div>
             </div>
         )
     }

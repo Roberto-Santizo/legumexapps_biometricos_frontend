@@ -3,6 +3,7 @@ import { CreateUser, ShowUser, UpdateUser, Users } from "@/features/users/users"
 import { CreateDepartment, Departments, ShowDepartment, UpdateDepartment } from "@/features/departments/departments";
 import { AccessLevels, CreateAccessLevel, ShowAccessLevel, UpdateAccessLevel } from "@/features/access-levels/access-levels";
 import { CreateEmployee, Employees, ShowEmployee, UpdateEmployee } from "@/features/employees/employees";
+import { InactiveEmployees, ShowInactiveEmployee } from "@/features/inactive-employees/inactive-employees";
 import { Dashboard } from "@/features/dashboard/dashboard";
 import { Login } from "@/features/auth/auth";
 import { NotFound, ProtectedLayout, PublicLayout } from "@/features/shared/shared";
@@ -50,6 +51,11 @@ export default function AppRouter() {
                     <Route path="/empleados/crear" element={<CreateEmployee />} />
                     <Route path="/empleados/:id" element={<ShowEmployee />} />
                     <Route path="/empleados/:id/editar" element={<UpdateEmployee />} />
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route path="/empleados-inactivos" element={<InactiveEmployees />} />
+                    <Route path="/empleados-inactivos/:id" element={<ShowInactiveEmployee />} />
                 </Route>
             </Routes>
         </BrowserRouter>

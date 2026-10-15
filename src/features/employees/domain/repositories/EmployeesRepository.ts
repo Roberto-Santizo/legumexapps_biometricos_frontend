@@ -5,4 +5,5 @@ export abstract class EmployeesRepository {
     abstract getEmployees(page: number, limit: number, filters: EmployeesFilters): Promise<EmployeeListItem[]>;
     abstract getEmployeeById(id: string): Promise<Employee>;
     abstract getEmployeeLevels(id: string): Promise<EmployeeLevel[]>;
+    abstract inactiveEmployee(id: string): Promise<string>;
 }

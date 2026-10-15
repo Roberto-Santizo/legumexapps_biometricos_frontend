@@ -18,4 +18,8 @@ export class EmployeesRepositoryImpl implements EmployeesRepository {
     getEmployeeLevels(id: string): Promise<EmployeeLevel[]> {
         return this.datasource.getEmployeeLevels(id);
     }
+
+    inactiveEmployee(id: string): Promise<string> {
+        return this.datasource.inactiveEmployee(id);
+    }
 }

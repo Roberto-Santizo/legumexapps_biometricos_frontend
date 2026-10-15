@@ -18,4 +18,8 @@ export class EmployeesProvider {
     getEmployeeLevels(id: string): Promise<EmployeeLevel[]> {
         return this.repository.getEmployeeLevels(id);
     }
+
+    inactiveEmployee(id: string): Promise<string> {
+        return this.repository.inactiveEmployee(id);
+    }
 }

@@ -64,4 +64,15 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }
     }
+
+    // POST /employees/status/inactiveEmployee/:id da de baja al empleado en ZKBioAccess; responde un mensaje de texto
+    async inactiveEmployee(id: string): Promise<string> {
+        try {
+            const url = `/employees/status/inactiveEmployee/${id}`;
+            const { data } = await this.api.post(url);
+            return typeof data === 'string' && data ? data : 'Empleado dado de baja correctamente';
+        } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
 }

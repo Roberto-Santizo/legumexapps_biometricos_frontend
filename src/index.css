@@ -211,6 +211,7 @@
     --ios-orange: light-dark(#FF9500, #FF9F0A);
     --ios-teal: light-dark(#30B0C7, #40C8E0);
     --ios-green: light-dark(#34C759, #30D158);
+    --ios-gray: light-dark(#8E8E93, #8E8E93);
     background: var(--ios-grp);
     box-shadow: inset -0.5px 0 0 var(--ios-sep);
     color: var(--ios-label);
@@ -353,6 +354,7 @@
 .ios-sidebar__tile--orange { background: var(--ios-orange); }
 .ios-sidebar__tile--teal { background: var(--ios-teal); }
 .ios-sidebar__tile--green { background: var(--ios-green); }
+.ios-sidebar__tile--gray { background: var(--ios-gray); }
 
 .ios-sidebar__label {
     flex: 1;
