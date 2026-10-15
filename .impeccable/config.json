@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/features/employees/presentation/components/AccessLevelsFormField.tsx"
+        ],
+        "createdAt": "2026-10-15T19:33:37.939Z",
+        "reason": "Claude: bg-blue-50 only applies under has-checked, where text switches to blue-800/blue-200; gray text only shows on uncolored unchecked state"
+      }
+    ]
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T00:00:00Z",
+  "title": "Design System: Legumexapps Biométricos",
+  "extensions": {
+    "colorMeta": {
+      "verde-campo": { "role": "primary", "displayName": "Verde Campo", "canonical": "oklch(59.6% 0.145 163.225)", "tonalRamp": ["oklch(37.8% 0.077 168.94)", "oklch(43.2% 0.095 166.913)", "oklch(50.8% 0.118 165.612)", "oklch(59.6% 0.145 163.225)", "oklch(69.6% 0.17 162.48)", "oklch(76.5% 0.177 163.223)", "oklch(90.5% 0.093 164.15)", "oklch(97.9% 0.021 166.113)"] },
+      "verde-campo-hondo": { "role": "primary", "displayName": "Verde Campo Hondo", "canonical": "oklch(50.8% 0.118 165.612)", "tonalRamp": ["oklch(37.8% 0.077 168.94)", "oklch(43.2% 0.095 166.913)", "oklch(50.8% 0.118 165.612)", "oklch(59.6% 0.145 163.225)", "oklch(69.6% 0.17 162.48)", "oklch(76.5% 0.177 163.223)", "oklch(90.5% 0.093 164.15)", "oklch(97.9% 0.021 166.113)"] },
+      "verde-campo-tenue": { "role": "primary", "displayName": "Verde Campo Tenue", "canonical": "oklch(76.5% 0.177 163.223)", "tonalRamp": ["oklch(37.8% 0.077 168.94)", "oklch(43.2% 0.095 166.913)", "oklch(50.8% 0.118 165.612)", "oklch(59.6% 0.145 163.225)", "oklch(69.6% 0.17 162.48)", "oklch(76.5% 0.177 163.223)", "oklch(90.5% 0.093 164.15)", "oklch(97.9% 0.021 166.113)"] },
+      "azul-senal": { "role": "secondary", "displayName": "Azul Señal", "canonical": "oklch(54.6% 0.245 262.881)", "tonalRamp": ["oklch(37.9% 0.146 265.522)", "oklch(42.4% 0.199 265.638)", "oklch(48.8% 0.243 264.376)", "oklch(54.6% 0.245 262.881)", "oklch(62.3% 0.214 259.815)", "oklch(70.7% 0.165 254.624)", "oklch(88.2% 0.059 254.128)", "oklch(97% 0.014 254.604)"] },
+      "azul-senal-foco": { "role": "secondary", "displayName": "Azul Señal Foco", "canonical": "oklch(62.3% 0.214 259.815)", "tonalRamp": ["oklch(37.9% 0.146 265.522)", "oklch(42.4% 0.199 265.638)", "oklch(48.8% 0.243 264.376)", "oklch(54.6% 0.245 262.881)", "oklch(62.3% 0.214 259.815)", "oklch(70.7% 0.165 254.624)", "oklch(88.2% 0.059 254.128)", "oklch(97% 0.014 254.604)"] },
+      "azul-senal-tinta": { "role": "secondary", "displayName": "Azul Señal Tinta", "canonical": "oklch(48.8% 0.243 264.376)", "tonalRamp": ["oklch(37.9% 0.146 265.522)", "oklch(42.4% 0.199 265.638)", "oklch(48.8% 0.243 264.376)", "oklch(54.6% 0.245 262.881)", "oklch(62.3% 0.214 259.815)", "oklch(70.7% 0.165 254.624)", "oklch(88.2% 0.059 254.128)", "oklch(97% 0.014 254.604)"] },
+      "azul-senal-velo": { "role": "secondary", "displayName": "Velo Azul", "canonical": "oklch(97% 0.014 254.604)", "tonalRamp": ["oklch(37.9% 0.146 265.522)", "oklch(42.4% 0.199 265.638)", "oklch(48.8% 0.243 264.376)", "oklch(54.6% 0.245 262.881)", "oklch(62.3% 0.214 259.815)", "oklch(70.7% 0.165 254.624)", "oklch(88.2% 0.059 254.128)", "oklch(97% 0.014 254.604)"] },
+      "azul-senal-velo-avatar": { "role": "secondary", "displayName": "Velo Azul Avatar", "canonical": "oklch(93.2% 0.032 255.585)", "tonalRamp": ["oklch(37.9% 0.146 265.522)", "oklch(42.4% 0.199 265.638)", "oklch(48.8% 0.243 264.376)", "oklch(54.6% 0.245 262.881)", "oklch(62.3% 0.214 259.815)", "oklch(70.7% 0.165 254.624)", "oklch(93.2% 0.032 255.585)", "oklch(97% 0.014 254.604)"] },
+      "azul-noche": { "role": "tertiary", "displayName": "Azul Noche", "canonical": "oklch(37.9% 0.146 265.522)", "tonalRamp": ["oklch(28.2% 0.091 267.935)", "oklch(37.9% 0.146 265.522)", "oklch(42.4% 0.199 265.638)", "oklch(48.8% 0.243 264.376)", "oklch(54.6% 0.245 262.881)", "oklch(70.7% 0.165 254.624)", "oklch(88.2% 0.059 254.128)", "oklch(97% 0.014 254.604)"] },
+      "pizarra-noche": { "role": "tertiary", "displayName": "Pizarra Noche", "canonical": "oklch(20.8% 0.042 265.755)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(70.4% 0.04 256.788)", "oklch(92.9% 0.013 255.508)", "oklch(98.4% 0.003 247.858)"] },
+      "papel": { "role": "neutral", "displayName": "Papel", "canonical": "#ffffff", "tonalRamp": ["oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(87.2% 0.01 258.338)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)", "#ffffff"] },
+      "papel-pizarra": { "role": "neutral", "displayName": "Papel Pizarra", "canonical": "oklch(98.4% 0.003 247.858)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(86.9% 0.022 252.894)", "oklch(92.9% 0.013 255.508)", "oklch(98.4% 0.003 247.858)"] },
+      "linea-pizarra": { "role": "neutral", "displayName": "Línea Pizarra", "canonical": "oklch(92.9% 0.013 255.508)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(86.9% 0.022 252.894)", "oklch(92.9% 0.013 255.508)", "oklch(98.4% 0.003 247.858)"] },
+      "linea-pizarra-tenue": { "role": "neutral", "displayName": "Línea Pizarra Tenue", "canonical": "oklch(96.8% 0.007 247.896)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(86.9% 0.022 252.894)", "oklch(96.8% 0.007 247.896)", "oklch(98.4% 0.003 247.858)"] },
+      "linea-gris": { "role": "neutral", "displayName": "Línea Gris", "canonical": "oklch(92.8% 0.006 264.531)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(87.2% 0.01 258.338)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "tinta": { "role": "neutral", "displayName": "Tinta", "canonical": "oklch(21% 0.034 264.665)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(87.2% 0.01 258.338)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "tinta-titulo": { "role": "neutral", "displayName": "Tinta Título", "canonical": "oklch(20.8% 0.042 265.755)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(86.9% 0.022 252.894)", "oklch(92.9% 0.013 255.508)", "oklch(98.4% 0.003 247.858)"] },
+      "tinta-cuerpo": { "role": "neutral", "displayName": "Tinta Cuerpo", "canonical": "oklch(37.2% 0.044 257.287)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(86.9% 0.022 252.894)", "oklch(92.9% 0.013 255.508)", "oklch(98.4% 0.003 247.858)"] },
+      "tinta-etiqueta": { "role": "neutral", "displayName": "Tinta Etiqueta", "canonical": "oklch(37.3% 0.034 259.733)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(87.2% 0.01 258.338)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "tinta-media": { "role": "neutral", "displayName": "Tinta Media", "canonical": "oklch(55.4% 0.046 257.417)", "tonalRamp": ["oklch(12.9% 0.042 264.695)", "oklch(20.8% 0.042 265.755)", "oklch(27.9% 0.041 260.031)", "oklch(37.2% 0.044 257.287)", "oklch(55.4% 0.046 257.417)", "oklch(86.9% 0.022 252.894)", "oklch(92.9% 0.013 255.508)", "oklch(98.4% 0.003 247.858)"] },
+      "tinta-suave": { "role": "neutral", "displayName": "Tinta Suave", "canonical": "oklch(70.7% 0.022 261.325)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "lienzo-oscuro": { "role": "neutral", "displayName": "Lienzo Oscuro", "canonical": "oklch(13% 0.028 261.692)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "superficie-oscura": { "role": "neutral", "displayName": "Superficie Oscura", "canonical": "oklch(21% 0.034 264.665)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "superficie-oscura-alta": { "role": "neutral", "displayName": "Superficie Oscura Alta", "canonical": "oklch(27.8% 0.033 256.848)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "linea-oscura": { "role": "neutral", "displayName": "Línea Oscura", "canonical": "oklch(37.3% 0.034 259.733)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "tinta-clara": { "role": "neutral", "displayName": "Tinta Clara", "canonical": "oklch(96.7% 0.003 264.542)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(96.7% 0.003 264.542)"] },
+      "tinta-clara-media": { "role": "neutral", "displayName": "Tinta Clara Media", "canonical": "oklch(70.7% 0.022 261.325)", "tonalRamp": ["oklch(13% 0.028 261.692)", "oklch(21% 0.034 264.665)", "oklch(27.8% 0.033 256.848)", "oklch(37.3% 0.034 259.733)", "oklch(55.1% 0.027 264.364)", "oklch(70.7% 0.022 261.325)", "oklch(92.8% 0.006 264.531)", "oklch(98.5% 0.002 247.839)"] },
+      "rojo-alerta": { "role": "status", "displayName": "Rojo Alerta", "canonical": "oklch(57.7% 0.245 27.325)", "tonalRamp": ["oklch(39.6% 0.141 25.723)", "oklch(44.4% 0.177 26.899)", "oklch(50.5% 0.213 26.518)", "oklch(57.7% 0.245 27.325)", "oklch(63.7% 0.237 25.331)", "oklch(70.4% 0.191 22.216)", "oklch(88.5% 0.062 18.334)", "oklch(97.1% 0.013 17.38)"] },
+      "rojo-alerta-hondo": { "role": "status", "displayName": "Rojo Alerta Hondo", "canonical": "oklch(50.5% 0.213 26.518)", "tonalRamp": ["oklch(39.6% 0.141 25.723)", "oklch(44.4% 0.177 26.899)", "oklch(50.5% 0.213 26.518)", "oklch(57.7% 0.245 27.325)", "oklch(63.7% 0.237 25.331)", "oklch(70.4% 0.191 22.216)", "oklch(88.5% 0.062 18.334)", "oklch(97.1% 0.013 17.38)"] },
+      "rojo-alerta-texto": { "role": "status", "displayName": "Rojo Alerta Texto", "canonical": "oklch(70.4% 0.191 22.216)", "tonalRamp": ["oklch(39.6% 0.141 25.723)", "oklch(44.4% 0.177 26.899)", "oklch(50.5% 0.213 26.518)", "oklch(57.7% 0.245 27.325)", "oklch(63.7% 0.237 25.331)", "oklch(70.4% 0.191 22.216)", "oklch(88.5% 0.062 18.334)", "oklch(97.1% 0.013 17.38)"] },
+      "rojo-alerta-velo": { "role": "status", "displayName": "Velo Rojo", "canonical": "oklch(97.1% 0.013 17.38)", "tonalRamp": ["oklch(39.6% 0.141 25.723)", "oklch(44.4% 0.177 26.899)", "oklch(50.5% 0.213 26.518)", "oklch(57.7% 0.245 27.325)", "oklch(63.7% 0.237 25.331)", "oklch(70.4% 0.191 22.216)", "oklch(88.5% 0.062 18.334)", "oklch(97.1% 0.013 17.38)"] },
+      "verde-activo": { "role": "status", "displayName": "Verde Activo", "canonical": "oklch(52.7% 0.154 150.069)", "tonalRamp": ["oklch(39.3% 0.095 152.535)", "oklch(44.8% 0.119 151.328)", "oklch(52.7% 0.154 150.069)", "oklch(62.7% 0.194 149.214)", "oklch(72.3% 0.219 149.579)", "oklch(79.2% 0.209 151.711)", "oklch(92.5% 0.084 155.995)", "oklch(98.2% 0.018 155.826)"] },
+      "verde-activo-velo": { "role": "status", "displayName": "Velo Verde Activo", "canonical": "oklch(98.2% 0.018 155.826)", "tonalRamp": ["oklch(39.3% 0.095 152.535)", "oklch(44.8% 0.119 151.328)", "oklch(52.7% 0.154 150.069)", "oklch(62.7% 0.194 149.214)", "oklch(72.3% 0.219 149.579)", "oklch(79.2% 0.209 151.711)", "oklch(92.5% 0.084 155.995)", "oklch(98.2% 0.018 155.826)"] },
+      "ambar-obra": { "role": "status", "displayName": "Ámbar Obra", "canonical": "oklch(76.9% 0.188 70.08)", "tonalRamp": ["oklch(41.4% 0.112 45.904)", "oklch(47.3% 0.137 46.201)", "oklch(55.5% 0.163 48.998)", "oklch(66.6% 0.179 58.318)", "oklch(76.9% 0.188 70.08)", "oklch(82.8% 0.189 84.429)", "oklch(92.4% 0.12 95.746)", "oklch(98.7% 0.022 95.277)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Titular del panel de marca del login (38px → 48px desde xl) y el 404." },
+      "headline": { "displayName": "Headline", "purpose": "Título de página vía Title, con subtítulo Body en Tinta Media." },
+      "title": { "displayName": "Title", "purpose": "Títulos de modal, valores de tarjetas de información, nombre de marca en la barra lateral." },
+      "body": { "displayName": "Body", "purpose": "Texto de trabajo: celdas, campos, enlaces de navegación (500), botones (600)." },
+      "label": { "displayName": "Label", "purpose": "Cabeceras de tabla en MAYÚSCULAS con tracking 0.05em; insignias sin mayúsculas." }
+    },
+    "shadows": [
+      { "name": "reposo", "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)", "purpose": "Botón primario, campos, tabla y enlace activo en reposo." },
+      { "name": "respuesta", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Hover del botón primario." },
+      { "name": "contenedor", "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)", "purpose": "Formulario contenedor (.form)." },
+      { "name": "flotante", "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)", "purpose": "Modales y tarjeta de login móvil sobre velo." },
+      { "name": "anillo-oscuro", "value": "0 0 0 1px rgb(255 255 255 / 0.1)", "purpose": "Sustituto de sombra en tema oscuro." },
+      { "name": "logo-marca", "value": "0 10px 30px rgba(0,0,0,.25), 0 0 0 4px rgba(255,255,255,.12)", "purpose": "Cuadro del logo Legumex sobre el degradado nocturno." }
+    ],
+    "motion": [
+      { "name": "fade-up", "value": "300ms ease-out, translateY(8px) → 0, opacity 0 → 1", "purpose": "Entrada de la tarjeta de login; desactivada con prefers-reduced-motion." },
+      { "name": "control", "value": "150ms ease-in-out", "purpose": "Borde y anillo de foco de campos." },
+      { "name": "componente", "value": "200ms ease-out", "purpose": "Hover de botones y enlaces de navegación; escala de icono 1.1." },
+      { "name": "presion", "value": "scale(0.98)", "purpose": "Botón primario al presionar." },
+      { "name": "cajon", "value": "300ms ease-in-out", "purpose": "Barra lateral deslizante en móvil." },
+      { "name": "modal-entrada", "value": "200ms ease-out, scale 0.95 → 1, translateY(8px) → 0", "purpose": "Apertura de modal; cierre en 150ms ease-in." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón Primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal de cada vista, en Verde Campo. Una por barra de herramientas.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>Crear Usuario</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 12px; background: oklch(59.6% 0.145 163.225); padding: 10px 20px; font: 600 14px/20px ui-sans-serif, system-ui, sans-serif; color: #fff; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); cursor: pointer; transition: all 200ms; } .ds-btn-primary:hover { background: oklch(50.8% 0.118 165.612); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px oklch(69.6% 0.17 162.48); } .ds-btn-primary:disabled { background: oklch(76.5% 0.177 163.223); box-shadow: none; cursor: not-allowed; }"
+    },
+    {
+      "name": "Botón de Peligro",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Acción destructiva o de bloqueo (Desactivar), siempre tras confirmación.",
+      "html": "<button class=\"ds-btn-danger\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2v10\"/><path d=\"M18.4 6.6a9 9 0 1 1-12.77.04\"/></svg>Desactivar</button>",
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 12px; background: oklch(57.7% 0.245 27.325); padding: 10px 20px; font: 600 14px/20px ui-sans-serif, system-ui, sans-serif; color: #fff; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); cursor: pointer; transition: all 200ms; } .ds-btn-danger:hover { background: oklch(50.5% 0.213 26.518); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); } .ds-btn-danger:active { transform: scale(0.98); } .ds-btn-danger:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px oklch(63.7% 0.237 25.331); }"
+    },
+    {
+      "name": "Campo de Texto",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de formulario con etiqueta arriba, icono opcional y mensaje de error debajo.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-email\">Correo Electrónico</label><div class=\"ds-field-wrap\"><span class=\"ds-field-icon\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\"/><path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\"/></svg></span><input id=\"ds-email\" class=\"ds-input\" type=\"email\" placeholder=\"nombre@legumex.com\"></div><p class=\"ds-field-error\">Ingrese un correo válido</p></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; width: 320px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-field-label { font-size: 14px; font-weight: 500; color: oklch(37.3% 0.034 259.733); } .ds-field-wrap { position: relative; } .ds-field-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); display: flex; color: oklch(70.7% 0.022 261.325); pointer-events: none; } .ds-input { width: 100%; box-sizing: border-box; padding: 8px 12px 8px 40px; border: 1px solid oklch(92.8% 0.006 264.531); border-radius: 8px; background: #fff; color: oklch(21% 0.034 264.665); font-size: 14px; outline: none; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); transition: all 150ms ease-in-out; } .ds-input::placeholder { color: oklch(70.7% 0.022 261.325); } .ds-input:hover { border-color: oklch(87.2% 0.01 258.338); } .ds-input:focus-visible { border-color: oklch(62.3% 0.214 259.815); box-shadow: 0 0 0 2px oklch(62.3% 0.214 259.815 / 0.2); } .ds-field-error { margin: 0; font-size: 12px; color: oklch(70.4% 0.191 22.216); }"
+    },
+    {
+      "name": "Filtro de Búsqueda",
+      "kind": "input",
+      "refersTo": "input-filter",
+      "description": "Filtro sobre tablas, con lupa a la izquierda y fondo Papel Pizarra.",
+      "html": "<div class=\"ds-filter\"><svg class=\"ds-filter-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input class=\"ds-filter-input\" placeholder=\"Buscar por nombre\"></div>",
+      "css": ".ds-filter { position: relative; width: 240px; } .ds-filter-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: oklch(70.4% 0.04 256.788); } .ds-filter-input { width: 100%; box-sizing: border-box; padding: 8px 16px 8px 40px; border: 1px solid oklch(86.9% 0.022 252.894); border-radius: 12px; background: oklch(98.4% 0.003 247.858); font: 14px/20px ui-sans-serif, system-ui, sans-serif; color: oklch(21% 0.034 264.665); outline: none; transition: all 150ms; } .ds-filter-input::placeholder { color: oklch(70.4% 0.04 256.788); } .ds-filter-input:focus-visible { border-color: oklch(62.3% 0.214 259.815); background: #fff; box-shadow: 0 0 0 2px oklch(88.2% 0.059 254.128); }"
+    },
+    {
+      "name": "Navegación Lateral",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Enlaces de la barra lateral; el activo en Velo Azul con Azul Señal Tinta.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link-active\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\"/></svg>Dashboard</a><a class=\"ds-nav-link\" href=\"#\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>Usuarios</a></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; gap: 12px; width: 256px; padding: 16px; background: #fff; } .ds-nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; font: 500 14px/20px ui-sans-serif, system-ui, sans-serif; color: oklch(44.6% 0.03 256.802); text-decoration: none; transition: all 200ms ease-out; } .ds-nav-link svg { transition: transform 200ms; } .ds-nav-link:hover { background: oklch(98.5% 0.002 247.839); color: oklch(21% 0.034 264.665); } .ds-nav-link:hover svg { transform: scale(1.1); } .ds-nav-link:focus-visible { outline: 2px solid oklch(62.3% 0.214 259.815); outline-offset: 2px; } .ds-nav-link-active, .ds-nav-link-active:hover { background: oklch(97% 0.014 254.604); color: oklch(48.8% 0.243 264.376); box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }"
+    },
+    {
+      "name": "Insignias de Estado",
+      "kind": "chip",
+      "refersTo": "badge-active",
+      "description": "Estado activo/inactivo del usuario en píldora.",
+      "html": "<div class=\"ds-badges\"><span class=\"ds-badge ds-badge-active\">Activo</span><span class=\"ds-badge ds-badge-inactive\">Inactivo</span></div>",
+      "css": ".ds-badges { display: flex; gap: 8px; } .ds-badge { display: inline-flex; padding: 4px 10px; border-radius: 9999px; font: 600 12px/16px ui-sans-serif, system-ui, sans-serif; } .ds-badge-active { background: oklch(98.2% 0.018 155.826); color: oklch(52.7% 0.154 150.069); } .ds-badge-inactive { background: oklch(97.1% 0.013 17.38); color: oklch(50.5% 0.213 26.518); }"
+    },
+    {
+      "name": "Casilla de Rol",
+      "kind": "chip",
+      "refersTo": "role-chip",
+      "description": "Selector de roles; marcada con borde Azul Señal y Velo Azul.",
+      "html": "<div class=\"ds-roles\"><label class=\"ds-role\"><input type=\"checkbox\" checked>Administrador</label><label class=\"ds-role\"><input type=\"checkbox\">RRHH</label><label class=\"ds-role\"><input type=\"checkbox\">Usuario</label></div>",
+      "css": ".ds-roles { display: flex; flex-wrap: wrap; gap: 12px; } .ds-role { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid oklch(92.8% 0.006 264.531); border-radius: 8px; font: 14px/20px ui-sans-serif, system-ui, sans-serif; color: oklch(37.3% 0.034 259.733); cursor: pointer; } .ds-role:hover { border-color: oklch(87.2% 0.01 258.338); } .ds-role input { accent-color: oklch(54.6% 0.245 262.881); margin: 0; } .ds-role:has(input:checked) { border-color: oklch(62.3% 0.214 259.815); background: oklch(97% 0.014 254.604); } .ds-role:has(input:focus-visible) { outline: 2px solid oklch(62.3% 0.214 259.815); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tabla de Bitácora",
+      "kind": "custom",
+      "refersTo": "table-wrapper",
+      "description": "Forma principal de mostrar datos: cabecera en mayúsculas pequeñas, filas con hover.",
+      "html": "<div class=\"ds-table-wrap\"><table class=\"ds-table\"><thead><tr><th>Nombre</th><th>Roles</th><th>Estado</th></tr></thead><tbody><tr><td>Nombre de usuario</td><td>Administrador</td><td><span class=\"ds-tbadge\">Activo</span></td></tr><tr><td>Nombre de usuario</td><td>RRHH</td><td><span class=\"ds-tbadge ds-tbadge-off\">Inactivo</span></td></tr></tbody></table></div>",
+      "css": ".ds-table-wrap { overflow-x: auto; border: 1px solid oklch(92.9% 0.013 255.508); border-radius: 16px; background: #fff; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); } .ds-table { width: 100%; border-collapse: collapse; font: 14px/20px ui-sans-serif, system-ui, sans-serif; } .ds-table thead { background: oklch(98.4% 0.003 247.858); } .ds-table th { padding: 16px 24px; text-align: left; white-space: nowrap; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: oklch(55.4% 0.046 257.417); } .ds-table td { padding: 16px 24px; color: oklch(37.2% 0.044 257.287); border-top: 1px solid oklch(96.8% 0.007 247.896); } .ds-table tbody tr { transition: background-color 150ms; } .ds-table tbody tr:hover { background: oklch(98.4% 0.003 247.858); } .ds-tbadge { display: inline-flex; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; background: oklch(98.2% 0.018 155.826); color: oklch(52.7% 0.154 150.069); } .ds-tbadge-off { background: oklch(97.1% 0.013 17.38); color: oklch(50.5% 0.213 26.518); }"
+    },
+    {
+      "name": "Tarjeta de Información",
+      "kind": "card",
+      "refersTo": "card-info",
+      "description": "Dato de detalle: icono + etiqueta arriba, valor en Title debajo.",
+      "html": "<div class=\"ds-info-card\"><div class=\"ds-info-head\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\"/></svg><span>Roles</span></div><p class=\"ds-info-value\">Administrador, RRHH</p></div>",
+      "css": ".ds-info-card { width: 260px; padding: 16px; border: 1px solid oklch(92.9% 0.013 255.508); border-radius: 12px; background: oklch(98.4% 0.003 247.858); font-family: ui-sans-serif, system-ui, sans-serif; } .ds-info-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: oklch(55.4% 0.046 257.417); font-size: 14px; font-weight: 500; } .ds-info-value { margin: 0; font-size: 18px; line-height: 28px; font-weight: 600; color: oklch(27.9% 0.041 260.031); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La Bitácora de RRHH",
+    "overview": "Biométricos es un registro: ordenado, trazable y fácil de releer. Cada pantalla se comporta como una página de bitácora bien llevada, con un título claro, una fila de herramientas (filtros y una acción principal) y luego el dato, casi siempre en tabla. La interfaz es sobria y precisa, pero amable: esquinas generosas y transiciones cortas le quitan la rigidez de un formulario administrativo sin restarle seriedad.\n\nLa densidad es de oficina: texto de trabajo a 14px, cabeceras de tabla en versalitas pequeñas, superficies neutras (blanco y pizarra muy clara) donde el color aparece solo cuando significa algo. El verde de Legumex marca la acción que hace avanzar el trabajo; el azul indica dónde está el usuario y qué tiene el foco. La marca profunda (degradado pizarra a azul noche) se reserva para el umbral: login y pantalla de carga. Dentro de la app, el trabajo ocurre sobre papel.\n\nEl sistema vive en claro y oscuro con igual cuidado. En oscuro las sombras desaparecen y la profundidad pasa a bordes y anillos de 1px.",
+    "keyCharacteristics": [
+      "Superficies neutras, color solo con función (acción, ubicación, estado).",
+      "Tabla como forma principal de mostrar datos; cabeceras en mayúsculas pequeñas con tracking amplio.",
+      "Esquinas suaves y firmes: 8px en campos, 12px en botones y tarjetas, 16px en contenedores grandes.",
+      "Casi plano: sombra ambiental mínima en reposo, sombras amplias solo en capas flotantes.",
+      "Tema claro y oscuro paritarios, conmutables desde la barra lateral y el login.",
+      "Tipografía del sistema, sin fuente de marca."
+    ],
+    "rules": [
+      { "name": "The Two Voices Rule", "body": "Verde actúa, azul ubica. El verde nunca marca navegación ni selección; el azul nunca es un botón primario.", "section": "colors" },
+      { "name": "The Threshold Rule", "body": "El degradado nocturno vive solo en el umbral (login, carga, fondo público). Dentro de la app, las superficies son papel o su equivalente oscuro.", "section": "colors" },
+      { "name": "The Earned Color Rule", "body": "Un color fuera de los neutros debe significar acción, ubicación o estado. Si no comunica nada, es gris.", "section": "colors" },
+      { "name": "The Weight Ladder Rule", "body": "La jerarquía sube por peso antes que por tamaño: 400 lectura, 500 navegación y etiquetas, 600 acción y títulos de componente, 700 títulos de página.", "section": "typography" },
+      { "name": "The Float-Only Shadow Rule", "body": "Una sombra grande significa \"esto está encima de la página\". Nada que viva en el flujo lleva más que la sombra de reposo.", "section": "elevation" },
+      { "name": "The Dark Ring Rule", "body": "En oscuro no hay sombras: la separación se dibuja con un anillo o borde de 1px.", "section": "elevation" },
+      { "name": "The Size-Scaled Corner Rule", "body": "Cuanto más grande el objeto, más amplia la curva: 8px → 12px → 16px. Nunca esquinas rectas en superficies interactivas.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do usar Verde Campo solo para la acción primaria de cada vista, alineada a la derecha de la barra de herramientas.",
+      "Do usar Azul Señal para estado activo de navegación, foco y selección.",
+      "Do abrir cada página con Title (Headline 30px/700 + subtítulo 14px Tinta Media) y separar bloques con 20px.",
+      "Do mostrar listados en la tabla compartida (Table/Thead/Th/Tr/Td) con esqueleto de carga y mensaje de vacío.",
+      "Do escalar la curva con el tamaño: 8px campos, 12px botones y tarjetas, 16px contenedores.",
+      "Do diseñar cada componente en claro y oscuro; en oscuro, sustituir sombras por anillos o bordes de 1px.",
+      "Do mantener el logo Legumex en la cabecera de la barra lateral, la cabecera móvil, el login y la pantalla de carga.",
+      "Do confirmar acciones destructivas o de bloqueo antes de ejecutarlas y pintarlas en Rojo Alerta.",
+      "Do escribir toda la interfaz en español claro y directo."
+    ],
+    "donts": [
+      "Don't usar verde para navegación o selección, ni azul para botones primarios.",
+      "Don't llevar el degradado nocturno (pizarra/azul noche) al área de trabajo autenticada.",
+      "Don't poner sombras grandes en elementos del flujo; solo modales y tarjetas flotantes las llevan.",
+      "Don't introducir un tercer acento; el ámbar existe solo para \"En desarrollo\".",
+      "Don't usar esquinas rectas en superficies interactivas.",
+      "Don't mezclar gris y pizarra dentro del mismo componente; las tablas y tarjetas usan pizarra, el marco de la app y los campos usan gris."
+    ]
+  }
+}
