@@ -22,4 +22,8 @@ export class EmployeesRepositoryImpl implements EmployeesRepository {
     inactiveEmployee(id: string): Promise<string> {
         return this.datasource.inactiveEmployee(id);
     }
+
+    updateEmployeePhoto(pin: string, file: File): Promise<string> {
+        return this.datasource.updateEmployeePhoto(pin, file);
+    }
 }

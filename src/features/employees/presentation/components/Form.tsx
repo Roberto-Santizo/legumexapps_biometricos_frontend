@@ -43,9 +43,9 @@ export function Form({ register, errors, isEdit = false }: Props) {
       />
 
       <TextFormField<EmployeeForm>
-        label="Apellidos"
+        label="Posición"
         name="lastName"
-        placeholder="Apellidos del empleado"
+        placeholder="Posición del empleado"
         register={register}
         type="text"
         validation={{
@@ -56,9 +56,9 @@ export function Form({ register, errors, isEdit = false }: Props) {
       />
 
       <TextFormField<EmployeeForm>
-        label={isEdit ? "PIN (no editable)" : "PIN"}
+        label={isEdit ? "PIN (no editable)" : "Código del empleado"}
         name="pin"
-        placeholder="Código del empleado en ZKBioAccess (ej. 10045)"
+        placeholder="Código del empleado"
         register={register}
         type="text"
         readOnly={isEdit}

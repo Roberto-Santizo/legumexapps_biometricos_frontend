@@ -9,7 +9,10 @@ export const EmployeeListItemSchema = z.object({
     pin: z.coerce.string(),
     createdBy: z.string().nullish(),
     updatedBy: z.string().nullish(),
-    department: z.string().nullish()
+    department: z.string().nullish(),
+    hasPhoto: z.boolean(),
+    // Cadena vacía cuando el empleado no tiene fotografía
+    photoUrl: z.string()
 });
 
 export const EmployeeListSchema = z.array(EmployeeListItemSchema);
@@ -30,6 +33,8 @@ export const EmployeeSchema = z.object({
     status: ZkFlagSchema,
     person_type: ZkFlagSchema,
     photo_path: z.string().nullish(),
+    hasPhoto: z.boolean().nullish(),
+    photoUrl: z.string().nullish(),
     creater_name: z.string().nullish(),
     creater_code: z.string().nullish(),
     updater_name: z.string().nullish(),

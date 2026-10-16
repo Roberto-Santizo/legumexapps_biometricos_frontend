@@ -1,10 +1,9 @@
-import { CustomFilledButton, Spinner, useNotification } from "@/features/shared/shared";
+import { CustomFilledButton, ImageUploader, Spinner, useNotification, ZoomablePhoto } from "@/features/shared/shared";
 import { EmployeeLevels, employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
-import { ArrowLeft, Building2, CalendarClock, EditIcon, Hash, IdCard, ShieldCheck, User, UserMinus, UserPen, UserPlus } from "lucide-react";
+import { ArrowLeft, Building2, EditIcon, Hash, IdCard, ShieldCheck, User, UserMinus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-
-const formatDate = (value?: string | null) => value ? new Date(value).toLocaleString('es-GT') : '—';
+import { useState } from "react";
 
 type Row = { icon: React.ReactNode; label: string; value: string | number };
 
@@ -47,6 +46,22 @@ export function ShowEmployee() {
         }
     });
 
+    // la URL de la foto no cambia al actualizarla; este valor evita mostrar la versión en caché
+    const [photoVersion, setPhotoVersion] = useState<number | null>(null);
+
+    const { mutateAsync: uploadPhoto, isPending: isUploading } = useMutation({
+        mutationFn: ({ pin, file }: { pin: string; file: File }) => employeesRepositoryProvider.updateEmployeePhoto(pin, file),
+        onSuccess: (message) => {
+            notification.success(message);
+            setPhotoVersion(Date.now());
+            queryClient.invalidateQueries({ queryKey: ['getEmployeeById', id] });
+            queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
+        },
+        onError: (err) => {
+            notification.error(err.message);
+        }
+    });
+
     const handleInactive = () => notification.question(
         '¿Desea dar de baja al empleado?',
         'Dar de baja',
@@ -59,19 +74,14 @@ export function ShowEmployee() {
         <p className="text-center text-sm text-red-600 dark:text-red-400">No se pudo cargar el empleado: {error.message}</p>
     )
     if (data) {
-        const enabled = data.enabled_credential === 1;
+        const hasPhoto = data.hasPhoto;
+        const photoSrc = data.hasPhoto ? (photoVersion ? `${data.photoUrl}?v=${photoVersion}` : data.photoUrl) : null;
         const rows: Row[] = [
-            { icon: <Hash className="h-4 w-4" />, label: 'PIN', value: data.pin },
+            { icon: <Hash className="h-4 w-4" />, label: 'Código', value: data.pin },
             { icon: <User className="h-4 w-4" />, label: 'Nombres', value: data.name },
-            { icon: <IdCard className="h-4 w-4" />, label: 'Apellidos', value: data.last_name || '—' },
+            { icon: <IdCard className="h-4 w-4" />, label: 'Posición', value: data.last_name || '—' },
             { icon: <Building2 className="h-4 w-4" />, label: 'Departamento', value: data.authDepartment?.name || '—' },
-            { icon: <ShieldCheck className="h-4 w-4" />, label: 'Credencial', value: enabled ? 'Habilitada' : 'Deshabilitada' },
-        ];
-        const audit: Row[] = [
-            { icon: <UserPlus className="h-4 w-4" />, label: 'Creado por', value: data.creater_name || '—' },
-            { icon: <CalendarClock className="h-4 w-4" />, label: 'Fecha de creación', value: formatDate(data.create_time) },
-            { icon: <UserPen className="h-4 w-4" />, label: 'Actualizado por', value: data.updater_name || '—' },
-            { icon: <CalendarClock className="h-4 w-4" />, label: 'Última actualización', value: formatDate(data.update_time) },
+            { icon: <ShieldCheck className="h-4 w-4" />, label: 'Credencial', value: hasPhoto ? 'Habilitada' : 'Deshabilitada' },
         ];
 
         return (
@@ -88,20 +98,26 @@ export function ShowEmployee() {
                     />
                 </div>
 
-                <div className="space-y-3">
-                    <h1 className="text-2xl font-bold leading-tight tracking-tight text-balance text-slate-900 sm:text-3xl dark:text-gray-100">{employeeFullName(data)}</h1>
-                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${enabled ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300' : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300'}`}>
-                        <ShieldCheck className="h-3.5 w-3.5" />
-                        Credencial {enabled ? 'habilitada' : 'deshabilitada'}
-                    </span>
+                <div className="flex items-center gap-5">
+                    <ZoomablePhoto key={photoSrc} src={photoSrc} alt={`Fotografía de ${employeeFullName(data)}`} caption={employeeFullName(data)} />
+                    <div className="space-y-3">
+                        <h1 className="text-2xl font-bold leading-tight tracking-tight text-balance text-slate-900 sm:text-3xl dark:text-gray-100">{employeeFullName(data)}</h1>
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${hasPhoto ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300' : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300'}`}>
+                            <ShieldCheck className="h-3.5 w-3.5" />
+                            Credencial {hasPhoto ? 'habilitada' : 'deshabilitada'}
+                        </span>
+                    </div>
                 </div>
 
                 <PropertyList items={rows} />
 
-                <section className="space-y-3">
-                    <h2 className="text-base font-semibold text-slate-900 dark:text-gray-100">Registro</h2>
-                    <PropertyList items={audit} />
-                </section>
+                <ImageUploader
+                    label="Fotografía"
+                    description="Se enviará a ZKBioAccess; el rostro debe verse con claridad."
+                    submitLabel={data.hasPhoto ? 'Actualizar foto' : 'Subir foto'}
+                    loading={isUploading}
+                    onUpload={(file) => uploadPhoto({ pin: data.pin, file })}
+                />
 
                 <EmployeeLevels employeeId={id} />
 

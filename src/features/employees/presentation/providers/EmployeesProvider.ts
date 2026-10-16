@@ -22,4 +22,8 @@ export class EmployeesProvider {
     inactiveEmployee(id: string): Promise<string> {
         return this.repository.inactiveEmployee(id);
     }
+
+    updateEmployeePhoto(pin: string, file: File): Promise<string> {
+        return this.repository.updateEmployeePhoto(pin, file);
+    }
 }

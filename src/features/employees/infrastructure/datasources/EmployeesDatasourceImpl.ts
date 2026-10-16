@@ -1,11 +1,10 @@
 import { getApiErrorMessage, setQueryParams } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
-import { EmployeeLevelsSchema, EmployeeListSchema, EmployeeSchema, EmployeesDatasource, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters } from '@/features/employees/employees';
+import { EmployeeLevelsSchema, EmployeeListItemSchema, EmployeeListSchema, EmployeesDatasource, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters } from '@/features/employees/employees';
 
 export class EmployeesDatasourceImpl implements EmployeesDatasource {
     constructor(private api: AxiosInstance) { }
 
-    // POST /employees crea el empleado en ZKBioAccess o lo actualiza si el PIN ya existe; responde sin cuerpo
     async saveEmployee(payload: EmployeePayload): Promise<string> {
         try {
             const url = '/employees';
@@ -37,7 +36,7 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
         try {
             const url = `/employees/${id}`;
             const { data } = await this.api.get(url);
-            const response = EmployeeSchema.safeParse(data);
+            const response = EmployeeListItemSchema.safeParse(data);
 
             if (response.success) {
                 return response.data;
@@ -71,6 +70,19 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
             const url = `/employees/status/inactiveEmployee/${id}`;
             const { data } = await this.api.post(url);
             return typeof data === 'string' && data ? data : 'Empleado dado de baja correctamente';
+        } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
+
+    // POST /employees/updateEmployeePhoto/:pin (multipart, campo `file`) envía la foto a ZKBioAccess; responde un mensaje de texto
+    async updateEmployeePhoto(pin: string, file: File): Promise<string> {
+        try {
+            const url = `/employees/updateEmployeePhoto/${encodeURIComponent(pin)}`;
+            const formData = new FormData();
+            formData.append('file', file);
+            const { data } = await this.api.post(url, formData);
+            return typeof data === 'string' && data ? data : 'Foto actualizada correctamente';
         } catch (error) {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }

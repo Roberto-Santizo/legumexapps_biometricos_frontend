@@ -1,5 +1,5 @@
 import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination } from "@/features/shared/shared";
-import { EditIcon, EyeIcon, PlusIcon } from "lucide-react";
+import { EditIcon, EyeIcon, FaceNeutralIcon, PlusIcon, SmileIcon } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { employeesRepositoryProvider } from "@/features/employees/employees";
@@ -47,6 +47,7 @@ export function Employees() {
               <Th text="Nombre" />
               <Th text="Departamento" />
               <Th text="Creado por" />
+              <Th text="Fotografía" />
               <Th text="Acciones" />
             </Thead>
 
@@ -57,6 +58,7 @@ export function Employees() {
                   <Td>{employee.name}</Td>
                   <Td>{employee.department || '—'}</Td>
                   <Td>{employee.createdBy || '—'}</Td>
+                  <Td>{employee.hasPhoto ? <SmileIcon className="text-green-500"/> : <SmileIcon className="text-red-500"/>}</Td>
                   <Td>
                     <ActionsMenu
                       items={[
