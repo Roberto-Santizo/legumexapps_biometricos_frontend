@@ -5,11 +5,12 @@ import { DepartmentSchema } from "@/features/departments/departments";
 export const EmployeeListItemSchema = z.object({
     id: z.string(),
     name: z.string(),
-    last_name: z.string().nullish(),
+    last_name: z.string(),
     pin: z.coerce.string(),
     createdBy: z.string().nullish(),
     updatedBy: z.string().nullish(),
-    department: z.string().nullish(),
+    department: z.string(),
+    departmentCode: z.string(),
     hasPhoto: z.boolean(),
     // Cadena vacía cuando el empleado no tiene fotografía
     photoUrl: z.string()

@@ -51,7 +51,7 @@ export function UpdateEmployee() {
         name: data.name,
         lastName: data.last_name ?? '',
         pin: data.pin,
-        deptCode: data.authDepartment?.code ?? '',
+        deptCode: data.departmentCode ?? '',
         // Solo se permite un nivel: se preselecciona el primero asignado
         accLevelIds: levels[0]?.level_id ?? ''
       });

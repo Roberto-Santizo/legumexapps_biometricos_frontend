@@ -5,10 +5,15 @@ import { EmployeeLevelsSchema, EmployeeListItemSchema, EmployeeListSchema, Emplo
 export class EmployeesDatasourceImpl implements EmployeesDatasource {
     constructor(private api: AxiosInstance) { }
 
+    // POST /employees (multipart, foto en el campo `file`) crea o actualiza al empleado en ZKBioAccess
     async saveEmployee(payload: EmployeePayload): Promise<string> {
         try {
             const url = '/employees';
-            await this.api.post(url, payload);
+            const formData = new FormData();
+            Object.entries(payload).forEach(([key, value]) => {
+                if (value !== undefined) formData.append(key, value);
+            });
+            await this.api.post(url, formData);
             return `Empleado ${payload.name} ${payload.lastName} guardado correctamente`;
         } catch (error) {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });

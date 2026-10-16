@@ -1,7 +1,7 @@
-import { EmployeeLevelSchema, EmployeeListItemSchema, EmployeeSchema } from "@/features/employees/employees";
+import { EmployeeLevelSchema, EmployeeListItemSchema } from "@/features/employees/employees";
 import type { z } from "zod";
 
-export type Employee = z.infer<typeof EmployeeSchema>;
+export type Employee = z.infer<typeof EmployeeListItemSchema>;
 
 export type EmployeeListItem = z.infer<typeof EmployeeListItemSchema>;
 
@@ -16,9 +16,11 @@ export type EmployeeForm = {
     accLevelIds: string[] | string;
     accStartTime: string;
     accEndTime: string;
+    // Fotografía del empleado (jpg, jpeg, png o gif); requerida al crear
+    file: File | null;
 }
 
-// Body de POST /employees (crea o actualiza si el PIN ya existe)
+// Body multipart de POST /employees (crea o actualiza si el PIN ya existe)
 export type EmployeePayload = {
     name: string;
     lastName: string;
@@ -27,6 +29,7 @@ export type EmployeePayload = {
     accLevelIds: string;
     accStartTime?: string;
     accEndTime?: string;
+    file?: File;
 }
 
 export type EmployeesFilters = {

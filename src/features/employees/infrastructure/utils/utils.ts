@@ -14,7 +14,8 @@ export const toEmployeePayload = (form: EmployeeForm): EmployeePayload => ({
     deptCode: form.deptCode,
     accLevelIds: [form.accLevelIds].flat().join(','),
     accStartTime: toZkDateTime(form.accStartTime),
-    accEndTime: toZkDateTime(form.accEndTime)
+    accEndTime: toZkDateTime(form.accEndTime),
+    file: form.file ?? undefined
 });
 
 // En ZKBioAccess los apellidos pueden venir nulos o vacíos
@@ -28,5 +29,6 @@ export const emptyEmployeeForm: EmployeeForm = {
     deptCode: '',
     accLevelIds: [],
     accStartTime: '',
-    accEndTime: ''
+    accEndTime: '',
+    file: null
 };

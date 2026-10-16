@@ -3,7 +3,6 @@ import { EmployeeLevels, employeeFullName, employeesRepositoryProvider } from "@
 import { ArrowLeft, Building2, EditIcon, Hash, IdCard, ShieldCheck, User, UserMinus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
 
 type Row = { icon: React.ReactNode; label: string; value: string | number };
 
@@ -27,7 +26,7 @@ export function ShowEmployee() {
     const notification = useNotification();
     const id = params.id!;
 
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error, dataUpdatedAt } = useQuery({
         queryKey: ['getEmployeeById', id],
         queryFn: () => employeesRepositoryProvider.getEmployeeById(id)
     });
@@ -46,14 +45,10 @@ export function ShowEmployee() {
         }
     });
 
-    // la URL de la foto no cambia al actualizarla; este valor evita mostrar la versión en caché
-    const [photoVersion, setPhotoVersion] = useState<number | null>(null);
-
     const { mutateAsync: uploadPhoto, isPending: isUploading } = useMutation({
         mutationFn: ({ pin, file }: { pin: string; file: File }) => employeesRepositoryProvider.updateEmployeePhoto(pin, file),
         onSuccess: (message) => {
             notification.success(message);
-            setPhotoVersion(Date.now());
             queryClient.invalidateQueries({ queryKey: ['getEmployeeById', id] });
             queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
         },
@@ -75,7 +70,11 @@ export function ShowEmployee() {
     )
     if (data) {
         const hasPhoto = data.hasPhoto;
-        const photoSrc = data.hasPhoto ? (photoVersion ? `${data.photoUrl}?v=${photoVersion}` : data.photoUrl) : null;
+        // El backend sirve la foto con max-age de 24 h y la URL no cambia al actualizarla o eliminarla;
+        // cada fetch del empleado genera una URL nueva para que el navegador no use la copia en caché
+        const photoSrc = data.hasPhoto && data.photoUrl
+            ? `${data.photoUrl}${data.photoUrl.includes('?') ? '&' : '?'}v=${dataUpdatedAt}`
+            : null;
         const rows: Row[] = [
             { icon: <Hash className="h-4 w-4" />, label: 'Código', value: data.pin },
             { icon: <User className="h-4 w-4" />, label: 'Nombres', value: data.name },
