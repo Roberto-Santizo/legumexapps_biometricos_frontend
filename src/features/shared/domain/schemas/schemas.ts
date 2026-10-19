@@ -18,3 +18,9 @@ export const FileResponseSchema = z.object({
     file: z.base64(),
     fileName: z.string()
 });
+
+// Archivos que el backend devuelve como Buffer serializado en JSON
+export const BufferResponseSchema = z.object({
+    type: z.literal("Buffer"),
+    data: z.array(z.number().int().min(0).max(255))
+});

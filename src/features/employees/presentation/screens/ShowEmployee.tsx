@@ -70,8 +70,6 @@ export function ShowEmployee() {
     )
     if (data) {
         const hasPhoto = data.hasPhoto;
-        // El backend sirve la foto con max-age de 24 h y la URL no cambia al actualizarla o eliminarla;
-        // cada fetch del empleado genera una URL nueva para que el navegador no use la copia en caché
         const photoSrc = data.hasPhoto && data.photoUrl
             ? `${data.photoUrl}${data.photoUrl.includes('?') ? '&' : '?'}v=${dataUpdatedAt}`
             : null;
@@ -79,7 +77,7 @@ export function ShowEmployee() {
             { icon: <Hash className="h-4 w-4" />, label: 'Código', value: data.pin },
             { icon: <User className="h-4 w-4" />, label: 'Nombres', value: data.name },
             { icon: <IdCard className="h-4 w-4" />, label: 'Posición', value: data.last_name || '—' },
-            { icon: <Building2 className="h-4 w-4" />, label: 'Departamento', value: data.authDepartment?.name || '—' },
+            { icon: <Building2 className="h-4 w-4" />, label: 'Departamento', value: data.department || '—' },
             { icon: <ShieldCheck className="h-4 w-4" />, label: 'Credencial', value: hasPhoto ? 'Habilitada' : 'Deshabilitada' },
         ];
 

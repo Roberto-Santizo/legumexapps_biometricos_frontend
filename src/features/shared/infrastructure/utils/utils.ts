@@ -1,5 +1,6 @@
 import { type Location, type NavigateFunction } from "react-router-dom";
 import { isAxiosError } from "axios";
+import type { BufferResponse } from "@/features/shared/domain/domain";
 
 export const getQueryParam = (location: Location, queryParam: string) => {
     const queryParams = new URLSearchParams(location.search);
@@ -52,22 +53,30 @@ export const chartTheme = (theme: 'light' | 'dark') => {
     };
 };
 
-export function downloadBase64File(base64: string, filename: string) {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+export const XLSX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
+// Dispara la descarga de cualquier Blob en el navegador y libera la URL temporal
+export function downloadBlob(blob: Blob, filename: string) {
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
+    link.href = url;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
+
+export function downloadBase64File(base64: string, filename: string, type = XLSX_MIME_TYPE) {
+    const bytes = Uint8Array.from(atob(base64), char => char.charCodeAt(0));
+    downloadBlob(new Blob([bytes], { type }), filename);
+}
+
+// NestJS serializa los Buffer como { type: "Buffer", data: number[] }
+export function downloadBufferFile(buffer: BufferResponse, filename: string, type = XLSX_MIME_TYPE) {
+    downloadBlob(new Blob([new Uint8Array(buffer.data)], { type }), filename);
+}
+
 // NestJS devuelve `message` como string o como string[] (errores de validación)
 export function getApiErrorMessage(error: unknown, fallback = "Error no controlado"): string {
     if (isAxiosError(error)) {

@@ -1,5 +1,5 @@
 import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination } from "@/features/shared/shared";
-import { EditIcon, EyeIcon, FaceNeutralIcon, PlusIcon, SmileIcon } from "lucide-react";
+import { EditIcon, EyeIcon, PlusIcon, SmileIcon } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { employeesRepositoryProvider } from "@/features/employees/employees";

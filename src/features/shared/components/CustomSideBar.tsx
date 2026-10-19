@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { Building2, ChevronRight, IdCard, KeyRound, LayoutDashboard, LogOut, UserX, Users, X } from "lucide-react";
+import { Building2, ChevronRight, Fingerprint, IdCard, KeyRound, LayoutDashboard, LogOut, UserX, Users, X } from "lucide-react";
 import { logout, ValidRoles } from "@/features/auth/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoles } from "@/features/shared/shared";
@@ -79,6 +79,15 @@ export function CustomSideBar({ open, onClose }: Props) {
               <NavLink to="/empleados-inactivos" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--gray"><UserX aria-hidden="true" /></span>
                 <span className="ios-sidebar__label">Empleados inactivos</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+          )}
+          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+            <li className="ios-sidebar__item">
+              <NavLink to="/transacciones-empleados" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--blue"><Fingerprint aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Transacciones</span>
                 <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
               </NavLink>
             </li>
