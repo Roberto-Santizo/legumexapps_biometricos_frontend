@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PaginatedResponseSchema } from "@/features/shared/shared";
 import { DepartmentSchema } from "@/features/departments/departments";
 
 // GET /employees devuelve una vista resumida con el departamento ya resuelto por nombre
@@ -16,7 +17,7 @@ export const EmployeeListItemSchema = z.object({
     photoUrl: z.string()
 });
 
-export const EmployeeListSchema = z.array(EmployeeListItemSchema);
+export const EmployeeListSchema = PaginatedResponseSchema(EmployeeListItemSchema);
 
 // Las banderas de ZKBioAccess son columnas bit/smallint en MSSQL: llegan como boolean o number
 const ZkFlagSchema = z.union([z.number(), z.boolean()]).transform(Number).nullish();

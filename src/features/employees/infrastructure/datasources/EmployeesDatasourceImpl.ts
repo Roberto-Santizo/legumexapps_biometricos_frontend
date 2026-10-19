@@ -1,4 +1,4 @@
-import { getApiErrorMessage, setQueryParams } from '@/features/shared/shared';
+import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
 import { EmployeeLevelsSchema, EmployeeListItemSchema, EmployeeListSchema, EmployeesDatasource, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters } from '@/features/employees/employees';
 
@@ -20,7 +20,7 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
         }
     }
 
-    async getEmployees(page: number, limit: number, filters: EmployeesFilters): Promise<EmployeeListItem[]> {
+    async getEmployees(page: number, limit: number, filters: EmployeesFilters): Promise<PaginatedResponse<EmployeeListItem>> {
         try {
             const params = setQueryParams({ limit, offset: page * limit, ...filters });
             const url = `/employees?${params.toString()}`;

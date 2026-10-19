@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from "@/features/shared/shared";
 import type { AccessLevel, AccessLevelForm, AccessLevelsFilters, AccessLevelsRepository, AssignDoorPayload, Door, LevelDoor, UpdateAccessLevelForm } from "@/features/access-levels/access-levels";
 
 export class AccessLevelsProvider {
@@ -7,7 +8,7 @@ export class AccessLevelsProvider {
         return this.repository.createAccessLevel(payload);
     }
 
-    getAccessLevels(page: number, limit: number, filters: AccessLevelsFilters = {}): Promise<AccessLevel[]> {
+    getAccessLevels(page: number, limit: number, filters: AccessLevelsFilters = {}): Promise<PaginatedResponse<AccessLevel>> {
         return this.repository.getAccessLevels(page, limit, filters);
     }
 

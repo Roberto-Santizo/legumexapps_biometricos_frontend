@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from "@/features/shared/shared";
 import type { Employee, EmployeeLevel, EmployeeListItem, EmployeePayload, EmployeesFilters, EmployeesRepository } from "@/features/employees/employees";
 
 export class EmployeesProvider {
@@ -7,7 +8,7 @@ export class EmployeesProvider {
         return this.repository.saveEmployee(payload);
     }
 
-    getEmployees(page: number, limit: number, filters: EmployeesFilters = {}): Promise<EmployeeListItem[]> {
+    getEmployees(page: number, limit: number, filters: EmployeesFilters = {}): Promise<PaginatedResponse<EmployeeListItem>> {
         return this.repository.getEmployees(page, limit, filters);
     }
 

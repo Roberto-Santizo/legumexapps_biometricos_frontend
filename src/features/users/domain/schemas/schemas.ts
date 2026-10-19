@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PaginatedResponseSchema } from "@/features/shared/shared";
 
 export const UserSchema = z.object({
     id: z.uuid(),
@@ -8,7 +9,7 @@ export const UserSchema = z.object({
     roles: z.array(z.string())
 });
 
-export const UsersSchema = z.array(UserSchema);
+export const UsersSchema = PaginatedResponseSchema(UserSchema);
 
 // POST /auth/register devuelve el usuario creado junto con su token
 export const CreatedUserSchema = UserSchema.pick({ id: true, name: true, email: true, roles: true });

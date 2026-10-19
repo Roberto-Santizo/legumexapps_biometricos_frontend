@@ -39,9 +39,6 @@ export function InactiveEmployees() {
     () => mutate(id)
   );
 
-  // El backend no devuelve el total: si la página viene incompleta es la última
-  const count = data && data.length < rowsPerPage ? page * rowsPerPage + data.length : -1;
-
   return (
     <div className="space-y-5">
       <Title title="Empleados inactivos" subtitle="Listado de empleados dados de baja en ZKBioAccess" />
@@ -66,7 +63,7 @@ export function InactiveEmployees() {
             </Thead>
 
             <Tbody>
-              {data.map(employee => (
+              {data.data.map(employee => (
                 <Tr key={employee.id}>
                   <Td>{employee.pin}</Td>
                   <Td>{employeeFullName(employee)}</Td>
@@ -85,12 +82,12 @@ export function InactiveEmployees() {
             </Tbody>
           </Table>
 
-          {data.length === 0 && (
+          {data.data.length === 0 && (
             <p className="text-center text-sm text-slate-500 dark:text-gray-400">No se encontraron empleados inactivos</p>
           )}
 
           <Pagination
-            count={count}
+            count={data.total}
             page={page}
             rowsPerPage={rowsPerPage}
             setSearchParams={setSearchParams}

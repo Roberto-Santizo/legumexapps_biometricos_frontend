@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from "@/features/shared/shared";
 import type { UpdateUserForm, User, UserForm, UsersFilters, UsersRepository } from "@/features/users/users";
 
 export class UsersProvider {
@@ -7,7 +8,7 @@ export class UsersProvider {
         return this.repository.createUser(payload);
     }
 
-    getUsers(page: number, limit: number, filters: UsersFilters = {}): Promise<User[]> {
+    getUsers(page: number, limit: number, filters: UsersFilters = {}): Promise<PaginatedResponse<User>> {
         return this.repository.getUsers(page, limit, filters);
     }
 

@@ -16,9 +16,6 @@ export function Users() {
     queryFn: () => usersRepositoryProvider.getUsers(page, rowsPerPage, { name, email })
   });
 
-  // El backend no devuelve el total: si la página viene incompleta es la última
-  const count = data && data.length < rowsPerPage ? page * rowsPerPage + data.length : -1;
-
   return (
     <div className="space-y-5">
       <Title title="Usuarios" subtitle="Listado de usuarios" />
@@ -55,7 +52,7 @@ export function Users() {
             </Thead>
 
             <Tbody>
-              {data.map(user => (
+              {data.data.map(user => (
                 <Tr key={user.id}>
                   <Td>{user.name}</Td>
                   <Td>{user.email}</Td>
@@ -74,12 +71,12 @@ export function Users() {
             </Tbody>
           </Table>
 
-          {data.length === 0 && (
+          {data.data.length === 0 && (
             <p className="text-center text-sm text-slate-500 dark:text-gray-400">No se encontraron usuarios</p>
           )}
 
           <Pagination
-            count={count}
+            count={data.total}
             page={page}
             rowsPerPage={rowsPerPage}
             setSearchParams={setSearchParams}

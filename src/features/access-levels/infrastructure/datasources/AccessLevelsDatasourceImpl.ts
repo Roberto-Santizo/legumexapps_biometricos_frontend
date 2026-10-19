@@ -1,4 +1,4 @@
-import { getApiErrorMessage, setQueryParams } from '@/features/shared/shared';
+import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
 import { AccessLevelSchema, AccessLevelsDatasource, AccessLevelsSchema, AssignedDoorSchema, DoorsSchema, LevelDoorsSchema, type AccessLevel, type AccessLevelForm, type AccessLevelsFilters, type AssignDoorPayload, type Door, type LevelDoor, type UpdateAccessLevelForm } from '@/features/access-levels/access-levels';
 
@@ -21,7 +21,7 @@ export class AccessLevelsDatasourceImpl implements AccessLevelsDatasource {
         }
     }
 
-    async getAccessLevels(page: number, limit: number, filters: AccessLevelsFilters): Promise<AccessLevel[]> {
+    async getAccessLevels(page: number, limit: number, filters: AccessLevelsFilters): Promise<PaginatedResponse<AccessLevel>> {
         try {
             const params = setQueryParams({ limit, offset: page * limit, ...filters });
             const url = `/acc-level?${params.toString()}`;

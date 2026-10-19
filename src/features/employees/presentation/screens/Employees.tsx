@@ -15,9 +15,6 @@ export function Employees() {
     queryFn: () => employeesRepositoryProvider.getEmployees(page, rowsPerPage, { name })
   });
 
-  // El backend no devuelve el total: si la página viene incompleta es la última
-  const count = data && data.length < rowsPerPage ? page * rowsPerPage + data.length : -1;
-
   return (
     <div className="space-y-5">
       <Title title="Empleados" subtitle="Listado de empleados registrados en ZKBioAccess" />
@@ -52,7 +49,7 @@ export function Employees() {
             </Thead>
 
             <Tbody>
-              {data.map(employee => (
+              {data.data.map(employee => (
                 <Tr key={employee.id}>
                   <Td>{employee.pin}</Td>
                   <Td>{employee.name}</Td>
@@ -72,12 +69,12 @@ export function Employees() {
             </Tbody>
           </Table>
 
-          {data.length === 0 && (
+          {data.data.length === 0 && (
             <p className="text-center text-sm text-slate-500 dark:text-gray-400">No se encontraron empleados</p>
           )}
 
           <Pagination
-            count={count}
+            count={data.total}
             page={page}
             rowsPerPage={rowsPerPage}
             setSearchParams={setSearchParams}

@@ -1,4 +1,4 @@
-import { getApiErrorMessage, setQueryParams } from '@/features/shared/shared';
+import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
 import { CreatedUserSchema, UserSchema, UsersDatasource, UsersSchema, type UpdateUserForm, type User, type UserForm, type UsersFilters } from '@/features/users/users';
 
@@ -22,7 +22,7 @@ export class UsersDatasourceImpl implements UsersDatasource {
         }
     }
 
-    async getUsers(page: number, limit: number, filters: UsersFilters): Promise<User[]> {
+    async getUsers(page: number, limit: number, filters: UsersFilters): Promise<PaginatedResponse<User>> {
         try {
             const params = setQueryParams({ limit, offset: page * limit, ...filters });
             const url = `/users?${params.toString()}`;

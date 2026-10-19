@@ -1,4 +1,4 @@
-import { getApiErrorMessage, setQueryParams } from '@/features/shared/shared';
+import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
 import { DepartmentSchema, DepartmentsDatasource, DepartmentsSchema, type Department, type DepartmentForm, type DepartmentsFilters, type UpdateDepartmentForm } from '@/features/departments/departments';
 
@@ -21,7 +21,7 @@ export class DepartmentsDatasourceImpl implements DepartmentsDatasource {
         }
     }
 
-    async getDepartments(page: number, limit: number, filters: DepartmentsFilters): Promise<Department[]> {
+    async getDepartments(page: number, limit: number, filters: DepartmentsFilters): Promise<PaginatedResponse<Department>> {
         try {
             const params = setQueryParams({ limit, offset: page * limit, ...filters });
             const url = `/auth-department?${params.toString()}`;

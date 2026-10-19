@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PaginatedResponseSchema } from "@/features/shared/shared";
 
 // Los campos de auditoría pueden venir nulos desde la base de datos
 export const AccessLevelSchema = z.object({
@@ -13,7 +14,7 @@ export const AccessLevelSchema = z.object({
     update_time: z.string().nullish()
 });
 
-export const AccessLevelsSchema = z.array(AccessLevelSchema);
+export const AccessLevelsSchema = PaginatedResponseSchema(AccessLevelSchema);
 
 export const DoorSchema = z.object({
     id: z.string(),

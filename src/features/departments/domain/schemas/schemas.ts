@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PaginatedResponseSchema } from "@/features/shared/shared";
 
 // Los campos de auditoría y jerarquía pueden venir nulos desde la base de datos
 export const DepartmentSchema = z.object({
@@ -15,4 +16,4 @@ export const DepartmentSchema = z.object({
     update_time: z.string().nullish()
 });
 
-export const DepartmentsSchema = z.array(DepartmentSchema);
+export const DepartmentsSchema = PaginatedResponseSchema(DepartmentSchema);

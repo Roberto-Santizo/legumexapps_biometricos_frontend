@@ -17,12 +17,14 @@ type Props = {
 export function Form({ register, errors, isEdit = false }: Props) {
   const { data: departments } = useQuery({
     queryKey: ['getDepartments', 'catalog'],
-    queryFn: () => departmentsRepositoryProvider.getDepartments(0, CATALOG_LIMIT)
+    queryFn: () => departmentsRepositoryProvider.getDepartments(0, CATALOG_LIMIT),
+    select: (response) => response.data
   });
 
   const { data: levels } = useQuery({
     queryKey: ['getAccessLevels', 'catalog'],
-    queryFn: () => accessLevelsRepositoryProvider.getAccessLevels(0, CATALOG_LIMIT)
+    queryFn: () => accessLevelsRepositoryProvider.getAccessLevels(0, CATALOG_LIMIT),
+    select: (response) => response.data
   });
 
   if (!departments || !levels) return <LoadingData />

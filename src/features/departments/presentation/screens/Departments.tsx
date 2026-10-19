@@ -16,9 +16,6 @@ export function Departments() {
     queryFn: () => departmentsRepositoryProvider.getDepartments(page, rowsPerPage, { name, code })
   });
 
-  // El backend no devuelve el total: si la página viene incompleta es la última
-  const count = data && data.length < rowsPerPage ? page * rowsPerPage + data.length : -1;
-
   return (
     <div className="space-y-5">
       <Title title="Departamentos" subtitle="Listado de departamentos" />
@@ -54,7 +51,7 @@ export function Departments() {
             </Thead>
 
             <Tbody>
-              {data.map(department => (
+              {data.data.map(department => (
                 <Tr key={department.id}>
                   <Td>{department.code}</Td>
                   <Td>{department.name}</Td>
@@ -72,12 +69,12 @@ export function Departments() {
             </Tbody>
           </Table>
 
-          {data.length === 0 && (
+          {data.data.length === 0 && (
             <p className="text-center text-sm text-slate-500 dark:text-gray-400">No se encontraron departamentos</p>
           )}
 
           <Pagination
-            count={count}
+            count={data.total}
             page={page}
             rowsPerPage={rowsPerPage}
             setSearchParams={setSearchParams}

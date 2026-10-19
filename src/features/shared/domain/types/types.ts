@@ -12,3 +12,10 @@ export type FileForm = {
 
 export type DynamicFormValues = Record<string, number | string>;
 export type FileResponse = z.infer<typeof FileResponseSchema>;
+
+export type PaginatedResponse<T> = {
+    data: T[];
+    total: number;
+    totalPages: number;
+    currentPage: number;
+};

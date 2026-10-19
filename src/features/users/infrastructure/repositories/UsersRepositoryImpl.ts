@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from "@/features/shared/shared";
 import { UsersDatasource, UsersRepository, type UpdateUserForm, type User, type UserForm, type UsersFilters } from '@/features/users/users';
 
 export class UsersRepositoryImpl implements UsersRepository {
@@ -7,7 +8,7 @@ export class UsersRepositoryImpl implements UsersRepository {
         return this.datasource.createUser(payload);
     }
 
-    getUsers(page: number, limit: number, filters: UsersFilters): Promise<User[]> {
+    getUsers(page: number, limit: number, filters: UsersFilters): Promise<PaginatedResponse<User>> {
         return this.datasource.getUsers(page, limit, filters);
     }
 

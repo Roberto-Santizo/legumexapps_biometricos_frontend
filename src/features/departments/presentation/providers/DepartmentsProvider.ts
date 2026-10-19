@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from "@/features/shared/shared";
 import type { Department, DepartmentForm, DepartmentsFilters, DepartmentsRepository, UpdateDepartmentForm } from "@/features/departments/departments";
 
 export class DepartmentsProvider {
@@ -7,7 +8,7 @@ export class DepartmentsProvider {
         return this.repository.createDepartment(payload);
     }
 
-    getDepartments(page: number, limit: number, filters: DepartmentsFilters = {}): Promise<Department[]> {
+    getDepartments(page: number, limit: number, filters: DepartmentsFilters = {}): Promise<PaginatedResponse<Department>> {
         return this.repository.getDepartments(page, limit, filters);
     }
 

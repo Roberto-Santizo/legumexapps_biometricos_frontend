@@ -1,11 +1,11 @@
-import { getApiErrorMessage, setQueryParams } from '@/features/shared/shared';
+import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
 import { InactiveEmployeeListSchema, InactiveEmployeeSchema, InactiveEmployeesDatasource, type InactiveEmployee, type InactiveEmployeeListItem, type InactiveEmployeesFilters } from '@/features/inactive-employees/inactive-employees';
 
 export class InactiveEmployeesDatasourceImpl implements InactiveEmployeesDatasource {
     constructor(private api: AxiosInstance) { }
 
-    async getInactiveEmployees(page: number, limit: number, filters: InactiveEmployeesFilters): Promise<InactiveEmployeeListItem[]> {
+    async getInactiveEmployees(page: number, limit: number, filters: InactiveEmployeesFilters): Promise<PaginatedResponse<InactiveEmployeeListItem>> {
         try {
             const params = setQueryParams({ limit, offset: page * limit, ...filters });
             const url = `/inactive-employees?${params.toString()}`;
