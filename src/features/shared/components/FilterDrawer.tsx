@@ -7,7 +7,7 @@ export type FilterField = {
   name: string;
   label: string;
   placeholder?: string;
-  type?: 'text' | 'email' | 'number' | 'date';
+  type?: 'text' | 'email' | 'number' | 'date' | 'datetime-local';
   options?: { value: string; label: string }[];
 };
 
