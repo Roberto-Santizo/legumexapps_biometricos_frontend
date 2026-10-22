@@ -6,6 +6,7 @@ import { CreateEmployee, Employees, ShowEmployee, UpdateEmployee } from "@/featu
 import { InactiveEmployees, ShowInactiveEmployee } from "@/features/inactive-employees/inactive-employees";
 import { EmployeeTransactions } from "@/features/employee-transactions/employee-transactions";
 import { ShowTask, Tasks } from "@/features/tasks/tasks";
+import { Photos } from "@/features/photos/photos";
 import { Dashboard } from "@/features/dashboard/dashboard";
 import { Login } from "@/features/auth/auth";
 import { NotFound, ProtectedLayout, PublicLayout } from "@/features/shared/shared";
@@ -67,6 +68,10 @@ export default function AppRouter() {
                 <Route element={<ProtectedLayout />}>
                     <Route path="/tareas" element={<Tasks />} />
                     <Route path="/tareas/:id" element={<ShowTask />} />
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route path="/fotos" element={<Photos />} />
                 </Route>
             </Routes>
         </BrowserRouter>

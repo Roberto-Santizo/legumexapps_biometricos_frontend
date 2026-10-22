@@ -212,6 +212,7 @@
     --ios-teal: light-dark(#30B0C7, #40C8E0);
     --ios-green: light-dark(#34C759, #30D158);
     --ios-gray: light-dark(#8E8E93, #8E8E93);
+    --ios-pink: light-dark(#FF2D55, #FF375F);
     background: var(--ios-grp);
     box-shadow: inset -0.5px 0 0 var(--ios-sep);
     color: var(--ios-label);
@@ -355,6 +356,7 @@
 .ios-sidebar__tile--teal { background: var(--ios-teal); }
 .ios-sidebar__tile--green { background: var(--ios-green); }
 .ios-sidebar__tile--gray { background: var(--ios-gray); }
+.ios-sidebar__tile--pink { background: var(--ios-pink); }
 
 .ios-sidebar__label {
     flex: 1;
@@ -492,5 +494,67 @@
     .photo-viewer::backdrop {
         transition: none;
         filter: none;
+    }
+}
+
+/* Marco con marcas de corte (Fotos): al enfocar o pasar el cursor, las marcas se alargan y pasan a azul */
+@property --mark-color {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --mark-len {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 12px;
+}
+
+.photo-frame {
+    --mark-color: oklch(80.4% 0.016 257);
+    --mark-len: 12px;
+    --mark-w: 1.5px;
+    padding: 7px;
+    background:
+        linear-gradient(var(--mark-color) 0 0) top left / var(--mark-len) var(--mark-w),
+        linear-gradient(var(--mark-color) 0 0) top left / var(--mark-w) var(--mark-len),
+        linear-gradient(var(--mark-color) 0 0) top right / var(--mark-len) var(--mark-w),
+        linear-gradient(var(--mark-color) 0 0) top right / var(--mark-w) var(--mark-len),
+        linear-gradient(var(--mark-color) 0 0) bottom left / var(--mark-len) var(--mark-w),
+        linear-gradient(var(--mark-color) 0 0) bottom left / var(--mark-w) var(--mark-len),
+        linear-gradient(var(--mark-color) 0 0) bottom right / var(--mark-len) var(--mark-w),
+        linear-gradient(var(--mark-color) 0 0) bottom right / var(--mark-w) var(--mark-len);
+    background-repeat: no-repeat;
+    transition: --mark-color 200ms ease-out, --mark-len 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .photo-frame {
+    --mark-color: oklch(44.6% 0.043 257.281);
+}
+
+.photo-frame[data-status="empty"] {
+    --mark-color: oklch(90% 0.012 257);
+}
+
+.dark .photo-frame[data-status="empty"] {
+    --mark-color: oklch(30% 0.03 260);
+}
+
+.group\/frame:hover .photo-frame[data-status="ready"],
+.group\/frame:focus-within .photo-frame[data-status="ready"],
+.photo-frame[data-status="drop"] {
+    --mark-color: oklch(62.3% 0.214 259.815);
+    --mark-len: 20px;
+}
+
+.photo-frame[data-status="drop"] {
+    --mark-len: 36px;
+    --mark-w: 2px;
+    padding: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .photo-frame {
+        transition: none;
     }
 }
