@@ -8,6 +8,7 @@ export interface LoginForm {
 export const ValidRoles = {
     admin: 'admin',
     rrhh: 'rrhh',
+    fincas: 'fincas',
     user: 'user',
 } as const;
 

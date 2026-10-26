@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { Building2, CalendarClock, ChevronRight, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, X } from "lucide-react";
+import { Building2, CalendarClock, ChevronRight, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, UsersRound, X } from "lucide-react";
 import { logout, ValidRoles } from "@/features/auth/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoles } from "@/features/shared/shared";
@@ -13,6 +13,8 @@ type Props = {
 
 export function CustomSideBar({ open, onClose }: Props) {
   const { hasRole } = useRoles();
+  // Abre la sección Fincas cuando la ruta actual pertenece a un módulo de fincas (listado o detalle)
+  const isFincasRoute = /-fincas(\/|$)/.test(window.location.pathname);
   const user = useSelector((state: RootState) => state.auth.user)!;
   const dispatch = useDispatch<AppDispatch>();
 
@@ -48,7 +50,19 @@ export function CustomSideBar({ open, onClose }: Props) {
       </div>
 
       <nav className="ios-sidebar__nav">
-        <ul className="ios-sidebar__group">
+        {hasRole(ValidRoles.admin, ValidRoles.rrhh, ValidRoles.fincas) && (
+          <div className="ios-sidebar__seg" role="radiogroup" aria-label="Sección del menú">
+            <label className="ios-sidebar__seg-opt">
+              <input type="radio" name="sidebar-section" value="general" className="ios-sidebar__seg-input" defaultChecked={!isFincasRoute} />
+              <span>General</span>
+            </label>
+            <label className="ios-sidebar__seg-opt">
+              <input type="radio" name="sidebar-section" value="fincas" className="ios-sidebar__seg-input" defaultChecked={isFincasRoute} />
+              <span>Fincas</span>
+            </label>
+          </div>
+        )}
+        <ul className="ios-sidebar__group ios-sidebar__panel ios-sidebar__panel--general">
           <li className="ios-sidebar__item">
             <NavLink to="/dashboard" className="ios-sidebar__row">
               <span className="ios-sidebar__tile ios-sidebar__tile--blue"><LayoutDashboard aria-hidden="true" /></span>
@@ -121,24 +135,6 @@ export function CustomSideBar({ open, onClose }: Props) {
           )}
           {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
             <li className="ios-sidebar__item">
-              <NavLink to="/departamentos-fincas" className="ios-sidebar__row">
-                <span className="ios-sidebar__tile ios-sidebar__tile--green"><Tractor aria-hidden="true" /></span>
-                <span className="ios-sidebar__label">Departamentos Fincas</span>
-                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
-              </NavLink>
-            </li>
-          )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
-            <li className="ios-sidebar__item">
-              <NavLink to="/posiciones-fincas" className="ios-sidebar__row">
-                <span className="ios-sidebar__tile ios-sidebar__tile--green"><Network aria-hidden="true" /></span>
-                <span className="ios-sidebar__label">Posiciones Fincas</span>
-                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
-              </NavLink>
-            </li>
-          )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
-            <li className="ios-sidebar__item">
               <NavLink to="/niveles-acceso" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--teal"><KeyRound aria-hidden="true" /></span>
                 <span className="ios-sidebar__label">Niveles de acceso</span>
@@ -147,6 +143,37 @@ export function CustomSideBar({ open, onClose }: Props) {
             </li>
           )}
         </ul>
+        {hasRole(ValidRoles.admin, ValidRoles.rrhh, ValidRoles.fincas) && (
+          <ul className="ios-sidebar__group ios-sidebar__panel ios-sidebar__panel--fincas">
+            {hasRole(ValidRoles.admin, ValidRoles.fincas) && (
+              <li className="ios-sidebar__item">
+                <NavLink to="/empleados-fincas" className="ios-sidebar__row">
+                  <span className="ios-sidebar__tile ios-sidebar__tile--green"><UsersRound aria-hidden="true" /></span>
+                  <span className="ios-sidebar__label">Empleados</span>
+                  <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+                </NavLink>
+              </li>
+            )}
+            {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+              <li className="ios-sidebar__item">
+                <NavLink to="/departamentos-fincas" className="ios-sidebar__row">
+                  <span className="ios-sidebar__tile ios-sidebar__tile--green"><Tractor aria-hidden="true" /></span>
+                  <span className="ios-sidebar__label">Departamentos</span>
+                  <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+                </NavLink>
+              </li>
+            )}
+            {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+              <li className="ios-sidebar__item">
+                <NavLink to="/posiciones-fincas" className="ios-sidebar__row">
+                  <span className="ios-sidebar__tile ios-sidebar__tile--green"><Network aria-hidden="true" /></span>
+                  <span className="ios-sidebar__label">Posiciones</span>
+                  <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+                </NavLink>
+              </li>
+            )}
+          </ul>
+        )}
       </nav>
 
       <div className="ios-sidebar__footer">

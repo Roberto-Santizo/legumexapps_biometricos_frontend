@@ -369,6 +369,81 @@
     color: var(--ios-chev);
 }
 
+/* Control segmentado General | Fincas */
+.ios-sidebar__seg {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 32px;
+    margin-bottom: 16px;
+    padding: 2px;
+    border-radius: 9px;
+    background: var(--ios-fill);
+}
+
+.ios-sidebar__seg::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc(50% - 2px);
+    border-radius: 7px;
+    background: light-dark(#FFFFFF, #636366);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .12), 0 3px 1px rgba(0, 0, 0, .04);
+    transition: transform .32s cubic-bezier(.2, .8, .2, 1);
+}
+
+.ios-sidebar__seg:has(input[value="fincas"]:checked)::before {
+    transform: translateX(100%);
+}
+
+.ios-sidebar__seg-opt {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.006em;
+    color: var(--ios-label);
+    cursor: pointer;
+}
+
+.ios-sidebar__seg-opt:has(input:checked) {
+    font-weight: 600;
+}
+
+.ios-sidebar__seg-opt:has(input:focus-visible) {
+    outline: 2px solid var(--ios-blue);
+    outline-offset: -2px;
+}
+
+.ios-sidebar__seg-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ios-sidebar__nav:has(input[value="fincas"]:checked) .ios-sidebar__panel--general,
+.ios-sidebar__nav:has(input[value="general"]:checked) .ios-sidebar__panel--fincas {
+    display: none;
+}
+
+.ios-sidebar__panel {
+    animation: ios-sidebar-panel-in .28s cubic-bezier(.2, .8, .2, 1);
+}
+
+@keyframes ios-sidebar-panel-in {
+    from { opacity: 0; transform: translateY(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ios-sidebar__seg::before { transition: none; }
+    .ios-sidebar__panel { animation: none; }
+}
+
 .ios-sidebar__user {
     display: flex;
     align-items: center;

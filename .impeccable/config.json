@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-10-15T19:33:37.939Z",
         "reason": "Claude: bg-blue-50 only applies under has-checked, where text switches to blue-800/blue-200; gray text only shows on uncolored unchecked state"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/features/finca-employees/presentation/components/AreasFormField.tsx"
+        ],
+        "createdAt": "2026-10-26T21:52:47.294Z",
+        "reason": "claude: gray text only on unchecked white card; checked state swaps to text-blue-800 via has-checked, same pattern as AccessLevelsFormField"
       }
     ]
   }

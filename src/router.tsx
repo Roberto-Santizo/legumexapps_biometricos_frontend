@@ -3,6 +3,7 @@ import { CreateUser, ShowUser, UpdateUser, Users } from "@/features/users/users"
 import { CreateDepartment, Departments, ShowDepartment, UpdateDepartment } from "@/features/departments/departments";
 import { CreateFincaDepartment, FincaDepartments, ShowFincaDepartment, UpdateFincaDepartment } from "@/features/finca-departments/finca-departments";
 import { CreateFincaPosition, FincaPositions, ShowFincaPosition, UpdateFincaPosition } from "@/features/finca-positions/finca-positions";
+import { CreateFincaEmployee, FincaEmployees, ShowFincaEmployee } from "@/features/finca-employees/finca-employees";
 import { AccessLevels, CreateAccessLevel, ShowAccessLevel, UpdateAccessLevel } from "@/features/access-levels/access-levels";
 import { CreateEmployee, Employees, ShowEmployee, UpdateEmployee } from "@/features/employees/employees";
 import { InactiveEmployees, ShowInactiveEmployee } from "@/features/inactive-employees/inactive-employees";
@@ -56,6 +57,12 @@ export default function AppRouter() {
                     <Route path="/posiciones-fincas/crear" element={<CreateFincaPosition />} />
                     <Route path="/posiciones-fincas/:id" element={<ShowFincaPosition />} />
                     <Route path="/posiciones-fincas/:id/editar" element={<UpdateFincaPosition />} />
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route path="/empleados-fincas" element={<FincaEmployees />} />
+                    <Route path="/empleados-fincas/crear" element={<CreateFincaEmployee />} />
+                    <Route path="/empleados-fincas/:id" element={<ShowFincaEmployee />} />
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
