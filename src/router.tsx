@@ -1,6 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { CreateUser, ShowUser, UpdateUser, Users } from "@/features/users/users";
 import { CreateDepartment, Departments, ShowDepartment, UpdateDepartment } from "@/features/departments/departments";
+import { CreateFincaDepartment, FincaDepartments, ShowFincaDepartment, UpdateFincaDepartment } from "@/features/finca-departments/finca-departments";
+import { CreateFincaPosition, FincaPositions, ShowFincaPosition, UpdateFincaPosition } from "@/features/finca-positions/finca-positions";
 import { AccessLevels, CreateAccessLevel, ShowAccessLevel, UpdateAccessLevel } from "@/features/access-levels/access-levels";
 import { CreateEmployee, Employees, ShowEmployee, UpdateEmployee } from "@/features/employees/employees";
 import { InactiveEmployees, ShowInactiveEmployee } from "@/features/inactive-employees/inactive-employees";
@@ -40,6 +42,20 @@ export default function AppRouter() {
                     <Route path="/departamentos/crear" element={<CreateDepartment />} />
                     <Route path="/departamentos/:id" element={<ShowDepartment />} />
                     <Route path="/departamentos/:id/editar" element={<UpdateDepartment />} />
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route path="/departamentos-fincas" element={<FincaDepartments />} />
+                    <Route path="/departamentos-fincas/crear" element={<CreateFincaDepartment />} />
+                    <Route path="/departamentos-fincas/:id" element={<ShowFincaDepartment />} />
+                    <Route path="/departamentos-fincas/:id/editar" element={<UpdateFincaDepartment />} />
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route path="/posiciones-fincas" element={<FincaPositions />} />
+                    <Route path="/posiciones-fincas/crear" element={<CreateFincaPosition />} />
+                    <Route path="/posiciones-fincas/:id" element={<ShowFincaPosition />} />
+                    <Route path="/posiciones-fincas/:id/editar" element={<UpdateFincaPosition />} />
                 </Route>
 
                 <Route element={<ProtectedLayout />}>

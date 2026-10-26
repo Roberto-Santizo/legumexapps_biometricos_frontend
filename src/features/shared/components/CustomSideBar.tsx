@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { Building2, CalendarClock, ChevronRight, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, UserX, Users, X } from "lucide-react";
+import { Building2, CalendarClock, ChevronRight, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, X } from "lucide-react";
 import { logout, ValidRoles } from "@/features/auth/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoles } from "@/features/shared/shared";
@@ -115,6 +115,24 @@ export function CustomSideBar({ open, onClose }: Props) {
               <NavLink to="/departamentos" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--orange"><Building2 aria-hidden="true" /></span>
                 <span className="ios-sidebar__label">Departamentos</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+          )}
+          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+            <li className="ios-sidebar__item">
+              <NavLink to="/departamentos-fincas" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--green"><Tractor aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Departamentos Fincas</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+          )}
+          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+            <li className="ios-sidebar__item">
+              <NavLink to="/posiciones-fincas" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--green"><Network aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Posiciones Fincas</span>
                 <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
               </NavLink>
             </li>
