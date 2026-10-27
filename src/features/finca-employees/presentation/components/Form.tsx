@@ -49,14 +49,14 @@ export function Form({ register, errors }: Props) {
       />
 
       <TextFormField<FincaEmployeeForm>
-        label="Apellidos"
+        label="Código"
         name="last_name"
-        placeholder="Apellidos del empleado"
+        placeholder="Código del empleado"
         register={register}
         type="text"
         validation={{
-          required: 'Los apellidos son requeridos',
-          minLength: { value: 5, message: 'Los apellidos deben tener al menos 5 caracteres' }
+          required: 'El código del empleado es requerido',
+          minLength: { value: 5, message: 'El código del empledo necesita tener por lo menos 5 caracteres' }
         }}
         errorMessage={errors.last_name?.message}
       />

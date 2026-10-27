@@ -35,9 +35,8 @@ export function FincaEmployees() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <FilterDrawer
           fields={[
-            { name: 'emp_code', label: 'Código', placeholder: 'Buscar por código' },
             { name: 'first_name', label: 'Nombres', placeholder: 'Buscar por nombres' },
-            { name: 'last_name', label: 'Apellidos', placeholder: 'Buscar por apellidos' },
+            { name: 'last_name', label: 'Código', placeholder: 'Buscar por código de empleado' },
             {
               name: 'position_id',
               label: 'Posición',
