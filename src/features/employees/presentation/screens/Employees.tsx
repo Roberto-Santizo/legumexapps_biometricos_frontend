@@ -40,7 +40,7 @@ export function Employees() {
         <>
           <Table>
             <Thead>
-              <Th text="PIN" />
+              <Th text="Código" />
               <Th text="Nombre" />
               <Th text="Departamento" />
               <Th text="Creado por" />

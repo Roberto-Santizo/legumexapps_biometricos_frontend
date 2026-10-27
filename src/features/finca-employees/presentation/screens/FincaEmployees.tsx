@@ -63,7 +63,6 @@ export function FincaEmployees() {
             <Thead>
               <Th text="Código" />
               <Th text="Nombres" />
-              <Th text="Apellidos" />
               <Th text="Departamento" />
               <Th text="Posición" />
               <Th text="Estado" />
@@ -73,9 +72,8 @@ export function FincaEmployees() {
             <Tbody>
               {data.data.map(employee => (
                 <Tr key={employee.id}>
-                  <Td>{employee.emp_code}</Td>
-                  <Td>{employee.first_name}</Td>
                   <Td>{employee.last_name || '—'}</Td>
+                  <Td>{employee.first_name}</Td>
                   <Td>{employee.department}</Td>
                   <Td>{employee.position}</Td>
                   <Td><ResignBadge resign={employee.resign} /></Td>

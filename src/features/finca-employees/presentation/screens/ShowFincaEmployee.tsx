@@ -1,6 +1,6 @@
 import { CustomFilledButton, Spinner, useNotification } from "@/features/shared/shared";
 import { FincaEmployeeAreas, ResignBadge, fincaEmployeeFullName, fincaEmployeesRepositoryProvider } from "@/features/finca-employees/finca-employees";
-import { ArrowLeft, Building2, Hash, IdCard, User, UserCheck, UserMinus } from "lucide-react";
+import { ArrowLeft, Building2, IdCard, User, UserCheck, UserMinus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -51,9 +51,8 @@ export function ShowFincaEmployee() {
             );
 
         const rows = [
-            { icon: <Hash className="h-4 w-4" />, label: 'Código', value: data.emp_code },
             { icon: <User className="h-4 w-4" />, label: 'Nombres', value: data.first_name },
-            { icon: <User className="h-4 w-4" />, label: 'Apellidos', value: data.last_name || '—' },
+            { icon: <User className="h-4 w-4" />, label: 'Código', value: data.last_name || '—' },
             { icon: <Building2 className="h-4 w-4" />, label: 'Departamento', value: data.department },
             { icon: <IdCard className="h-4 w-4" />, label: 'Posición', value: data.position },
         ];

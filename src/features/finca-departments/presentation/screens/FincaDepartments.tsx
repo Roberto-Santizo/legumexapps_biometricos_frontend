@@ -42,7 +42,6 @@ export function FincaDepartments() {
         <>
           <Table>
             <Thead>
-              <Th text="Código" />
               <Th text="Nombre" />
               <Th text="Acciones" />
             </Thead>
@@ -50,7 +49,6 @@ export function FincaDepartments() {
             <Tbody>
               {data.data.map(department => (
                 <Tr key={department.id}>
-                  <Td>{department.dept_code}</Td>
                   <Td>{department.dept_name}</Td>
                   <Td>
                     <ActionsMenu

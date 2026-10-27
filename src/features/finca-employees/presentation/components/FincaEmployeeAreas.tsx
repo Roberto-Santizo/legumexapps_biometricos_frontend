@@ -60,7 +60,6 @@ export function FincaEmployeeAreas({ employeeId, areas }: Props) {
 
       <Table>
         <Thead>
-          <Th text="Código" />
           <Th text="Área" />
           <Th text="Acciones" />
         </Thead>
@@ -68,7 +67,6 @@ export function FincaEmployeeAreas({ employeeId, areas }: Props) {
         <Tbody>
           {areas.map(area => (
             <Tr key={area.id}>
-              <Td>{area.area_code}</Td>
               <Td>{area.area_name}</Td>
               <Td>
                 <button
