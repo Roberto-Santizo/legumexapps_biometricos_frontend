@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "@/features/shared/shared";
-import type { AddFincaEmployeeAreaPayload, FincaArea, FincaEmployee, FincaEmployeeDetail, FincaEmployeePayload, FincaEmployeesFilters, FincaEmployeesRepository } from "@/features/finca-employees/finca-employees";
+import type { AddFincaEmployeeAreaPayload, FincaArea, FincaEmployee, FincaEmployeeDetail, FincaEmployeePayload, FincaEmployeesFilters, FincaEmployeesRepository, UpdateFincaEmployeePayload } from "@/features/finca-employees/finca-employees";
 
 export class FincaEmployeesProvider {
     constructor(private repository: FincaEmployeesRepository) { }
@@ -14,6 +14,10 @@ export class FincaEmployeesProvider {
 
     getFincaEmployeeById(id: string): Promise<FincaEmployeeDetail> {
         return this.repository.getFincaEmployeeById(id);
+    }
+
+    updateFincaEmployeeById(payload: UpdateFincaEmployeePayload, id: string): Promise<string> {
+        return this.repository.updateFincaEmployeeById(payload, id);
     }
 
     resignFincaEmployee(id: string): Promise<string> {

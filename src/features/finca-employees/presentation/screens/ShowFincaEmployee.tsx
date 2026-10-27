@@ -1,6 +1,6 @@
 import { CustomFilledButton, Spinner, useNotification } from "@/features/shared/shared";
 import { FincaEmployeeAreas, ResignBadge, fincaEmployeeFullName, fincaEmployeesRepositoryProvider } from "@/features/finca-employees/finca-employees";
-import { ArrowLeft, Building2, IdCard, User, UserCheck, UserMinus } from "lucide-react";
+import { ArrowLeft, Building2, EditIcon, IdCard, User, UserCheck, UserMinus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -63,6 +63,12 @@ export function ShowFincaEmployee() {
                     <button type="button" onClick={() => navigate('/empleados-fincas')} className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer dark:text-gray-400 dark:hover:text-gray-100">
                         <ArrowLeft className="h-4 w-4" /> Empleados Fincas
                     </button>
+                    <CustomFilledButton
+                        label="Editar"
+                        type="button"
+                        icon={<EditIcon className="h-4 w-4 text-white" />}
+                        onClick={() => navigate(`/empleados-fincas/${id}/editar`)}
+                    />
                 </div>
 
                 <div className="space-y-3">

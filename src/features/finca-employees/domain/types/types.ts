@@ -27,6 +27,9 @@ export type FincaEmployeePayload = {
     area: number[];
 }
 
+// Body de PATCH /employees-finca/:id; todos los campos son opcionales
+export type UpdateFincaEmployeePayload = Partial<FincaEmployeePayload>;
+
 export type AssignFincaAreaForm = {
     area_id: string;
 }

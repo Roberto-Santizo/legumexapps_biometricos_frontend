@@ -1,5 +1,5 @@
 import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination } from "@/features/shared/shared";
-import { EyeIcon, PlusIcon } from "lucide-react";
+import { EditIcon, EyeIcon, PlusIcon } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fincaPositionsRepositoryProvider } from "@/features/finca-positions/finca-positions";
@@ -81,6 +81,7 @@ export function FincaEmployees() {
                     <ActionsMenu
                       items={[
                         { label: 'Ver', icon: <EyeIcon />, onClick: () => navigate(`/empleados-fincas/${employee.id}`) },
+                        { label: 'Editar', icon: <EditIcon />, onClick: () => navigate(`/empleados-fincas/${employee.id}/editar`) },
                       ]}
                     />
                   </Td>

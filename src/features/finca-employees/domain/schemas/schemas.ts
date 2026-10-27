@@ -22,7 +22,10 @@ export const FincaEmployeeAreaSchema = z.object({
     area_name: z.string()
 });
 
+// El detalle incluye además los IDs de departamento y posición para precargar el formulario de actualización
 export const FincaEmployeeDetailSchema = FincaEmployeeSchema.extend({
+    department_id: z.number(),
+    position_id: z.number(),
     areas: z.array(FincaEmployeeAreaSchema)
 });
 

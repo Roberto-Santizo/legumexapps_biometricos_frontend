@@ -1,6 +1,6 @@
 import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
-import { FincaAreasSchema, FincaEmployeeDetailSchema, FincaEmployeesDatasource, FincaEmployeesSchema, type AddFincaEmployeeAreaPayload, type FincaArea, type FincaEmployee, type FincaEmployeeDetail, type FincaEmployeePayload, type FincaEmployeesFilters } from '@/features/finca-employees/finca-employees';
+import { FincaAreasSchema, FincaEmployeeDetailSchema, FincaEmployeesDatasource, FincaEmployeesSchema, type AddFincaEmployeeAreaPayload, type FincaArea, type FincaEmployee, type FincaEmployeeDetail, type FincaEmployeePayload, type FincaEmployeesFilters, type UpdateFincaEmployeePayload } from '@/features/finca-employees/finca-employees';
 
 // Las acciones de /employees-finca responden con el mensaje de confirmación en texto plano
 const toMessage = (data: unknown, fallback: string) => typeof data === 'string' && data ? data : fallback;
@@ -46,6 +46,16 @@ export class FincaEmployeesDatasourceImpl implements FincaEmployeesDatasource {
             }
 
             throw new Error("Información no válida");
+        } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
+
+    async updateFincaEmployeeById(payload: UpdateFincaEmployeePayload, id: string): Promise<string> {
+        try {
+            const url = `/employees-finca/${id}`;
+            const { data } = await this.api.patch(url, payload);
+            return toMessage(data, 'Empleado actualizado correctamente');
         } catch (error) {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }
