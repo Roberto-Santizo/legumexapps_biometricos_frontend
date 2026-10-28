@@ -1,17 +1,12 @@
-import { UploadPhotosResultSchema } from "@/features/photos/photos";
+import { PhotoSchema, UploadPhotosResultSchema } from "@/features/photos/photos";
 import type { z } from "zod";
 
 export type UploadPhotosResult = z.infer<typeof UploadPhotosResultSchema>;
 
-// Cómo llegó la foto a la sesión: subida en lote, consultada por PIN o reemplazada desde su marco
-export type PhotoOrigin = 'subida' | 'consulta' | 'reemplazo';
+export type Photo = z.infer<typeof PhotoSchema>;
 
-// Foto que el usuario tocó en esta sesión; el backend no tiene listado, así que se recuerda en el navegador
-export type SessionPhoto = {
-    key: string;
-    origin: PhotoOrigin;
-    // marca de tiempo; también rompe la caché de la imagen tras reemplazarla o eliminarla
-    version: number;
+export type PhotosFilters = {
+    code?: string;
 }
 
 // Archivo preparado en la mesa de carga, antes de enviarlo

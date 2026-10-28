@@ -44,4 +44,5 @@ export type FincaEmployeesFilters = {
     last_name?: string;
     emp_code?: string;
     position_id?: string;
+    department_id?: string;
 }

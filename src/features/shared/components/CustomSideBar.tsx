@@ -13,6 +13,8 @@ type Props = {
 
 export function CustomSideBar({ open, onClose }: Props) {
   const { hasRole } = useRoles();
+  const canSeeGeneral = hasRole(ValidRoles.admin, ValidRoles.rrhh);
+  const canSeeFincas = hasRole(ValidRoles.admin, ValidRoles.fincas);
   // Abre la sección Fincas cuando la ruta actual pertenece a un módulo de fincas (listado o detalle)
   const isFincasRoute = /-fincas(\/|$)/.test(window.location.pathname);
   const user = useSelector((state: RootState) => state.auth.user)!;
@@ -50,7 +52,8 @@ export function CustomSideBar({ open, onClose }: Props) {
       </div>
 
       <nav className="ios-sidebar__nav">
-        {hasRole(ValidRoles.admin, ValidRoles.rrhh, ValidRoles.fincas) && (
+        {/* El selector solo aparece si el usuario tiene acceso a ambas secciones */}
+        {canSeeGeneral && canSeeFincas && (
           <div className="ios-sidebar__seg" role="radiogroup" aria-label="Sección del menú">
             <label className="ios-sidebar__seg-opt">
               <input type="radio" name="sidebar-section" value="general" className="ios-sidebar__seg-input" defaultChecked={!isFincasRoute} />
@@ -79,7 +82,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/empleados" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--green"><IdCard aria-hidden="true" /></span>
@@ -88,7 +91,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/empleados-inactivos" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--gray"><UserX aria-hidden="true" /></span>
@@ -97,7 +100,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/fotos" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--pink"><Images aria-hidden="true" /></span>
@@ -106,7 +109,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/transacciones-empleados" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--blue"><Fingerprint aria-hidden="true" /></span>
@@ -115,7 +118,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/tareas" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--indigo"><CalendarClock aria-hidden="true" /></span>
@@ -124,7 +127,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/departamentos" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--orange"><Building2 aria-hidden="true" /></span>
@@ -133,7 +136,7 @@ export function CustomSideBar({ open, onClose }: Props) {
               </NavLink>
             </li>
           )}
-          {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
+          {canSeeGeneral && (
             <li className="ios-sidebar__item">
               <NavLink to="/niveles-acceso" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--teal"><KeyRound aria-hidden="true" /></span>
@@ -143,35 +146,29 @@ export function CustomSideBar({ open, onClose }: Props) {
             </li>
           )}
         </ul>
-        {hasRole(ValidRoles.admin, ValidRoles.rrhh, ValidRoles.fincas) && (
+        {canSeeFincas && (
           <ul className="ios-sidebar__group ios-sidebar__panel ios-sidebar__panel--fincas">
-            {hasRole(ValidRoles.admin, ValidRoles.fincas) && (
-              <li className="ios-sidebar__item">
-                <NavLink to="/empleados-fincas" className="ios-sidebar__row">
-                  <span className="ios-sidebar__tile ios-sidebar__tile--green"><UsersRound aria-hidden="true" /></span>
-                  <span className="ios-sidebar__label">Empleados</span>
-                  <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
-                </NavLink>
-              </li>
-            )}
-            {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
-              <li className="ios-sidebar__item">
-                <NavLink to="/departamentos-fincas" className="ios-sidebar__row">
-                  <span className="ios-sidebar__tile ios-sidebar__tile--green"><Tractor aria-hidden="true" /></span>
-                  <span className="ios-sidebar__label">Departamentos</span>
-                  <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
-                </NavLink>
-              </li>
-            )}
-            {hasRole(ValidRoles.admin, ValidRoles.rrhh) && (
-              <li className="ios-sidebar__item">
-                <NavLink to="/posiciones-fincas" className="ios-sidebar__row">
-                  <span className="ios-sidebar__tile ios-sidebar__tile--green"><Network aria-hidden="true" /></span>
-                  <span className="ios-sidebar__label">Posiciones</span>
-                  <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
-                </NavLink>
-              </li>
-            )}
+            <li className="ios-sidebar__item">
+              <NavLink to="/empleados-fincas" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--green"><UsersRound aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Empleados</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+            <li className="ios-sidebar__item">
+              <NavLink to="/departamentos-fincas" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--green"><Tractor aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Departamentos</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+            <li className="ios-sidebar__item">
+              <NavLink to="/posiciones-fincas" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--green"><Network aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Posiciones</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
           </ul>
         )}
       </nav>

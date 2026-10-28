@@ -2,10 +2,11 @@ import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Pagination,
 import { EditIcon, EyeIcon, PlusIcon } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { fincaDepartmentsRepositoryProvider } from "@/features/finca-departments/finca-departments";
 import { fincaPositionsRepositoryProvider } from "@/features/finca-positions/finca-positions";
 import { ResignBadge, fincaEmployeesRepositoryProvider } from "@/features/finca-employees/finca-employees";
 
-// El filtro de posición necesita el catálogo completo; el backend no expone un endpoint sin paginar
+// Los filtros de departamento y posición necesitan el catálogo completo; el backend no expone un endpoint sin paginar
 const CATALOG_LIMIT = 1000;
 
 export function FincaEmployees() {
@@ -16,10 +17,17 @@ export function FincaEmployees() {
   const last_name = searchParams.get('last_name') ?? '';
   const emp_code = searchParams.get('emp_code') ?? '';
   const position_id = searchParams.get('position_id') ?? '';
+  const department_id = searchParams.get('department_id') ?? '';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['getFincaEmployees', page, rowsPerPage, first_name, last_name, emp_code, position_id],
-    queryFn: () => fincaEmployeesRepositoryProvider.getFincaEmployees(page, rowsPerPage, { first_name, last_name, emp_code, position_id })
+    queryKey: ['getFincaEmployees', page, rowsPerPage, first_name, last_name, emp_code, position_id, department_id],
+    queryFn: () => fincaEmployeesRepositoryProvider.getFincaEmployees(page, rowsPerPage, { first_name, last_name, emp_code, position_id, department_id })
+  });
+
+  const { data: departments } = useQuery({
+    queryKey: ['getFincaDepartments', 'catalog'],
+    queryFn: () => fincaDepartmentsRepositoryProvider.getFincaDepartments(0, CATALOG_LIMIT),
+    select: (response) => response.data
   });
 
   const { data: positions } = useQuery({
@@ -37,6 +45,11 @@ export function FincaEmployees() {
           fields={[
             { name: 'first_name', label: 'Nombres', placeholder: 'Buscar por nombres' },
             { name: 'last_name', label: 'Código', placeholder: 'Buscar por código de empleado' },
+            {
+              name: 'department_id',
+              label: 'Departamento',
+              options: departments?.map(department => ({ value: String(department.id), label: department.dept_name })) ?? []
+            },
             {
               name: 'position_id',
               label: 'Posición',

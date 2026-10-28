@@ -1,4 +1,2 @@
-export * from './PhotoFrame';
-export * from './PhotoLookup';
+export * from './CreatePhotoModal';
 export * from './UploadTray';
-export * from './SessionSheet';
