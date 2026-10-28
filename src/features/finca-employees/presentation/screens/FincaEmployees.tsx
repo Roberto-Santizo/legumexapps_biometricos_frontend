@@ -61,6 +61,7 @@ export function FincaEmployees() {
         <>
           <Table>
             <Thead>
+              <Th text="Código Empleado" />
               <Th text="Código" />
               <Th text="Nombres" />
               <Th text="Departamento" />
@@ -72,6 +73,7 @@ export function FincaEmployees() {
             <Tbody>
               {data.data.map(employee => (
                 <Tr key={employee.id}>
+                  <Td>{employee.emp_code}</Td>
                   <Td>{employee.last_name || '—'}</Td>
                   <Td>{employee.first_name}</Td>
                   <Td>{employee.department}</Td>

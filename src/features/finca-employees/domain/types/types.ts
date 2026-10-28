@@ -9,13 +9,13 @@ export type FincaEmployeeArea = z.infer<typeof FincaEmployeeAreaSchema>;
 
 export type FincaArea = z.infer<typeof FincaAreaSchema>;
 
-// Valores del formulario: los selects y checkboxes entregan los IDs como texto
+// Valores del formulario: los selects y radios entregan los IDs como texto
 export type FincaEmployeeForm = {
     first_name: string;
     last_name: string;
     department: string;
     position: string;
-    area: string[];
+    area: string;
 }
 
 // Body de POST /employees-finca; el código de empleado lo asigna el backend
@@ -24,7 +24,7 @@ export type FincaEmployeePayload = {
     last_name: string;
     department: number;
     position: number;
-    area: number[];
+    area: number;
 }
 
 // Body de PATCH /employees-finca/:id; todos los campos son opcionales
