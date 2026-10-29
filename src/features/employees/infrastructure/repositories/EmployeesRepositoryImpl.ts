@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "@/features/shared/shared";
-import { EmployeesDatasource, EmployeesRepository, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters } from '@/features/employees/employees';
+import { EmployeesDatasource, EmployeesRepository, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters, type UpdateEmployeePayload } from '@/features/employees/employees';
 
 export class EmployeesRepositoryImpl implements EmployeesRepository {
     constructor(private datasource: EmployeesDatasource) { }
@@ -14,6 +14,10 @@ export class EmployeesRepositoryImpl implements EmployeesRepository {
 
     getEmployeeById(id: string): Promise<Employee> {
         return this.datasource.getEmployeeById(id);
+    }
+
+    updateEmployeeById(payload: UpdateEmployeePayload, id: string): Promise<string> {
+        return this.datasource.updateEmployeeById(payload, id);
     }
 
     getEmployeeLevels(id: string): Promise<EmployeeLevel[]> {

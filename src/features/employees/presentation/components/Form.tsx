@@ -3,6 +3,7 @@ import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { departmentsRepositoryProvider } from "@/features/departments/departments";
 import { accessLevelsRepositoryProvider } from "@/features/access-levels/access-levels";
+import { positionsRepositoryProvider } from "@/features/positions/positions";
 import { AccessLevelsFormField, type EmployeeForm } from "@/features/employees/employees";
 
 // Los catálogos se usan completos en los selectores; el backend no expone un endpoint sin paginar
@@ -12,9 +13,11 @@ type Props = {
   register: UseFormRegister<EmployeeForm>;
   errors: FieldErrors<EmployeeForm>;
   isEdit?: boolean;
+  // Posición actual del empleado en edición: se mantiene seleccionable aunque ya tenga empleado
+  currentPositionId?: string | null;
 }
 
-export function Form({ register, errors, isEdit = false }: Props) {
+export function Form({ register, errors, isEdit = false, currentPositionId }: Props) {
   const { data: departments } = useQuery({
     queryKey: ['getDepartments', 'catalog'],
     queryFn: () => departmentsRepositoryProvider.getDepartments(0, CATALOG_LIMIT),
@@ -27,7 +30,13 @@ export function Form({ register, errors, isEdit = false }: Props) {
     select: (response) => response.data
   });
 
-  if (!departments || !levels) return <LoadingData />
+  const { data: positions } = useQuery({
+    queryKey: ['getPositions', 'catalog'],
+    queryFn: () => positionsRepositoryProvider.getPositions(0, CATALOG_LIMIT),
+    select: (response) => response.data
+  });
+
+  if (!departments || !levels || !positions) return <LoadingData />
 
   return (
     <>
@@ -45,9 +54,9 @@ export function Form({ register, errors, isEdit = false }: Props) {
       />
 
       <TextFormField<EmployeeForm>
-        label="Posición"
+        label="Apellidos"
         name="lastName"
-        placeholder="Posición del empleado"
+        placeholder="Apellidos del empleado"
         register={register}
         type="text"
         validation={{
@@ -89,6 +98,32 @@ export function Form({ register, errors, isEdit = false }: Props) {
         </select>
 
         <p className="text-red-400 text-xs">{errors.deptCode?.message}</p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="position_id">
+          Posición
+        </label>
+
+        <select
+          id="position_id"
+          aria-invalid={!!errors.position_id}
+          className={errors.position_id ? 'text_form_field_error' : 'text_form_field'}
+          {...register('position_id', { required: 'Seleccione una posición' })}
+        >
+          <option value="" disabled>Seleccione una posición</option>
+          {/* El backend rechaza posiciones que ya tienen un empleado asignado */}
+          {positions.map(position => {
+            const taken = !!position.employee && position.id !== currentPositionId;
+            return (
+              <option key={position.id} value={position.id} disabled={taken}>
+                {position.name} ({position.code}){taken ? ` · ocupada por ${position.employee}` : ''}
+              </option>
+            );
+          })}
+        </select>
+
+        <p className="text-red-400 text-xs">{errors.position_id?.message}</p>
       </div>
 
       <AccessLevelsFormField register={register} levels={levels} single={isEdit} errorMessage={errors.accLevelIds?.message} />

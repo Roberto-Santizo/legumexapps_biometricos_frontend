@@ -22,6 +22,8 @@ export function CreateEmployee() {
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
+      // La posición asignada deja de estar disponible
+      queryClient.invalidateQueries({ queryKey: ['getPositions'] });
       navigate('/empleados');
     },
     onError: (err) => {
@@ -33,7 +35,7 @@ export function CreateEmployee() {
 
   return (
     <div className="space-y-5">
-      <Title title="Creación de Empleado" subtitle="Si el PIN ya existe en ZKBioAccess, el empleado se actualiza" />
+      <Title title="Creación de Empleado" subtitle="El PIN debe ser único y la posición no debe tener un empleado asignado" />
 
       <form className="form w-full mx-auto lg:w-2/3" noValidate onSubmit={handleSubmit(onSubmit)}>
         <Form register={register} errors={errors} />

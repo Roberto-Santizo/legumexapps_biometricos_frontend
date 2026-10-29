@@ -2,7 +2,7 @@ import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Pagination,
 import { EditIcon, EyeIcon, PlusIcon, SmileIcon } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { employeesRepositoryProvider } from "@/features/employees/employees";
+import { employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
 
 export function Employees() {
   const navigate = useNavigate();
@@ -42,6 +42,7 @@ export function Employees() {
             <Thead>
               <Th text="Código" />
               <Th text="Nombre" />
+              <Th text="Posición" />
               <Th text="Departamento" />
               <Th text="Creado por" />
               <Th text="Fotografía" />
@@ -52,7 +53,8 @@ export function Employees() {
               {data.data.map(employee => (
                 <Tr key={employee.id}>
                   <Td>{employee.pin}</Td>
-                  <Td>{employee.name}</Td>
+                  <Td>{employeeFullName(employee)}</Td>
+                  <Td>{employee.position_id ? employee.position : '—'}</Td>
                   <Td>{employee.department || '—'}</Td>
                   <Td>{employee.createdBy || '—'}</Td>
                   <Td>{employee.hasPhoto ? <SmileIcon className="text-green-500"/> : <SmileIcon className="text-red-500"/>}</Td>

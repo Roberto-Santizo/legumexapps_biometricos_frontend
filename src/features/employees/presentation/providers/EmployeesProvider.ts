@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from "@/features/shared/shared";
-import type { Employee, EmployeeLevel, EmployeeListItem, EmployeePayload, EmployeesFilters, EmployeesRepository } from "@/features/employees/employees";
+import type { Employee, EmployeeLevel, EmployeeListItem, EmployeePayload, EmployeesFilters, EmployeesRepository, UpdateEmployeePayload } from "@/features/employees/employees";
 
 export class EmployeesProvider {
     constructor(private repository: EmployeesRepository) { }
@@ -14,6 +14,10 @@ export class EmployeesProvider {
 
     getEmployeeById(id: string): Promise<Employee> {
         return this.repository.getEmployeeById(id);
+    }
+
+    updateEmployeeById(payload: UpdateEmployeePayload, id: string): Promise<string> {
+        return this.repository.updateEmployeeById(payload, id);
     }
 
     getEmployeeLevels(id: string): Promise<EmployeeLevel[]> {

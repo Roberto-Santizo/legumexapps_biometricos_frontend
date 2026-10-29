@@ -1,20 +1,38 @@
 import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
-import { EmployeeLevelsSchema, EmployeeListItemSchema, EmployeeListSchema, EmployeesDatasource, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters } from '@/features/employees/employees';
+import { EmployeeLevelsSchema, EmployeeListItemSchema, EmployeeListSchema, EmployeesDatasource, type Employee, type EmployeeLevel, type EmployeeListItem, type EmployeePayload, type EmployeesFilters, type UpdateEmployeePayload } from '@/features/employees/employees';
+
+// Las acciones de /employees responden con el mensaje de confirmación en texto plano
+const toMessage = (data: unknown, fallback: string) => typeof data === 'string' && data ? data : fallback;
+
+const toFormData = (payload: EmployeePayload | UpdateEmployeePayload) => {
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined) formData.append(key, value);
+    });
+    return formData;
+}
 
 export class EmployeesDatasourceImpl implements EmployeesDatasource {
     constructor(private api: AxiosInstance) { }
 
-    // POST /employees (multipart, foto en el campo `file`) crea o actualiza al empleado en ZKBioAccess
+    // POST /employees (multipart, foto en el campo `file`) crea al empleado en ZKBioAccess
     async saveEmployee(payload: EmployeePayload): Promise<string> {
         try {
             const url = '/employees';
-            const formData = new FormData();
-            Object.entries(payload).forEach(([key, value]) => {
-                if (value !== undefined) formData.append(key, value);
-            });
-            await this.api.post(url, formData);
-            return `Empleado ${payload.name} ${payload.lastName} guardado correctamente`;
+            const { data } = await this.api.post(url, toFormData(payload));
+            return toMessage(data, `Empleado ${payload.name} ${payload.lastName} creado correctamente`);
+        } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
+
+    // PATCH /employees/:id (multipart, foto opcional en el campo `file`); no acepta el PIN
+    async updateEmployeeById(payload: UpdateEmployeePayload, id: string): Promise<string> {
+        try {
+            const url = `/employees/${id}`;
+            const { data } = await this.api.patch(url, toFormData(payload));
+            return toMessage(data, 'Empleado actualizado correctamente');
         } catch (error) {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }
@@ -74,7 +92,7 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
         try {
             const url = `/employees/status/inactiveEmployee/${id}`;
             const { data } = await this.api.post(url);
-            return typeof data === 'string' && data ? data : 'Empleado dado de baja correctamente';
+            return toMessage(data, 'Empleado dado de baja correctamente');
         } catch (error) {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }
@@ -87,7 +105,7 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
             const formData = new FormData();
             formData.append('file', file);
             const { data } = await this.api.post(url, formData);
-            return typeof data === 'string' && data ? data : 'Foto actualizada correctamente';
+            return toMessage(data, 'Foto actualizada correctamente');
         } catch (error) {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }

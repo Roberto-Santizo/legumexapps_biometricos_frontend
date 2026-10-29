@@ -1,4 +1,4 @@
-import type { EmployeeForm, EmployeePayload } from "@/features/employees/employees";
+import type { EmployeeForm, EmployeePayload, UpdateEmployeePayload } from "@/features/employees/employees";
 
 // datetime-local entrega "YYYY-MM-DDTHH:mm"; ZKBioAccess espera "YYYY-MM-DD HH:mm:ss"
 const toZkDateTime = (value: string) => {
@@ -12,11 +12,19 @@ export const toEmployeePayload = (form: EmployeeForm): EmployeePayload => ({
     lastName: form.lastName.trim(),
     pin: form.pin.trim(),
     deptCode: form.deptCode,
+    position_id: form.position_id,
     accLevelIds: [form.accLevelIds].flat().join(','),
     accStartTime: toZkDateTime(form.accStartTime),
     accEndTime: toZkDateTime(form.accEndTime),
     file: form.file ?? undefined
 });
+
+// PATCH /employees/:id rechaza el PIN como propiedad no permitida
+export const toUpdateEmployeePayload = (form: EmployeeForm): UpdateEmployeePayload => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { pin, ...payload } = toEmployeePayload(form);
+    return payload;
+}
 
 // En ZKBioAccess los apellidos pueden venir nulos o vacíos
 export const employeeFullName = (employee: { name: string; last_name?: string | null }) =>
@@ -27,6 +35,7 @@ export const emptyEmployeeForm: EmployeeForm = {
     lastName: '',
     pin: '',
     deptCode: '',
+    position_id: '',
     accLevelIds: [],
     accStartTime: '',
     accEndTime: '',

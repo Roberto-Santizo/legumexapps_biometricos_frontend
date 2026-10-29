@@ -1,5 +1,5 @@
 import { CustomFilledButton, Spinner, Title, useNotification } from "@/features/shared/shared";
-import { Form, emptyEmployeeForm, employeeFullName, employeesRepositoryProvider, toEmployeePayload, type EmployeeForm, type EmployeePayload } from "@/features/employees/employees";
+import { Form, emptyEmployeeForm, employeeFullName, employeesRepositoryProvider, toUpdateEmployeePayload, type EmployeeForm, type UpdateEmployeePayload } from "@/features/employees/employees";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -29,14 +29,15 @@ export function UpdateEmployee() {
     reset
   } = useForm<EmployeeForm>({ defaultValues: emptyEmployeeForm });
 
-  // La actualización usa el mismo POST /employees: ZKBioAccess actualiza al empleado por su PIN
+  // PATCH /employees/:id; el PIN no es editable y no se envía
   const { mutate, isPending } = useMutation({
-    mutationFn: (payload: EmployeePayload) => employeesRepositoryProvider.saveEmployee(payload),
+    mutationFn: (payload: UpdateEmployeePayload) => employeesRepositoryProvider.updateEmployeeById(payload, id),
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
       queryClient.invalidateQueries({ queryKey: ['getEmployeeById', id] });
       queryClient.invalidateQueries({ queryKey: ['getEmployeeLevels', id] });
+      queryClient.invalidateQueries({ queryKey: ['getPositions'] });
       navigate(`/empleados/${id}`);
     },
     onError: (err) => {
@@ -52,14 +53,14 @@ export function UpdateEmployee() {
         lastName: data.last_name ?? '',
         pin: data.pin,
         deptCode: data.departmentCode ?? '',
+        position_id: data.position_id ?? '',
         // Solo se permite un nivel: se preselecciona el primero asignado
         accLevelIds: levels[0]?.level_id ?? ''
       });
     }
   }, [data, levels, reset]);
 
-  // El PIN identifica al empleado: siempre se envía el original aunque el input sea de solo lectura
-  const onSubmit = (form: EmployeeForm) => mutate(toEmployeePayload({ ...form, pin: data!.pin }));
+  const onSubmit = (form: EmployeeForm) => mutate(toUpdateEmployeePayload(form));
 
   if (isLoading || isLoadingLevels) return <Spinner />
   if (data && levels) return (
@@ -67,7 +68,7 @@ export function UpdateEmployee() {
       <Title title="Actualización de empleado" subtitle={`${employeeFullName(data)} · PIN ${data.pin}`} />
 
       <form className="form w-full mx-auto lg:w-2/3" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Form register={register} errors={errors} isEdit={true} />
+        <Form register={register} errors={errors} isEdit={true} currentPositionId={data.position_id} />
 
         <CustomFilledButton label="Guardar Cambios" type="submit" fullWitdh={true} disabled={isPending} />
       </form>

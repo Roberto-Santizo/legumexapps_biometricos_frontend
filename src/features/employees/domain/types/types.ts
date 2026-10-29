@@ -13,6 +13,7 @@ export type EmployeeForm = {
     lastName: string;
     pin: string;
     deptCode: string;
+    position_id: string;
     accLevelIds: string[] | string;
     accStartTime: string;
     accEndTime: string;
@@ -20,17 +21,21 @@ export type EmployeeForm = {
     file: File | null;
 }
 
-// Body multipart de POST /employees (crea o actualiza si el PIN ya existe)
+// Body multipart de POST /employees; responde 400 si el PIN ya existe
 export type EmployeePayload = {
     name: string;
     lastName: string;
     pin: string;
     deptCode: string;
+    position_id: string;
     accLevelIds: string;
     accStartTime?: string;
     accEndTime?: string;
     file?: File;
 }
+
+// Body multipart de PATCH /employees/:id; el backend rechaza el PIN
+export type UpdateEmployeePayload = Omit<EmployeePayload, 'pin'>;
 
 export type EmployeesFilters = {
     name?: string;

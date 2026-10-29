@@ -38,6 +38,7 @@ export function ShowEmployee() {
             queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
             queryClient.removeQueries({ queryKey: ['getEmployeeById', id] });
             queryClient.removeQueries({ queryKey: ['getEmployeeLevels', id] });
+            queryClient.invalidateQueries({ queryKey: ['getPositions'] });
             navigate('/empleados');
         },
         onError: (err) => {
@@ -76,7 +77,8 @@ export function ShowEmployee() {
         const rows: Row[] = [
             { icon: <Hash className="h-4 w-4" />, label: 'Código', value: data.pin },
             { icon: <User className="h-4 w-4" />, label: 'Nombres', value: data.name },
-            { icon: <IdCard className="h-4 w-4" />, label: 'Posición', value: data.last_name || '—' },
+            { icon: <User className="h-4 w-4" />, label: 'Apellidos', value: data.last_name || '—' },
+            { icon: <IdCard className="h-4 w-4" />, label: 'Posición', value: data.position_id ? data.position : 'Sin posición asignada' },
             { icon: <Building2 className="h-4 w-4" />, label: 'Departamento', value: data.department || '—' },
             { icon: <ShieldCheck className="h-4 w-4" />, label: 'Credencial', value: hasPhoto ? 'Habilitada' : 'Deshabilitada' },
         ];
