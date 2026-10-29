@@ -21,8 +21,21 @@
         color-scheme: light;
     }
 
+    /* Modo oscuro: escala gray neutra (sin tinte azul) alineada con los grises del sidebar iOS.
+       Redefine las variables de tema, así todas las utilidades dark:*-gray-* la usan */
     .dark {
         color-scheme: dark;
+        --color-gray-50: oklch(98.5% 0 0);
+        --color-gray-100: oklch(97% 0 0);
+        --color-gray-200: oklch(92.2% 0 0);
+        --color-gray-300: oklch(87% 0 0);
+        --color-gray-400: oklch(70.8% 0 0);
+        --color-gray-500: oklch(55.6% 0 0);
+        --color-gray-600: #48484A;
+        --color-gray-700: #3A3A3C;
+        --color-gray-800: #2C2C2E;
+        --color-gray-900: #1C1C1E;
+        --color-gray-950: #000000;
     }
 
     body {
@@ -52,8 +65,8 @@
 }
 
 .dark .form {
-    background: oklch(21% 0.034 264.665);
-    border-color: oklch(37.3% 0.034 259.733);
+    background: var(--color-gray-900);
+    border-color: var(--color-gray-700);
 }
 
 /* Campos de línea dentro de formularios: foco verde, acción dominante */
@@ -94,7 +107,7 @@
 .dark .form .text_form_field,
 .dark .form .text_form_field_error {
     background: transparent;
-    border-bottom-color: oklch(44.6% 0.043 257.281);
+    border-bottom-color: var(--color-gray-600);
 }
 
 .form p.text-red-400:empty {
@@ -130,7 +143,7 @@
 }
 
 .dark .thead {
-    background: oklch(21% 0.034 264.665);
+    background: var(--color-gray-800);
 }
 
 .thead-th {
@@ -141,7 +154,7 @@
 }
 
 .dark .thead-th {
-    color: oklch(87% 0.01 258);
+    color: var(--color-gray-300);
 }
 
 .tbody {
@@ -161,11 +174,11 @@
 }
 
 .dark .tbody-tr:nth-child(even) {
-    background: oklch(21% 0.034 264.665 / 0.6);
+    background: color-mix(in oklab, var(--color-gray-800) 40%, transparent);
 }
 
 .dark .tbody-tr:hover {
-    background: oklch(27.8% 0.033 256.848);
+    background: var(--color-gray-800);
 }
 
 /* Tipografía de filas: cuerpo legible, cifras tabulares, primera columna como ancla */
@@ -183,11 +196,11 @@
 }
 
 .dark .tbody-td {
-    color: oklch(80% 0.015 258);
+    color: oklch(80% 0 0);
 }
 
 .dark .tbody-td:first-child {
-    color: oklch(96.7% 0.003 264.542);
+    color: var(--color-gray-100);
 }
 
 .input-filter {
@@ -604,7 +617,7 @@
 }
 
 .dark .photo-frame {
-    --mark-color: oklch(44.6% 0.043 257.281);
+    --mark-color: var(--color-gray-600);
 }
 
 .photo-frame[data-status="empty"] {
@@ -612,7 +625,7 @@
 }
 
 .dark .photo-frame[data-status="empty"] {
-    --mark-color: oklch(30% 0.03 260);
+    --mark-color: var(--color-gray-800);
 }
 
 .group\/frame:hover .photo-frame[data-status="ready"],
@@ -632,4 +645,41 @@
     .photo-frame {
         transition: none;
     }
+}
+
+/* Tarjetas de métricas principales (StatCard primary): cada una se tiñe con su --tone */
+.stat-card {
+    background-color: color-mix(in oklch, var(--tone) 7%, white);
+    border-color: color-mix(in oklch, var(--tone) 22%, oklch(92.9% 0.013 255.508));
+}
+
+a.stat-card:hover {
+    border-color: color-mix(in oklch, var(--tone) 45%, oklch(92.9% 0.013 255.508));
+}
+
+.stat-card__value {
+    color: color-mix(in oklch, var(--tone) 60%, oklch(20.8% 0.042 265.755));
+}
+
+.stat-card__chip {
+    background-color: var(--tone);
+    color: white;
+    box-shadow: 0 2px 6px -2px color-mix(in oklch, var(--tone) 60%, transparent);
+}
+
+.dark .stat-card {
+    background-color: color-mix(in oklab, var(--tone) 14%, var(--color-gray-900));
+    border-color: color-mix(in oklab, var(--tone) 35%, var(--color-gray-700));
+}
+
+.dark a.stat-card:hover {
+    border-color: color-mix(in oklab, var(--tone) 60%, var(--color-gray-700));
+}
+
+.dark .stat-card__value {
+    color: color-mix(in oklch, var(--tone) 45%, white);
+}
+
+.dark .stat-card__chip {
+    box-shadow: none;
 }

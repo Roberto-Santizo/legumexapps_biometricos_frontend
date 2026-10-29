@@ -1,12 +1,11 @@
-import { FilterDrawer, Table, Tbody, Td, Th, Thead, Title, Tr, useRoles, WorkingOnIt } from "@/features/shared/shared";
+import { FilterDrawer, Title, useRoles, WorkingOnIt } from "@/features/shared/shared";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/config/config";
 import { ValidRoles } from "@/features/auth/auth";
-import { taskTypeLabels } from "@/features/tasks/tasks";
 import { Building2, Briefcase, CalendarClock, Fingerprint, Images, TriangleAlert, UserX, Users } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { BarList, DailyTransactionsChart, dashboardRepositoryProvider, formatDay, formatNumber, Panel, PanelError, PanelSkeleton, percentage, SegmentBar, StatCard, StatCardSkeleton, TaskList, type DashboardFilters } from "@/features/dashboard/dashboard";
+import { dashboardRepositoryProvider, formatDay, formatNumber, Panel, PanelError, PanelSkeleton, percentage, SegmentBar, StatCard, StatCardSkeleton, TaskList, type DashboardFilters } from "@/features/dashboard/dashboard";
 
 export function Dashboard() {
     const user = useSelector((state: RootState) => state.auth.user)!;
@@ -33,19 +32,9 @@ function DashboardMetrics() {
         queryFn: () => dashboardRepositoryProvider.getSummary(filters)
     });
 
-    const transactions = useQuery({
-        queryKey: ['getDashboardTransactions', filters],
-        queryFn: () => dashboardRepositoryProvider.getTransactions(filters)
-    });
-
     const tasks = useQuery({
         queryKey: ['getDashboardTasks', filters],
         queryFn: () => dashboardRepositoryProvider.getTasks(filters)
-    });
-
-    const employees = useQuery({
-        queryKey: ['getDashboardEmployees'],
-        queryFn: () => dashboardRepositoryProvider.getEmployees()
     });
 
     const positions = useQuery({
@@ -54,7 +43,7 @@ function DashboardMetrics() {
     });
 
     // El rango aplicado lo devuelve el backend (por defecto últimos 30 días)
-    const range = transactions.data ?? tasks.data;
+    const range = tasks.data;
     const rangeLabel = range ? `${formatDay(range.start_date, { dateStyle: 'medium' })} – ${formatDay(range.end_date, { dateStyle: 'medium' })}` : 'Últimos 30 días';
 
     return (
@@ -79,8 +68,9 @@ function DashboardMetrics() {
 
                 {summary.data && (
                     <>
-                        <StatCard tone="blue" icon={<Users />} label="Empleados activos" value={formatNumber(summary.data.employees_total)} to="/empleados" />
+                        <StatCard primary tone="blue" icon={<Users />} label="Empleados activos" value={formatNumber(summary.data.employees_total)} to="/empleados" />
                         <StatCard
+                            primary
                             tone="green"
                             icon={<Fingerprint />}
                             label="Marcajes hoy"
@@ -89,6 +79,7 @@ function DashboardMetrics() {
                             to="/transacciones-empleados"
                         />
                         <StatCard
+                            primary
                             tone="violet"
                             icon={<Briefcase />}
                             label="Posiciones vacantes"
@@ -97,6 +88,7 @@ function DashboardMetrics() {
                             to="/posiciones"
                         />
                         <StatCard
+                            primary
                             tone={summary.data.tasks_failed > 0 ? 'red' : 'amber'}
                             icon={summary.data.tasks_failed > 0 ? <TriangleAlert /> : <CalendarClock />}
                             label="Tareas pendientes"
@@ -104,11 +96,10 @@ function DashboardMetrics() {
                             hint={`${formatNumber(summary.data.tasks_failed)} fallidas`}
                             to="/tareas"
                         />
-                        <StatCard tone="slate" icon={<UserX />} label="Bajas en el periodo" value={formatNumber(summary.data.inactive_employees_in_range)} to="/empleados-inactivos" />
-                        <StatCard tone="slate" icon={<Building2 />} label="Departamentos" value={formatNumber(summary.data.departments_total)} to="/departamentos" />
-                        <StatCard tone="slate" icon={<Briefcase />} label="Posiciones" value={formatNumber(summary.data.positions_total)} to="/posiciones" />
+                        <StatCard icon={<UserX />} label="Bajas en el periodo" value={formatNumber(summary.data.inactive_employees_in_range)} to="/empleados-inactivos" />
+                        <StatCard icon={<Building2 />} label="Departamentos" value={formatNumber(summary.data.departments_total)} to="/departamentos" />
+                        <StatCard icon={<Briefcase />} label="Posiciones" value={formatNumber(summary.data.positions_total)} to="/posiciones" />
                         <StatCard
-                            tone="slate"
                             icon={<Images />}
                             label="Fotos registradas"
                             value={formatNumber(summary.data.photos_total)}
@@ -119,102 +110,16 @@ function DashboardMetrics() {
                 )}
             </div>
 
-            {/* Marcajes */}
-            {transactions.isLoading && (
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <PanelSkeleton className="lg:col-span-2" />
-                    <PanelSkeleton />
-                </div>
-            )}
-            {transactions.isError && <PanelError message={transactions.error.message} />}
-            {transactions.data && (
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <Panel
-                        className="lg:col-span-2"
-                        title="Marcajes diarios"
-                        subtitle={`${formatNumber(transactions.data.total)} marcajes · ${formatNumber(transactions.data.unique_employees)} empleados distintos`}
-                    >
-                        <DailyTransactionsChart transactions={transactions.data} />
-                    </Panel>
-
-                    <Panel title="Marcajes por dispositivo" subtitle="Periodo seleccionado">
-                        <BarList
-                            items={transactions.data.by_device.map(device => ({ key: device.dev_alias, label: device.dev_alias, value: device.total }))}
-                            emptyMessage="Sin marcajes en el periodo"
-                            barClassName="bg-green-500/80 dark:bg-green-400/70"
-                        />
-                    </Panel>
-                </div>
-            )}
-
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                {transactions.data && (
-                    <Panel title="Marcajes por departamento" subtitle="Periodo seleccionado">
-                        <BarList
-                            items={transactions.data.by_department.map(department => ({ key: department.dept_name, label: department.dept_name, value: department.total }))}
-                            emptyMessage="Sin marcajes en el periodo"
-                        />
-                    </Panel>
-                )}
-
-                {employees.isLoading && <PanelSkeleton />}
-                {employees.isError && <PanelError message={employees.error.message} />}
-                {employees.data && (
-                    <Panel
-                        title="Empleados por departamento"
-                        subtitle={`${formatNumber(employees.data.with_position)} con posición · ${formatNumber(employees.data.without_position)} sin posición`}
-                    >
-                        <BarList
-                            items={employees.data.by_department.map(department => ({ key: department.dept_id, label: department.name, detail: department.code, value: department.total }))}
-                            emptyMessage="No hay departamentos registrados"
-                            barClassName="bg-violet-500/80 dark:bg-violet-400/70"
-                        />
-                    </Panel>
-                )}
-            </div>
-
             {/* Tareas */}
             {tasks.isLoading && (
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <PanelSkeleton />
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <PanelSkeleton />
                     <PanelSkeleton />
                 </div>
             )}
             {tasks.isError && <PanelError message={tasks.error.message} />}
             {tasks.data && (
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <Panel title="Tareas programadas" subtitle="Por fecha programada en el periodo">
-                        <div className="space-y-5">
-                            <SegmentBar
-                                segments={[
-                                    { label: 'Completadas', value: tasks.data.by_status.completada, color: 'bg-green-500' },
-                                    { label: 'Pendientes', value: tasks.data.by_status.pendiente, color: 'bg-amber-400' },
-                                    { label: 'Fallidas', value: tasks.data.by_status.fallida, color: 'bg-red-500' },
-                                ]}
-                            />
-
-                            <Table>
-                                <Thead>
-                                    <Th text="Tipo" />
-                                    <Th text="Pend." />
-                                    <Th text="Comp." />
-                                    <Th text="Fall." />
-                                </Thead>
-                                <Tbody>
-                                    {tasks.data.by_type.map(type => (
-                                        <Tr key={type.type}>
-                                            <Td>{taskTypeLabels[type.type]}</Td>
-                                            <Td>{formatNumber(type.pendiente)}</Td>
-                                            <Td>{formatNumber(type.completada)}</Td>
-                                            <Td>{formatNumber(type.fallida)}</Td>
-                                        </Tr>
-                                    ))}
-                                </Tbody>
-                            </Table>
-                        </div>
-                    </Panel>
-
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <Panel title="Próximas tareas" subtitle="Pendientes desde hoy" action={<Link to="/tareas" className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">Ver todas</Link>}>
                         <TaskList tasks={tasks.data.upcoming} emptyMessage="No hay tareas pendientes" />
                     </Panel>

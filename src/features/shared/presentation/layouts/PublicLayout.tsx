@@ -10,7 +10,7 @@ export function PublicLayout() {
   }
 
   return (
-    <main className="print:p-0 print:text-black h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-800 dark:from-gray-950 dark:via-slate-900 dark:to-gray-950">
+    <main className="print:p-0 print:text-black h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-800 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
       <Outlet />
     </main>
   );

@@ -45,7 +45,7 @@ export function ProtectedLayout() {
             <div className="flex h-full min-h-0 min-w-0 flex-col">
                 <CustomHeader open={sidebarOpen} onMenuClick={() => setSidebarOpen(true)} />
 
-                <section className="min-h-0 flex-1 overflow-y-auto bg-white p-4 sm:p-6 dark:bg-gray-950">
+                <section className="min-h-0 flex-1 overflow-y-auto bg-white p-4 sm:p-6 dark:bg-black">
                     <Outlet />
                 </section>
             </div>

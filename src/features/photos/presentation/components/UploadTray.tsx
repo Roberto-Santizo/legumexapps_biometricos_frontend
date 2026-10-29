@@ -14,18 +14,34 @@ type Props = {
 
 // Mesa donde se preparan las fotos antes de enviarlas: muestra con qué nombre quedará guardada cada una
 export function UploadTray({ staged, uploading, progress, onPick, onRemove, onClear, onUpload }: Props) {
+  // Sin fotos: invitación a seleccionar y las reglas de la carga a la vista
   if (staged.length === 0) return (
-    <button
-      type="button"
-      onClick={onPick}
-      className="flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 px-4 py-7 text-center transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-900"
-    >
-      <ImagePlus className="h-7 w-7 text-slate-400 dark:text-gray-500" aria-hidden="true" />
-      <span className="text-sm font-medium text-slate-700 dark:text-gray-200">Arrastre fotos a cualquier parte de la pantalla o haga clic para seleccionarlas</span>
-      <span className="text-xs text-slate-500 dark:text-gray-400">
-        JPG, PNG o GIF · hasta {MAX_PHOTOS_PER_UPLOAD} por carga · cada una se guarda como <span className="font-mono">NOMBRE.jpg</span>
-      </span>
-    </button>
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+      <div className="flex flex-col gap-4 border-b border-dashed border-slate-300 bg-slate-50/60 p-4 sm:flex-row sm:items-center sm:p-5 dark:border-gray-700 dark:bg-gray-900">
+        <span className="grid h-11 w-11 flex-none place-items-center rounded-xl bg-white text-slate-500 ring-1 ring-slate-200 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700">
+          <ImagePlus className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-slate-900 dark:text-gray-100">Arrastre fotos a cualquier parte de la pantalla</p>
+          <p className="mt-0.5 text-sm text-slate-500 dark:text-gray-400">o selecciónelas desde su equipo</p>
+        </div>
+        <CustomFilledButton label="Seleccionar fotos" type="button" icon={<Plus className="h-4 w-4 text-white" />} onClick={onPick} className="flex-none" />
+      </div>
+      <dl className="grid divide-y divide-slate-200 text-sm sm:grid-cols-3 sm:divide-x sm:divide-y-0 dark:divide-gray-700">
+        <div className="px-4 py-3 sm:px-5">
+          <dt className="text-xs font-medium text-slate-500 dark:text-gray-400">Formatos</dt>
+          <dd className="mt-0.5 text-slate-800 dark:text-gray-200">JPG, PNG o GIF</dd>
+        </div>
+        <div className="px-4 py-3 sm:px-5">
+          <dt className="text-xs font-medium text-slate-500 dark:text-gray-400">Límite</dt>
+          <dd className="mt-0.5 tabular-nums text-slate-800 dark:text-gray-200">Hasta {MAX_PHOTOS_PER_UPLOAD} fotos por carga</dd>
+        </div>
+        <div className="px-4 py-3 sm:px-5">
+          <dt className="text-xs font-medium text-slate-500 dark:text-gray-400">Nombre al guardar</dt>
+          <dd className="mt-0.5 text-slate-800 dark:text-gray-200">El del archivo: <span className="font-mono">PIN.png</span> → <span className="font-mono font-semibold">PIN.jpg</span></dd>
+        </div>
+      </dl>
+    </div>
   )
 
   const counts = staged.reduce<Record<string, number>>((acc, item) => ({ ...acc, [item.key]: (acc[item.key] ?? 0) + 1 }), {});

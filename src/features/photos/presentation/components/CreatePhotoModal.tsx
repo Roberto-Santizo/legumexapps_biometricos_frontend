@@ -32,18 +32,22 @@ export function CreatePhotoModal({ open, onClose }: Props) {
       <div className="space-y-4">
         <div>
           <label htmlFor={inputId} className="text-sm font-semibold text-slate-900 dark:text-gray-100">Código</label>
-          <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">Normalmente el PIN del empleado. La imagen se guarda como <span className="font-mono">{key || 'CÓDIGO'}.jpg</span>.</p>
-          <input
-            id={inputId}
-            type="text"
-            autoComplete="off"
-            spellCheck={false}
-            value={code}
-            onChange={(event) => setCode(event.target.value)}
-            disabled={isPending}
-            placeholder="10045"
-            className="input-filter mt-2 w-full font-mono tracking-wide sm:w-full"
-          />
+          <div className="mt-2 flex items-stretch overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600">
+            <input
+              id={inputId}
+              type="text"
+              autoComplete="off"
+              spellCheck={false}
+              value={code}
+              onChange={(event) => setCode(event.target.value)}
+              disabled={isPending}
+              placeholder="10045"
+              aria-describedby={`${inputId}-hint`}
+              className="min-w-0 flex-1 bg-transparent px-3 py-2 font-mono tracking-wide text-gray-900 placeholder-gray-400 outline-none dark:text-gray-100 dark:placeholder-gray-500"
+            />
+            <span className="grid place-items-center border-l border-gray-200 bg-slate-50 px-3 font-mono text-sm text-slate-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400">.jpg</span>
+          </div>
+          <p id={`${inputId}-hint`} className="mt-1.5 text-xs text-slate-500 dark:text-gray-400">Normalmente el PIN del empleado; es el nombre con el que se guarda la imagen.</p>
         </div>
 
         <ImageUploader
@@ -52,6 +56,7 @@ export function CreatePhotoModal({ open, onClose }: Props) {
           submitLabel="Crear foto"
           loading={isPending}
           disabled={!key}
+          className="border-0! bg-transparent! p-0!"
           onUpload={(file) => mutateAsync(file)}
         />
       </div>
