@@ -4,6 +4,7 @@ import { CreateDepartment, Departments, ShowDepartment, UpdateDepartment } from 
 import { CreateFincaDepartment, FincaDepartments, ShowFincaDepartment, UpdateFincaDepartment } from "@/features/finca-departments/finca-departments";
 import { CreateFincaPosition, FincaPositions, ShowFincaPosition, UpdateFincaPosition } from "@/features/finca-positions/finca-positions";
 import { CreateFincaEmployee, FincaEmployees, ShowFincaEmployee, UpdateFincaEmployee } from "@/features/finca-employees/finca-employees";
+import { CreatePosition, Positions, ShowPosition, UpdatePosition } from "@/features/positions/positions";
 import { AccessLevels, CreateAccessLevel, ShowAccessLevel, UpdateAccessLevel } from "@/features/access-levels/access-levels";
 import { CreateEmployee, Employees, ShowEmployee, UpdateEmployee } from "@/features/employees/employees";
 import { InactiveEmployees, ShowInactiveEmployee } from "@/features/inactive-employees/inactive-employees";
@@ -46,6 +47,15 @@ export default function AppRouter() {
                         <Route path="/departamentos/crear" element={<CreateDepartment />} />
                         <Route path="/departamentos/:id" element={<ShowDepartment />} />
                         <Route path="/departamentos/:id/editar" element={<UpdateDepartment />} />
+                    </Route>
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                        <Route path="/posiciones" element={<Positions />} />
+                        <Route path="/posiciones/crear" element={<CreatePosition />} />
+                        <Route path="/posiciones/:id" element={<ShowPosition />} />
+                        <Route path="/posiciones/:id/editar" element={<UpdatePosition />} />
                     </Route>
                 </Route>
 
