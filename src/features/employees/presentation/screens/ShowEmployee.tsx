@@ -1,8 +1,9 @@
 import { CustomFilledButton, ImageUploader, Spinner, useNotification, ZoomablePhoto } from "@/features/shared/shared";
-import { EmployeeLevels, employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
-import { ArrowLeft, Building2, EditIcon, Hash, IdCard, ShieldCheck, User, UserMinus } from "lucide-react";
+import { EmployeeLevels, employeeFullName, employeesRepositoryProvider, RemoveEmployeeModal } from "@/features/employees/employees";
+import { ArrowLeft, Building2, EditIcon, Hash, IdCard, ShieldCheck, Trash2, User, UserMinus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 
 type Row = { icon: React.ReactNode; label: string; value: string | number };
 
@@ -58,11 +59,38 @@ export function ShowEmployee() {
         }
     });
 
+    const [removeModal, setRemoveModal] = useState(false);
+
+    const { mutate: removeEmployee, isPending: isRemoving } = useMutation({
+        mutationFn: (pin: string) => employeesRepositoryProvider.removeEmployee(pin),
+        onSuccess: (message) => {
+            notification.success(message);
+            setRemoveModal(false);
+            queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
+            queryClient.invalidateQueries({ queryKey: ['getInactiveEmployees'] });
+            queryClient.removeQueries({ queryKey: ['getEmployeeById', id] });
+            queryClient.removeQueries({ queryKey: ['getEmployeeLevels', id] });
+            queryClient.invalidateQueries({ queryKey: ['getPositions'] });
+            navigate('/empleados');
+        },
+        onError: (err) => {
+            notification.error(err.message);
+        }
+    });
+
     const handleInactive = () => notification.question(
         '¿Desea dar de baja al empleado?',
         'Dar de baja',
         'El empleado será dado de baja en ZKBioAccess',
         () => mutate()
+    );
+
+    // Primera confirmación; la segunda (escribir el código) ocurre en el modal
+    const handleRemove = () => notification.question(
+        '¿Desea eliminar permanentemente al empleado?',
+        'Continuar',
+        'Esta acción no se puede deshacer: el empleado no podrá reactivarse',
+        () => setRemoveModal(true)
     );
 
     if (isLoading) return <Spinner />
@@ -135,6 +163,31 @@ export function ShowEmployee() {
                         onClick={handleInactive}
                     />
                 </div>
+
+                <div className="flex flex-col gap-4 rounded-2xl border border-red-300 bg-red-50/50 p-5 sm:flex-row sm:items-center sm:justify-between dark:border-red-500/40 dark:bg-red-500/5">
+                    <div>
+                        <h2 className="text-sm font-semibold text-red-700 dark:text-red-300">Eliminar permanentemente</h2>
+                        <p className="mt-1 text-sm text-slate-600 dark:text-gray-400">Da de baja al empleado y borra su registro de inactivos y su fotografía. No se puede deshacer.</p>
+                    </div>
+                    <CustomFilledButton
+                        label="Eliminar"
+                        type="button"
+                        icon={<Trash2 className="h-4 w-4 text-white" />}
+                        disabled={isRemoving || isPending}
+                        loading={isRemoving}
+                        className="flex-none bg-red-700! hover:bg-red-800! focus:ring-red-600!"
+                        onClick={handleRemove}
+                    />
+                </div>
+
+                <RemoveEmployeeModal
+                    open={removeModal}
+                    onClose={() => setRemoveModal(false)}
+                    onConfirm={() => removeEmployee(data.pin)}
+                    loading={isRemoving}
+                    pin={data.pin}
+                    fullName={employeeFullName(data)}
+                />
             </div>
         )
     }

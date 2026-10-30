@@ -31,4 +31,8 @@ export class EmployeesProvider {
     updateEmployeePhoto(pin: string, file: File): Promise<string> {
         return this.repository.updateEmployeePhoto(pin, file);
     }
+
+    removeEmployee(pin: string): Promise<string> {
+        return this.repository.removeEmployee(pin);
+    }
 }

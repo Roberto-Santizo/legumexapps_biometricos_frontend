@@ -110,4 +110,15 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }
     }
+
+    // DELETE /employees/:pin da de baja al empleado en ZKBioAccess, borra su registro de inactivos y su foto; no se puede revertir
+    async removeEmployee(pin: string): Promise<string> {
+        try {
+            const url = `/employees/${encodeURIComponent(pin)}`;
+            const { data } = await this.api.delete(url);
+            return toMessage(data, 'Empleado eliminado permanentemente');
+        } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
 }

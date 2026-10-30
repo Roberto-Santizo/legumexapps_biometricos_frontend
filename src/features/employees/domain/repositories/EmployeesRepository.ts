@@ -9,4 +9,5 @@ export abstract class EmployeesRepository {
     abstract getEmployeeLevels(id: string): Promise<EmployeeLevel[]>;
     abstract inactiveEmployee(id: string): Promise<string>;
     abstract updateEmployeePhoto(pin: string, file: File): Promise<string>;
+    abstract removeEmployee(pin: string): Promise<string>;
 }
