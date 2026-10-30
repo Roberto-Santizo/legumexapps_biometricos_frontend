@@ -26,7 +26,7 @@ export function Tasks() {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getTasks'] });
       queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
-      queryClient.invalidateQueries({ queryKey: ['getPlanificationById'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks'] });
     },
     onError: (err) => {
       notification.error(err.message);
@@ -48,7 +48,7 @@ export function Tasks() {
         <FilterDrawer
           fields={[
             { name: 'pin', label: 'PIN', placeholder: 'Buscar por código de empleado' },
-            { name: 'scheduled_at', label: 'Fecha programada', type: 'datetime-local' },
+            { name: 'scheduled_at', label: 'Fecha programada', type: 'date' },
           ]}
           searchParams={searchParams}
           setSearchParams={setSearchParams}

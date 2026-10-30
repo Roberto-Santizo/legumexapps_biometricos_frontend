@@ -1,6 +1,7 @@
 import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
 import { type AxiosInstance } from 'axios';
-import { PlanificationDetailSchema, PlanificationSchema, PlanificationsDatasource, PlanificationsSchema, type Planification, type PlanificationDetail, type PlanificationForm, type PlanificationListItem, type PlanificationsFilters } from '@/features/planifications/planifications';
+import type { Task } from '@/features/tasks/tasks';
+import { PlanificationSchema, PlanificationTasksSchema, PlanificationsDatasource, PlanificationsSchema, type Planification, type PlanificationForm, type PlanificationListItem, type PlanificationsFilters } from '@/features/planifications/planifications';
 
 export class PlanificationsDatasourceImpl implements PlanificationsDatasource {
     constructor(private api: AxiosInstance) { }
@@ -39,11 +40,28 @@ export class PlanificationsDatasourceImpl implements PlanificationsDatasource {
         }
     }
 
-    async getPlanificationById(id: string): Promise<PlanificationDetail> {
+    // GET /planifications/:id devuelve solo la información de la semana, sin sus tareas
+    async getPlanificationById(id: string): Promise<Planification> {
         try {
             const url = `/planifications/${id}`;
             const { data } = await this.api.get(url);
-            const response = PlanificationDetailSchema.safeParse(data);
+            const response = PlanificationSchema.safeParse(data);
+
+            if (response.success) {
+                return response.data;
+            }
+
+            throw new Error("Información no válida");
+        } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
+
+    async getPlanificationTasks(id: string): Promise<Task[]> {
+        try {
+            const url = `/planifications/tasks/${id}`;
+            const { data } = await this.api.get(url);
+            const response = PlanificationTasksSchema.safeParse(data);
 
             if (response.success) {
                 return response.data;

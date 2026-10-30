@@ -1,11 +1,9 @@
-import { PlanificationCountsSchema, PlanificationDetailSchema, PlanificationListItemSchema, PlanificationSchema } from "@/features/planifications/planifications";
+import { PlanificationCountsSchema, PlanificationListItemSchema, PlanificationSchema } from "@/features/planifications/planifications";
 import type { z } from "zod";
 
 export type Planification = z.infer<typeof PlanificationSchema>;
 
 export type PlanificationListItem = z.infer<typeof PlanificationListItemSchema>;
-
-export type PlanificationDetail = z.infer<typeof PlanificationDetailSchema>;
 
 export type PlanificationCounts = z.infer<typeof PlanificationCountsSchema>;
 

@@ -1,5 +1,6 @@
 import type { PaginatedResponse } from "@/features/shared/shared";
-import { PlanificationsDatasource, PlanificationsRepository, type Planification, type PlanificationDetail, type PlanificationForm, type PlanificationListItem, type PlanificationsFilters } from '@/features/planifications/planifications';
+import type { Task } from "@/features/tasks/tasks";
+import { PlanificationsDatasource, PlanificationsRepository, type Planification, type PlanificationForm, type PlanificationListItem, type PlanificationsFilters } from '@/features/planifications/planifications';
 
 export class PlanificationsRepositoryImpl implements PlanificationsRepository {
     constructor(private datasource: PlanificationsDatasource) { }
@@ -12,8 +13,12 @@ export class PlanificationsRepositoryImpl implements PlanificationsRepository {
         return this.datasource.getPlanifications(page, limit, filters);
     }
 
-    getPlanificationById(id: string): Promise<PlanificationDetail> {
+    getPlanificationById(id: string): Promise<Planification> {
         return this.datasource.getPlanificationById(id);
+    }
+
+    getPlanificationTasks(id: string): Promise<Task[]> {
+        return this.datasource.getPlanificationTasks(id);
     }
 
     deletePlanification(id: string): Promise<string> {

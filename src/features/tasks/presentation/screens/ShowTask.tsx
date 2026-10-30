@@ -37,7 +37,7 @@ export function ShowTask() {
             notification.success(message);
             queryClient.invalidateQueries({ queryKey: ['getTasks'] });
             queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
-            queryClient.invalidateQueries({ queryKey: ['getPlanificationById'] });
+            queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks'] });
             queryClient.removeQueries({ queryKey: ['getTaskById', id] });
             navigate('/tareas');
         },

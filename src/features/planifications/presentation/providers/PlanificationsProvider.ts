@@ -1,5 +1,6 @@
 import type { PaginatedResponse } from "@/features/shared/shared";
-import type { Planification, PlanificationDetail, PlanificationForm, PlanificationListItem, PlanificationsFilters, PlanificationsRepository } from "@/features/planifications/planifications";
+import type { Task } from "@/features/tasks/tasks";
+import type { Planification, PlanificationForm, PlanificationListItem, PlanificationsFilters, PlanificationsRepository } from "@/features/planifications/planifications";
 
 export class PlanificationsProvider {
     constructor(private repository: PlanificationsRepository) { }
@@ -12,8 +13,12 @@ export class PlanificationsProvider {
         return this.repository.getPlanifications(page, limit, filters);
     }
 
-    getPlanificationById(id: string): Promise<PlanificationDetail> {
+    getPlanificationById(id: string): Promise<Planification> {
         return this.repository.getPlanificationById(id);
+    }
+
+    getPlanificationTasks(id: string): Promise<Task[]> {
+        return this.repository.getPlanificationTasks(id);
     }
 
     deletePlanification(id: string): Promise<string> {

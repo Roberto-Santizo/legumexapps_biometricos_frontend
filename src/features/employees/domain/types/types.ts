@@ -27,7 +27,8 @@ export type EmployeePayload = {
     lastName: string;
     pin: string;
     deptCode: string;
-    position_id: string;
+    // Opcional: el backend solo valida y asigna la posición si se envía
+    position_id?: string;
     accLevelIds: string;
     accStartTime?: string;
     accEndTime?: string;

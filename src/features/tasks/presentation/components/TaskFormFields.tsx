@@ -71,7 +71,12 @@ export function DepartmentField({ register, errors, items, optional = false }: S
   )
 }
 
-export function PositionField({ register, errors, items, optional = false }: SelectProps<Position>) {
+type PositionProps = SelectProps<Position> & {
+  // Texto de la opción vacía cuando el campo es opcional (en el alta: sin posición)
+  emptyLabel?: string;
+}
+
+export function PositionField({ register, errors, items, optional = false, emptyLabel = 'Mantener posición actual' }: PositionProps) {
   return (
     <div className="flex flex-col gap-2">
       <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="position_id">
@@ -84,7 +89,7 @@ export function PositionField({ register, errors, items, optional = false }: Sel
         className={errors.position_id ? 'text_form_field_error' : 'text_form_field'}
         {...register('position_id', { required: optional ? false : 'Seleccione una posición' })}
       >
-        <option value="" disabled={!optional}>{optional ? 'Mantener posición actual' : 'Seleccione una posición'}</option>
+        <option value="" disabled={!optional}>{optional ? emptyLabel : 'Seleccione una posición'}</option>
         {/* La disponibilidad se valida al ejecutar la tarea: una posición ocupada puede liberarse antes */}
         {items.map(position => (
           <option key={position.id} value={position.id}>

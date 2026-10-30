@@ -2,13 +2,6 @@ import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/fe
 import { type AxiosInstance } from 'axios';
 import { TaskListSchema, TaskSchema, TasksDatasource, type CreationTaskPayload, type InactivationTaskPayload, type MovementTaskPayload, type Task, type TasksFilters, type TaskUploadType, type UpdateTaskPayload } from '@/features/tasks/tasks';
 
-// El filtro llega del input datetime-local ("YYYY-MM-DDTHH:mm" en hora local); el backend espera ISO con coincidencia exacta
-const toIsoDateTime = (value?: string) => {
-    if (!value) return undefined;
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? value : date.toISOString();
-}
-
 const toFormData = (payload: CreationTaskPayload) => {
     const formData = new FormData();
     Object.entries(payload).forEach(([key, value]) => {
@@ -22,7 +15,7 @@ export class TasksDatasourceImpl implements TasksDatasource {
 
     async getTasks(page: number, limit: number, filters: TasksFilters): Promise<PaginatedResponse<Task>> {
         try {
-            const params = setQueryParams({ limit, offset: page * limit, ...filters, scheduled_at: toIsoDateTime(filters.scheduled_at) });
+            const params = setQueryParams({ limit, offset: page * limit, ...filters });
             const url = `/tasks?${params.toString()}`;
             const { data } = await this.api.get(url);
             const response = TaskListSchema.safeParse(data);

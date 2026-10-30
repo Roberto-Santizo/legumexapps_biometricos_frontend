@@ -10,7 +10,7 @@ export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 // Valor del parámetro :type de POST /tasks/upload/:type (altas, movimientos o bajas)
 export type TaskUploadType = 'creation' | 'movement' | 'inactivate';
 
-// pin es búsqueda parcial; scheduled_at es coincidencia exacta de fecha y hora
+// pin es búsqueda parcial; scheduled_at es el día programado ("YYYY-MM-DD", del input date)
 export type TasksFilters = {
     pin?: string;
     scheduled_at?: string;
@@ -31,8 +31,9 @@ export type TaskForm = {
     file: File | null;
 }
 
-// Body multipart de POST /tasks/creation; accLevelIds van separados por coma
-export type CreationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'name' | 'lastName' | 'position_id' | 'auth_dept_id' | 'scheduled_at'> & {
+// Body multipart de POST /tasks/creation; accLevelIds van separados por coma y position_id es opcional
+export type CreationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'name' | 'lastName' | 'auth_dept_id' | 'scheduled_at'> & {
+    position_id?: string;
     accLevelIds: string;
     file?: File;
 }

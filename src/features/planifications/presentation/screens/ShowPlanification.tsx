@@ -19,13 +19,18 @@ export function ShowPlanification() {
     queryFn: () => planificationsRepositoryProvider.getPlanificationById(id)
   });
 
+  const { data: tasks, isLoading: isLoadingTasks, error: tasksError } = useQuery({
+    queryKey: ['getPlanificationTasks', id],
+    queryFn: () => planificationsRepositoryProvider.getPlanificationTasks(id)
+  });
+
   const { mutate: deleteTask } = useMutation({
     mutationFn: (taskId: string) => tasksRepositoryProvider.deleteTask(taskId),
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getTasks'] });
       queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
-      queryClient.invalidateQueries({ queryKey: ['getPlanificationById', id] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks', id] });
     },
     onError: (err) => {
       notification.error(err.message);
@@ -38,6 +43,7 @@ export function ShowPlanification() {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
       queryClient.removeQueries({ queryKey: ['getPlanificationById', id] });
+      queryClient.removeQueries({ queryKey: ['getPlanificationTasks', id] });
       navigate('/planificaciones');
     },
     onError: (err) => {
@@ -59,13 +65,13 @@ export function ShowPlanification() {
     () => deletePlanification()
   );
 
-  if (isLoading) return <Spinner />
-  if (error) return (
-    <p className="text-center text-sm text-red-600 dark:text-red-400">No se pudo cargar la planificación: {error.message}</p>
+  if (isLoading || isLoadingTasks) return <Spinner />
+  if (error || tasksError) return (
+    <p className="text-center text-sm text-red-600 dark:text-red-400">No se pudo cargar la planificación: {(error ?? tasksError)?.message}</p>
   )
-  if (data) {
+  if (data && tasks) {
     const closed = isPlanificationClosed(data);
-    const countBy = (status: Task['status']) => data.tasks.filter(task => task.status === status).length;
+    const countBy = (status: Task['status']) => tasks.filter(task => task.status === status).length;
 
     return (
       <div className="mx-auto w-full max-w-5xl space-y-6">
@@ -95,7 +101,7 @@ export function ShowPlanification() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <InfoCard icon={<ListChecks className="h-4 w-4" />} label="Tareas" value={data.tasks.length} />
+          <InfoCard icon={<ListChecks className="h-4 w-4" />} label="Tareas" value={tasks.length} />
           <InfoCard icon={<CalendarClock className="h-4 w-4" />} label="Pendientes" value={countBy('pendiente')} />
           <InfoCard icon={<CalendarCheck className="h-4 w-4" />} label="Completadas" value={countBy('completada')} />
           <InfoCard icon={<CircleAlert className="h-4 w-4" />} label="Fallidas" value={countBy('fallida')} />
@@ -103,14 +109,14 @@ export function ShowPlanification() {
 
         <WeekTasks
           startDate={data.start_date}
-          tasks={data.tasks}
+          tasks={tasks}
           onView={(task) => navigate(`/tareas/${task.id}`)}
           onEdit={(task) => navigate(`/tareas/${task.id}/editar`)}
           onDelete={handleDeleteTask}
         />
 
         {/* El backend solo elimina planificaciones sin tareas */}
-        {data.tasks.length === 0 && (
+        {tasks.length === 0 && (
           <div className="flex flex-col gap-4 rounded-2xl border border-red-200 p-5 sm:flex-row sm:items-center sm:justify-between dark:border-red-500/30">
             <div>
               <h2 className="text-sm font-semibold text-red-700 dark:text-red-300">Eliminar planificación</h2>

@@ -33,7 +33,5 @@ export const PlanificationListItemSchema = PlanificationSchema.extend({
 
 export const PlanificationsSchema = PaginatedResponseSchema(PlanificationListItemSchema);
 
-// GET /planifications/:id incluye las tareas ordenadas por fecha programada
-export const PlanificationDetailSchema = PlanificationSchema.extend({
-    tasks: z.array(TaskSchema)
-});
+// GET /planifications/tasks/:id devuelve las tareas de la semana ordenadas por fecha programada
+export const PlanificationTasksSchema = z.array(TaskSchema);

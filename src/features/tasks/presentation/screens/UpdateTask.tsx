@@ -50,7 +50,7 @@ export function UpdateTask() {
       queryClient.invalidateQueries({ queryKey: ['getTasks'] });
       queryClient.invalidateQueries({ queryKey: ['getTaskById', id] });
       queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
-      queryClient.invalidateQueries({ queryKey: ['getPlanificationById'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks'] });
       navigate(`/tareas/${id}`);
     },
     onError: (err) => {

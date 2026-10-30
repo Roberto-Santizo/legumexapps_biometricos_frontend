@@ -47,15 +47,12 @@ export const toInputDate = (date: Date) => `${date.getFullYear()}-${pad(date.get
 
 export const todayInputDate = () => toInputDate(new Date());
 
-// scheduled_at llega como "dd-MM-yyyy HH:mm:ss"; se convierte a "YYYY-MM-DD"
+// scheduled_at llega como "YYYY-MM-DD" (columna date); se acepta también el formato anterior "dd-MM-yyyy HH:mm:ss"
 export const taskDateToInput = (scheduledAt: string) => {
-    const [date] = scheduledAt.split(' ');
-    const [day, month, year] = date.split('-');
-    return `${year}-${month}-${day}`;
+    const [date] = scheduledAt.split(/[ T]/);
+    const [first, month, last] = date.split('-');
+    return first.length === 4 ? date : `${last}-${month}-${first}`;
 }
-
-// Hora "HH:mm" de scheduled_at
-export const taskTime = (scheduledAt: string) => scheduledAt.split(' ')[1]?.slice(0, 5) ?? '';
 
 // scheduled_at debe ser hoy o posterior y caer dentro de la semana de la planificación
 export const scheduleBounds = (planification?: Pick<TaskPlanificationRef, 'start_date' | 'end_date'>) => {
@@ -81,7 +78,8 @@ export const toCreationTaskPayload = (form: TaskForm, planificationId: string): 
     pin: form.pin.trim(),
     name: form.name.trim(),
     lastName: form.lastName.trim(),
-    position_id: form.position_id,
+    // Vacío = sin posición; se omite del body
+    position_id: form.position_id || undefined,
     auth_dept_id: form.auth_dept_id,
     accLevelIds: joinLevels(form.accLevelIds),
     scheduled_at: form.scheduled_at,

@@ -102,16 +102,17 @@ export function Form({ register, errors, isEdit = false, currentPositionId }: Pr
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="position_id">
-          Posición
+          Posición {!isEdit && <span className="font-normal text-gray-400 dark:text-gray-500">(opcional)</span>}
         </label>
 
         <select
           id="position_id"
           aria-invalid={!!errors.position_id}
           className={errors.position_id ? 'text_form_field_error' : 'text_form_field'}
-          {...register('position_id', { required: 'Seleccione una posición' })}
+          {...register('position_id', { required: isEdit ? 'Seleccione una posición' : false })}
         >
-          <option value="" disabled>Seleccione una posición</option>
+          {/* Al crear, la posición es opcional y puede asignarse después */}
+          <option value="" disabled={isEdit}>{isEdit ? 'Seleccione una posición' : 'Sin posición'}</option>
           {/* El backend rechaza posiciones que ya tienen un empleado asignado */}
           {positions.map(position => {
             const taken = !!position.employee && position.id !== currentPositionId;

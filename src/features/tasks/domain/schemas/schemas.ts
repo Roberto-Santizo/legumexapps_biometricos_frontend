@@ -5,7 +5,7 @@ export const TaskTypeSchema = z.enum(['alta', 'movimiento', 'baja']);
 
 export const TaskStatusSchema = z.enum(['pendiente', 'completada', 'fallida']);
 
-// GET /tasks devuelve las tareas programadas para ZKBioAccess; scheduled_at llega como "dd-MM-yyyy HH:mm:ss"
+// GET /tasks devuelve las tareas programadas para ZKBioAccess; scheduled_at llega como "YYYY-MM-DD"
 export const TaskSchema = z.object({
     id: z.string(),
     type: TaskTypeSchema,

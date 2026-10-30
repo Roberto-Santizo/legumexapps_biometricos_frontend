@@ -24,7 +24,7 @@ function useScheduleTask(mutationFn: (form: TaskForm) => Promise<string>, onSche
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getTasks'] });
       queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
-      queryClient.invalidateQueries({ queryKey: ['getPlanificationById'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks'] });
       onScheduled();
     },
     onError: (err) => {
@@ -82,7 +82,8 @@ function CreationTaskForm({ planification, onScheduled }: FormProps) {
         />
       </div>
 
-      <PositionField register={register} errors={errors} items={positions} />
+      {/* En el alta la posición es opcional */}
+      <PositionField register={register} errors={errors} items={positions} optional emptyLabel="Sin posición" />
       <DepartmentField register={register} errors={errors} items={departments} />
       <TaskAccessLevelsField register={register} errors={errors} items={levels} />
       <ScheduledAtField register={register} errors={errors} min={bounds.min} max={bounds.max} />
