@@ -1,4 +1,4 @@
-import type { TaskStatus, TaskType, TaskUploadType } from "@/features/tasks/tasks";
+import type { CreationTaskPayload, InactivationTaskPayload, MovementTaskPayload, TaskForm, TaskPlanificationRef, TaskStatus, TaskType, TaskUploadType, UpdateTaskPayload } from "@/features/tasks/tasks";
 
 export const taskTypeLabels: Record<TaskType, string> = {
     alta: 'Alta',
@@ -39,3 +39,97 @@ export const formatTaskValue = (value: unknown): string => {
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
 }
+
+const pad = (value: number) => String(value).padStart(2, '0');
+
+// Fecha local en formato "YYYY-MM-DD" (el que usan los inputs date y el backend)
+export const toInputDate = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+export const todayInputDate = () => toInputDate(new Date());
+
+// scheduled_at llega como "dd-MM-yyyy HH:mm:ss"; se convierte a "YYYY-MM-DD"
+export const taskDateToInput = (scheduledAt: string) => {
+    const [date] = scheduledAt.split(' ');
+    const [day, month, year] = date.split('-');
+    return `${year}-${month}-${day}`;
+}
+
+// Hora "HH:mm" de scheduled_at
+export const taskTime = (scheduledAt: string) => scheduledAt.split(' ')[1]?.slice(0, 5) ?? '';
+
+// scheduled_at debe ser hoy o posterior y caer dentro de la semana de la planificación
+export const scheduleBounds = (planification?: Pick<TaskPlanificationRef, 'start_date' | 'end_date'>) => {
+    const today = todayInputDate();
+    if (!planification) return { min: today, max: undefined };
+    return { min: planification.start_date > today ? planification.start_date : today, max: planification.end_date };
+}
+
+// La semana ya no admite tareas cuando su domingo es anterior a hoy
+export const isPlanificationClosed = (planification: Pick<TaskPlanificationRef, 'end_date'>) => planification.end_date < todayInputDate();
+
+// Campos de PATCH /tasks/:id que aplican a cada tipo (además de planification_id y scheduled_at)
+export const taskEditableFields: Record<TaskType, (keyof UpdateTaskPayload)[]> = {
+    alta: ['position_id', 'auth_dept_id', 'accLevelIds', 'name', 'lastName'],
+    movimiento: ['position_id', 'auth_dept_id', 'accLevelIds'],
+    baja: []
+};
+
+const joinLevels = (ids: string[]) => [ids].flat().filter(Boolean).join(',');
+
+export const toCreationTaskPayload = (form: TaskForm, planificationId: string): CreationTaskPayload => ({
+    planification_id: planificationId,
+    pin: form.pin.trim(),
+    name: form.name.trim(),
+    lastName: form.lastName.trim(),
+    position_id: form.position_id,
+    auth_dept_id: form.auth_dept_id,
+    accLevelIds: joinLevels(form.accLevelIds),
+    scheduled_at: form.scheduled_at,
+    file: form.file ?? undefined
+});
+
+export const toMovementTaskPayload = (form: TaskForm, planificationId: string): MovementTaskPayload => ({
+    planification_id: planificationId,
+    employee_id: form.employee_id,
+    position_id: form.position_id,
+    auth_dept_id: form.auth_dept_id,
+    accLevelIds: joinLevels(form.accLevelIds),
+    scheduled_at: form.scheduled_at
+});
+
+export const toInactivationTaskPayload = (form: TaskForm, planificationId: string): InactivationTaskPayload => ({
+    planification_id: planificationId,
+    employee_id: form.employee_id,
+    scheduled_at: form.scheduled_at
+});
+
+// Solo se envían los campos modificados; los vacíos ("mantener actual") se omiten
+export const toUpdateTaskPayload = (form: TaskForm, type: TaskType, dirty: Partial<Record<keyof TaskForm, unknown>>): UpdateTaskPayload => {
+    const values: UpdateTaskPayload = {
+        planification_id: form.planification_id,
+        scheduled_at: form.scheduled_at,
+        position_id: form.position_id,
+        auth_dept_id: form.auth_dept_id,
+        accLevelIds: joinLevels(form.accLevelIds),
+        name: form.name.trim(),
+        lastName: form.lastName.trim()
+    };
+    const allowed: (keyof UpdateTaskPayload)[] = ['planification_id', 'scheduled_at', ...taskEditableFields[type]];
+
+    return Object.fromEntries(
+        allowed.filter(key => dirty[key] && values[key]).map(key => [key, values[key]])
+    );
+}
+
+export const emptyTaskForm: TaskForm = {
+    planification_id: '',
+    scheduled_at: '',
+    employee_id: '',
+    pin: '',
+    name: '',
+    lastName: '',
+    position_id: '',
+    auth_dept_id: '',
+    accLevelIds: [],
+    file: null
+};

@@ -1,10 +1,10 @@
 import { CustomFilledButton, Spinner, useNotification } from "@/features/shared/shared";
 import { PayloadList, TaskStatusBadge, TaskTypeBadge, taskTypeLabels, tasksRepositoryProvider } from "@/features/tasks/tasks";
-import { ArrowLeft, CalendarClock, Hash, Trash2, UserPlus } from "lucide-react";
+import { ArrowLeft, CalendarClock, CalendarRange, EditIcon, Hash, Trash2, UserPlus } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-type Row = { icon: React.ReactNode; label: string; value: string | number };
+type Row = { icon: React.ReactNode; label: string; value: React.ReactNode };
 
 function PropertyList({ items }: { items: Row[] }) {
     return (
@@ -36,6 +36,8 @@ export function ShowTask() {
         onSuccess: (message) => {
             notification.success(message);
             queryClient.invalidateQueries({ queryKey: ['getTasks'] });
+            queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
+            queryClient.invalidateQueries({ queryKey: ['getPlanificationById'] });
             queryClient.removeQueries({ queryKey: ['getTaskById', id] });
             navigate('/tareas');
         },
@@ -60,13 +62,33 @@ export function ShowTask() {
             { icon: <Hash className="h-4 w-4" />, label: 'PIN', value: data.pin },
             { icon: <CalendarClock className="h-4 w-4" />, label: 'Programada para', value: data.scheduled_at },
             { icon: <UserPlus className="h-4 w-4" />, label: 'Programada por', value: data.created_by },
+            {
+                icon: <CalendarRange className="h-4 w-4" />,
+                label: 'Planificación',
+                // Las tareas cargadas por Excel no tienen planificación
+                value: data.planification_id
+                    ? <Link to={`/planificaciones/${data.planification_id}`} className="text-blue-600 hover:underline dark:text-blue-400">Ver semana</Link>
+                    : 'Sin planificación (Excel)'
+            },
         ];
 
         return (
             <div className="mx-auto w-full max-w-4xl space-y-6">
-                <button type="button" onClick={() => navigate('/tareas')} className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer dark:text-gray-400 dark:hover:text-gray-100">
-                    <ArrowLeft className="h-4 w-4" /> Tareas
-                </button>
+                <div className="flex items-center justify-between gap-4">
+                    <button type="button" onClick={() => navigate('/tareas')} className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer dark:text-gray-400 dark:hover:text-gray-100">
+                        <ArrowLeft className="h-4 w-4" /> Tareas
+                    </button>
+                    {/* Solo las tareas pendientes se pueden editar */}
+                    {data.status === 'pendiente' && (
+                        <CustomFilledButton
+                            label="Editar"
+                            type="button"
+                            icon={<EditIcon className="h-4 w-4 text-white" />}
+                            loading={false}
+                            onClick={() => navigate(`/tareas/${id}/editar`)}
+                        />
+                    )}
+                </div>
 
                 <div className="space-y-3">
                     <h1 className="text-2xl font-bold leading-tight tracking-tight text-balance text-slate-900 sm:text-3xl dark:text-gray-100">{taskTypeLabels[data.type]} · PIN {data.pin}</h1>

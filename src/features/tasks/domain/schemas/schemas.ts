@@ -16,7 +16,9 @@ export const TaskSchema = z.object({
     // Datos del empleado antes del movimiento; solo viene en tareas de tipo movimiento
     previous: z.record(z.string(), z.unknown()).nullish(),
     scheduled_at: z.string(),
-    created_by: z.string()
+    created_by: z.string(),
+    // null en tareas cargadas por Excel
+    planification_id: z.string().nullish()
 });
 
 export const TaskListSchema = PaginatedResponseSchema(TaskSchema);
