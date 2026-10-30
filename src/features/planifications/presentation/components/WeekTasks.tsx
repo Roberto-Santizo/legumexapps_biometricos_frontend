@@ -52,8 +52,8 @@ export function WeekTasks({ startDate, tasks, onView, onEdit, onDelete }: Props)
               </span>
               <span><TaskTypeBadge type={task.type} /></span>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold tabular-nums text-slate-900 dark:text-gray-100">PIN {task.pin}</p>
-                {taskSubject(task) && <p className="truncate text-xs text-slate-500 dark:text-gray-400">{taskSubject(task)}</p>}
+                <p className="truncate text-sm font-semibold text-slate-900 dark:text-gray-100">{taskSubject(task) ?? `Código ${task.pin}`}</p>
+                {taskSubject(task) && <p className="truncate text-xs tabular-nums text-slate-500 dark:text-gray-400">Código {task.pin}</p>}
               </div>
               <span><TaskStatusBadge status={task.status} /></span>
               <ActionsMenu
