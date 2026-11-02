@@ -13,6 +13,7 @@ export function CreateEmployee() {
     handleSubmit,
     register,
     control,
+    setValue,
     formState: { errors }
   } = useForm<EmployeeForm>({ defaultValues: emptyEmployeeForm });
 
@@ -38,7 +39,7 @@ export function CreateEmployee() {
       <Title title="Creación de Empleado" subtitle="El PIN debe ser único y la posición no debe tener un empleado asignado" />
 
       <form className="form w-full mx-auto lg:w-2/3" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Form register={register} errors={errors} />
+        <Form register={register} control={control} setValue={setValue} errors={errors} />
 
         <PhotoFormField control={control} />
 

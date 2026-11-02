@@ -24,3 +24,4 @@ export * from './ThemeToggle';
 export * from './ThemedToaster';
 export * from './ZoomablePhoto';
 export * from './ImageUploader';
+export * from './SearchSelectFormField';

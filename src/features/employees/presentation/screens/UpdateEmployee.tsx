@@ -25,6 +25,8 @@ export function UpdateEmployee() {
   const {
     handleSubmit,
     register,
+    control,
+    setValue,
     formState: { errors },
     reset
   } = useForm<EmployeeForm>({ defaultValues: emptyEmployeeForm });
@@ -68,7 +70,15 @@ export function UpdateEmployee() {
       <Title title="Actualización de empleado" subtitle={`${employeeFullName(data)} · PIN ${data.pin}`} />
 
       <form className="form w-full mx-auto lg:w-2/3" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Form register={register} errors={errors} isEdit={true} currentPositionId={data.position_id} />
+        <Form
+          register={register}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          isEdit={true}
+          currentPositionId={data.position_id}
+          currentDepartment={`${data.department} (${data.departmentCode})`}
+        />
 
         <CustomFilledButton label="Guardar Cambios" type="submit" fullWitdh={true} disabled={isPending} />
       </form>
