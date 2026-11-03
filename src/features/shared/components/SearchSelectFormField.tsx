@@ -14,8 +14,9 @@ type Props<T extends FieldValues> = {
     label: string;
     name: Path<T>;
     control: Control<T>;
-    // Prefijo del queryKey; usar el mismo de la entidad para que sus invalidaciones refresquen las opciones
-    queryKey: string;
+    // Prefijo del queryKey; usar el mismo de la entidad para que sus invalidaciones refresquen las opciones.
+    // Usar un arreglo cuando otra búsqueda de la misma entidad devuelve opciones con otro `value`
+    queryKey: string | readonly string[];
     // Recibe el texto buscado y devuelve las opciones a mostrar (búsqueda en el backend)
     fetchOptions: (search: string) => Promise<SelectOption[]>;
     placeholder?: string;
@@ -52,16 +53,17 @@ type SearchSelectProps = Omit<Props<FieldValues>, 'name' | 'control' | 'validati
     id: string;
     value: string;
     onChange: (value: string) => void;
-    onBlur: () => void;
+    onBlur?: () => void;
 }
 
-function SearchSelect({ id, label, value, onChange, onBlur, queryKey, fetchOptions, placeholder = 'Buscar...', errorMessage, initialLabel, emptyMessage = 'Sin resultados', onValueChange }: SearchSelectProps) {
+// Versión controlada sin react-hook-form (p. ej. FilterDrawer)
+export function SearchSelect({ id, label, value, onChange, onBlur, queryKey, fetchOptions, placeholder = 'Buscar...', errorMessage, initialLabel, emptyMessage = 'Sin resultados', onValueChange }: SearchSelectProps) {
     const [search, setSearch] = useState('');
     const [selected, setSelected] = useState<SelectOption | null>(null);
     const debouncedSearch = useDebounce(search.trim());
 
     const { data: options = [], isFetching } = useQuery({
-        queryKey: [queryKey, 'search', debouncedSearch],
+        queryKey: [...(typeof queryKey === 'string' ? [queryKey] : queryKey), 'search', debouncedSearch],
         queryFn: () => fetchOptions(debouncedSearch),
         placeholderData: keepPreviousData
     });

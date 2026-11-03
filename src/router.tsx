@@ -100,8 +100,8 @@ export default function AppRouter() {
                     <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
                         <Route path="/empleados" element={<Employees />} />
                         <Route path="/empleados/crear" element={<CreateEmployee />} />
-                        <Route path="/empleados/:id" element={<ShowEmployee />} />
-                        <Route path="/empleados/:id/editar" element={<UpdateEmployee />} />
+                        <Route path="/empleados/:pin" element={<ShowEmployee />} />
+                        <Route path="/empleados/:pin/editar" element={<UpdateEmployee />} />
                     </Route>
                 </Route>
 

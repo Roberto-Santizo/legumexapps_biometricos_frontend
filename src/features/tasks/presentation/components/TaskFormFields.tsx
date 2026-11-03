@@ -1,13 +1,13 @@
-import { DateFormField } from "@/features/shared/shared";
-import type { Department } from "@/features/departments/departments";
+import { DateFormField, SearchSelectFormField, TextFormField, type SelectOption } from "@/features/shared/shared";
+import { departmentsRepositoryProvider, type Department } from "@/features/departments/departments";
 import type { AccessLevel } from "@/features/access-levels/access-levels";
-import type { Position } from "@/features/positions/positions";
-import { employeesRepositoryProvider, type EmployeeListItem } from "@/features/employees/employees";
-import type { TaskForm } from "@/features/tasks/tasks";
+import { positionsRepositoryProvider, type Position } from "@/features/positions/positions";
+import { employeeFullName, employeesRepositoryProvider, type Employee } from "@/features/employees/employees";
+import { inactivationTypeLabels, type InactivationType, type TaskForm } from "@/features/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { useController, type Control, type FieldErrors, type UseFormRegister } from "react-hook-form";
-import { ImageUp, Search, X } from "lucide-react";
+import { useController, useWatch, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from "react-hook-form";
+import { ImageUp, User, X } from "lucide-react";
 
 type FieldProps = {
   register: UseFormRegister<TaskForm>;
@@ -38,6 +38,33 @@ export function ScheduledAtField({ register, errors, min, max }: ScheduledAtProp
       }}
       errorMessage={errors.scheduled_at?.message}
     />
+  )
+}
+
+export function InactivationTypeField({ register, errors }: FieldProps) {
+  return (
+    <fieldset className="flex flex-col gap-2">
+      <legend className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de baja</legend>
+
+      <div className="grid grid-cols-2 gap-2">
+        {(Object.keys(inactivationTypeLabels) as InactivationType[]).map(option => (
+          <label
+            key={option}
+            className="cursor-pointer rounded-lg border border-gray-200 px-3 py-2 text-center text-sm font-medium text-gray-700 hover:border-gray-300 has-checked:border-red-500 has-checked:bg-red-50 has-checked:text-red-700 has-focus-visible:ring-2 has-focus-visible:ring-red-500 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:has-checked:bg-red-500/15 dark:has-checked:text-red-200"
+          >
+            <input
+              type="radio"
+              value={option}
+              className="sr-only"
+              {...register('inactivationType', { required: 'Seleccione el tipo de baja' })}
+            />
+            {inactivationTypeLabels[option]}
+          </label>
+        ))}
+      </div>
+
+      <p className="text-red-400 text-xs">{errors.inactivationType?.message}</p>
+    </fieldset>
   )
 }
 
@@ -103,6 +130,98 @@ export function PositionField({ register, errors, items, optional = false, empty
   )
 }
 
+// Los departamentos se buscan por nombre en el backend en lugar de cargar el catálogo completo
+const DEPARTMENTS_SEARCH_LIMIT = 20;
+const POSITIONS_LIMIT = 1000;
+
+// auth_dept_id espera el ID del departamento (el formulario de empleados usa el código)
+const searchDepartments = async (name: string): Promise<SelectOption[]> => {
+  const { data } = await departmentsRepositoryProvider.getDepartments(0, DEPARTMENTS_SEARCH_LIMIT, { name });
+  return data.map(department => ({ value: department.id, label: `${department.name} (${department.code})` }));
+}
+
+type DepartmentPositionProps = FieldProps & {
+  control: Control<TaskForm>;
+  setValue: UseFormSetValue<TaskForm>;
+  // En el alta la posición es opcional
+  optionalPosition?: boolean;
+}
+
+// Departamento con búsqueda y posiciones filtradas por el código del departamento elegido
+export function DepartmentPositionFields({ register, control, setValue, errors, optionalPosition = false }: DepartmentPositionProps) {
+  const departmentId = useWatch({ control, name: 'auth_dept_id' });
+
+  // Las posiciones se filtran por código, así que se obtiene el departamento elegido
+  const { data: department, isLoading: isLoadingDepartment } = useQuery({
+    queryKey: ['getDepartmentById', departmentId],
+    queryFn: () => departmentsRepositoryProvider.getDepartmentById(departmentId),
+    enabled: !!departmentId
+  });
+
+  const deptCode = department?.code;
+
+  const { data: positions = [], isLoading: isLoadingPositions } = useQuery({
+    queryKey: ['getPositions', 'byDepartment', deptCode],
+    queryFn: () => positionsRepositoryProvider.getPositions(0, POSITIONS_LIMIT, { code: deptCode }),
+    select: (response) => response.data,
+    enabled: !!deptCode
+  });
+
+  const loading = isLoadingDepartment || isLoadingPositions;
+
+  return (
+    <>
+      <SearchSelectFormField<TaskForm>
+        label="Departamento"
+        name="auth_dept_id"
+        control={control}
+        queryKey={['getDepartments', 'byId']}
+        fetchOptions={searchDepartments}
+        placeholder="Buscar departamento por nombre"
+        emptyMessage="No se encontraron departamentos"
+        validation={{ required: 'Seleccione un departamento' }}
+        errorMessage={errors.auth_dept_id?.message}
+        // La posición elegida pertenece al departamento anterior
+        onValueChange={() => setValue('position_id', '')}
+      />
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="position_id">
+          Posición {optionalPosition && <span className="font-normal text-gray-400 dark:text-gray-500">(opcional)</span>}
+        </label>
+
+        <select
+          // Se remonta al cargar las posiciones para que react-hook-form aplique el valor actual sobre las nuevas opciones
+          key={loading ? 'loading' : deptCode}
+          id="position_id"
+          disabled={!departmentId || loading}
+          aria-invalid={!!errors.position_id}
+          className={errors.position_id ? 'text_form_field_error' : 'text_form_field'}
+          {...register('position_id', { required: optionalPosition ? false : 'Seleccione una posición' })}
+        >
+          <option value="" disabled={!optionalPosition}>
+            {!departmentId
+              ? 'Seleccione un departamento primero'
+              : loading
+                ? 'Cargando posiciones...'
+                : positions.length === 0
+                  ? 'El departamento no tiene posiciones'
+                  : optionalPosition ? 'Sin posición' : 'Seleccione una posición'}
+          </option>
+          {/* La disponibilidad se valida al ejecutar la tarea: una posición ocupada puede liberarse antes */}
+          {positions.map(position => (
+            <option key={position.id} value={position.id}>
+              {position.name} ({position.code}){position.employee ? ` · ocupada por ${position.employee}` : ''}
+            </option>
+          ))}
+        </select>
+
+        <p className="text-red-400 text-xs">{errors.position_id?.message}</p>
+      </div>
+    </>
+  )
+}
+
 export function TaskAccessLevelsField({ register, errors, items }: SelectProps<AccessLevel>) {
   return (
     <div className="flex flex-col gap-2">
@@ -136,86 +255,75 @@ export function TaskAccessLevelsField({ register, errors, items }: SelectProps<A
   )
 }
 
-const employeeFullName = (employee: EmployeeListItem) => [employee.name, employee.last_name].filter(Boolean).join(' ');
+function EmployeePreviewPhoto({ employee }: { employee: Employee }) {
+  const [failed, setFailed] = useState(false);
 
-// Busca empleados activos por nombre y guarda su ID en employee_id
-export function EmployeeSearchField({ control }: { control: Control<TaskForm> }) {
-  const { field: { onChange }, fieldState: { error } } = useController({
-    control,
-    name: 'employee_id',
-    rules: { required: 'Seleccione un empleado' }
-  });
-  const [term, setTerm] = useState('');
-  const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<EmployeeListItem | null>(null);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setSearch(term.trim()), 300);
-    return () => clearTimeout(timeout);
-  }, [term]);
-
-  const { data, isFetching } = useQuery({
-    queryKey: ['getEmployees', 0, 8, search],
-    queryFn: () => employeesRepositoryProvider.getEmployees(0, 8, { name: search }),
-    select: (response) => response.data,
-    enabled: search.length >= 2
-  });
-
-  const select = (employee: EmployeeListItem | null) => {
-    setSelected(employee);
-    onChange(employee?.id ?? '');
-  };
+  if (!employee.hasPhoto || !employee.photoUrl || failed) return (
+    <div className="flex h-14 w-14 flex-none items-center justify-center rounded-xl bg-slate-100 dark:bg-gray-800">
+      <User className="h-6 w-6 text-slate-400 dark:text-gray-500" aria-label="Sin fotografía" />
+    </div>
+  )
 
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor="employee-search" className="text-sm font-medium text-gray-700 dark:text-gray-300">Empleado</label>
+    <img
+      src={employee.photoUrl}
+      alt={`Fotografía de ${employeeFullName(employee)}`}
+      onError={() => setFailed(true)}
+      className="h-14 w-14 flex-none rounded-xl border border-slate-200 object-cover dark:border-gray-700"
+    />
+  )
+}
 
-      {selected ? (
+type EmployeePinProps = FieldProps & {
+  control: Control<TaskForm>;
+}
+
+// El PIN se escribe a mano: la existencia del empleado se valida al ejecutar la tarea,
+// así que admite empleados con alta programada en la misma semana.
+// Si el PIN ya existe en ZKBioAccess se muestran sus datos como referencia
+export function EmployeePinField({ register, control, errors }: EmployeePinProps) {
+  const pin = useWatch({ control, name: 'pin' });
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setSearch(pin.trim()), 400);
+    return () => clearTimeout(timeout);
+  }, [pin]);
+
+  // Un 404 solo significa que el empleado aún no existe: no se reintenta ni se muestra error
+  const { data: employee } = useQuery({
+    queryKey: ['getEmployeeByPin', search],
+    queryFn: () => employeesRepositoryProvider.getEmployeeByPin(search),
+    enabled: !!search,
+    retry: false
+  });
+
+  // Evita mostrar el empleado del PIN anterior mientras se escribe
+  const found = employee && employee.pin === pin.trim() ? employee : null;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <TextFormField<TaskForm>
+        label="Código del empleado"
+        name="pin"
+        placeholder="PIN del empleado"
+        register={register}
+        type="text"
+        validation={{ required: 'El PIN es requerido' }}
+        errorMessage={errors.pin?.message}
+      />
+
+      {found && (
         <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 dark:border-gray-700">
+          <EmployeePreviewPhoto key={found.pin} employee={found} />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-slate-900 dark:text-gray-100">{employeeFullName(selected)}</p>
-            <p className="text-xs text-slate-500 dark:text-gray-400">
-              PIN {selected.pin} · {selected.position} · {selected.department}
+            <p className="truncate text-sm font-semibold text-slate-900 dark:text-gray-100">{employeeFullName(found)}</p>
+            <p className="truncate text-xs text-slate-500 dark:text-gray-400">
+              PIN {found.pin} · {found.position_id ? found.position : 'Sin posición asignada'}
             </p>
           </div>
-          <button type="button" onClick={() => select(null)} aria-label="Cambiar empleado" className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-red-600 cursor-pointer dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-red-400">
-            <X className="h-4 w-4" />
-          </button>
         </div>
-      ) : (
-        <>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
-            <input
-              id="employee-search"
-              type="search"
-              autoComplete="off"
-              value={term}
-              onChange={(event) => setTerm(event.target.value)}
-              placeholder="Buscar por nombre (mín. 2 letras)"
-              aria-invalid={!!error}
-              className={`${error ? 'text_form_field_error' : 'text_form_field'} pl-10!`}
-            />
-          </div>
-
-          {search.length >= 2 && (
-            <ul className="max-h-56 divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-200 dark:divide-gray-800 dark:border-gray-700">
-              {isFetching && !data && <li className="px-4 py-3 text-sm text-slate-500 dark:text-gray-400">Buscando…</li>}
-              {data?.length === 0 && <li className="px-4 py-3 text-sm text-slate-500 dark:text-gray-400">Sin resultados</li>}
-              {data?.map(employee => (
-                <li key={employee.id}>
-                  <button type="button" onClick={() => select(employee)} className="w-full px-4 py-2.5 text-left hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-50 cursor-pointer dark:hover:bg-gray-800 dark:focus-visible:bg-gray-800">
-                    <p className="text-sm font-medium text-slate-900 dark:text-gray-100">{employeeFullName(employee)}</p>
-                    <p className="text-xs text-slate-500 dark:text-gray-400">PIN {employee.pin} · {employee.department}</p>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
       )}
-
-      <p className="text-red-400 text-xs">{error?.message}</p>
     </div>
   )
 }

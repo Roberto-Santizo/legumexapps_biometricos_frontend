@@ -10,16 +10,20 @@ export function UpdateEmployee() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const notification = useNotification();
-  const id = params.id!;
+  const pin = params.pin!;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['getEmployeeById', id],
-    queryFn: () => employeesRepositoryProvider.getEmployeeById(id)
+    queryKey: ['getEmployeeByPin', pin],
+    queryFn: () => employeesRepositoryProvider.getEmployeeByPin(pin)
   });
+
+  // Niveles y PATCH siguen usando el ID interno, disponible tras consultar por PIN
+  const id = data?.id ?? '';
 
   const { data: levels, isLoading: isLoadingLevels } = useQuery({
     queryKey: ['getEmployeeLevels', id],
-    queryFn: () => employeesRepositoryProvider.getEmployeeLevels(id)
+    queryFn: () => employeesRepositoryProvider.getEmployeeLevels(id),
+    enabled: !!id
   });
 
   const {
@@ -37,10 +41,10 @@ export function UpdateEmployee() {
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
-      queryClient.invalidateQueries({ queryKey: ['getEmployeeById', id] });
+      queryClient.invalidateQueries({ queryKey: ['getEmployeeByPin', pin] });
       queryClient.invalidateQueries({ queryKey: ['getEmployeeLevels', id] });
       queryClient.invalidateQueries({ queryKey: ['getPositions'] });
-      navigate(`/empleados/${id}`);
+      navigate(`/empleados/${pin}`);
     },
     onError: (err) => {
       notification.error(err.message);

@@ -1,9 +1,14 @@
-import type { CreationTaskPayload, InactivationTaskPayload, MovementTaskPayload, TaskForm, TaskPlanificationRef, TaskStatus, TaskType, TaskUploadType, UpdateTaskPayload } from "@/features/tasks/tasks";
+import type { CreationTaskPayload, InactivationTaskPayload, InactivationType, MovementTaskPayload, TaskForm, TaskPlanificationRef, TaskStatus, TaskType, TaskUploadType, UpdateTaskPayload } from "@/features/tasks/tasks";
 
 export const taskTypeLabels: Record<TaskType, string> = {
     alta: 'Alta',
     movimiento: 'Movimiento',
     baja: 'Baja'
+};
+
+export const inactivationTypeLabels: Record<InactivationType, string> = {
+    PERMANENTE: 'Permanente',
+    TEMPORAL: 'Temporal'
 };
 
 export const taskStatusLabels: Record<TaskStatus, string> = {
@@ -30,7 +35,8 @@ export const taskFieldLabels: Record<string, string> = {
     deptCode: 'Código de departamento',
     accLevelIds: 'Niveles de acceso',
     leaveType: 'Tipo de baja',
-    leaveDate: 'Fecha de baja'
+    leaveDate: 'Fecha de baja',
+    inactivationType: 'Baja permanente o temporal'
 };
 
 export const formatTaskValue = (value: unknown): string => {
@@ -88,7 +94,7 @@ export const toCreationTaskPayload = (form: TaskForm, planificationId: string): 
 
 export const toMovementTaskPayload = (form: TaskForm, planificationId: string): MovementTaskPayload => ({
     planification_id: planificationId,
-    employee_id: form.employee_id,
+    pin: form.pin.trim(),
     position_id: form.position_id,
     auth_dept_id: form.auth_dept_id,
     accLevelIds: joinLevels(form.accLevelIds),
@@ -97,8 +103,9 @@ export const toMovementTaskPayload = (form: TaskForm, planificationId: string): 
 
 export const toInactivationTaskPayload = (form: TaskForm, planificationId: string): InactivationTaskPayload => ({
     planification_id: planificationId,
-    employee_id: form.employee_id,
-    scheduled_at: form.scheduled_at
+    pin: form.pin.trim(),
+    scheduled_at: form.scheduled_at,
+    type: form.inactivationType
 });
 
 // Solo se envían los campos modificados; los vacíos ("mantener actual") se omiten
@@ -122,12 +129,12 @@ export const toUpdateTaskPayload = (form: TaskForm, type: TaskType, dirty: Parti
 export const emptyTaskForm: TaskForm = {
     planification_id: '',
     scheduled_at: '',
-    employee_id: '',
     pin: '',
     name: '',
     lastName: '',
     position_id: '',
     auth_dept_id: '',
     accLevelIds: [],
+    inactivationType: 'PERMANENTE',
     file: null
 };

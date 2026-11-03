@@ -7,6 +7,16 @@ import { positionsRepositoryProvider } from "@/features/positions/positions";
 const CATALOG_LIMIT = 1000;
 
 // Comparte la caché con el formulario de empleados
+export function useAccessLevelsCatalog() {
+  const { data: levels } = useQuery({
+    queryKey: ['getAccessLevels', 'catalog'],
+    queryFn: () => accessLevelsRepositoryProvider.getAccessLevels(0, CATALOG_LIMIT),
+    select: (response) => response.data
+  });
+
+  return levels;
+}
+
 export function useTaskCatalogs() {
   const { data: departments } = useQuery({
     queryKey: ['getDepartments', 'catalog'],
@@ -14,11 +24,7 @@ export function useTaskCatalogs() {
     select: (response) => response.data
   });
 
-  const { data: levels } = useQuery({
-    queryKey: ['getAccessLevels', 'catalog'],
-    queryFn: () => accessLevelsRepositoryProvider.getAccessLevels(0, CATALOG_LIMIT),
-    select: (response) => response.data
-  });
+  const levels = useAccessLevelsCatalog();
 
   const { data: positions } = useQuery({
     queryKey: ['getPositions', 'catalog'],

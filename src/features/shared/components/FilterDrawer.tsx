@@ -2,6 +2,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/re
 import { SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import type { SetURLSearchParams } from "react-router-dom";
+import { SearchSelect, type SelectOption } from "./SearchSelectFormField";
 
 export type FilterField = {
   name: string;
@@ -9,7 +10,37 @@ export type FilterField = {
   placeholder?: string;
   type?: 'text' | 'email' | 'number' | 'date' | 'datetime-local';
   options?: { value: string; label: string }[];
+  // Búsqueda en el backend con SearchSelect en lugar de cargar el catálogo completo en `options`
+  search?: {
+    queryKey: string | readonly string[];
+    fetchOptions: (search: string) => Promise<SelectOption[]>;
+    emptyMessage?: string;
+  };
+  // Etiqueta del valor activo cuando no puede derivarse de `options` (p. ej. un id elegido con `search`)
+  valueLabel?: string;
 };
+
+// SearchSelect es controlado; el input oculto lo expone al FormData del formulario
+function SearchFilterInput({ field, defaultValue }: { field: FilterField & { search: NonNullable<FilterField['search']> }; defaultValue: string }) {
+  const [value, setValue] = useState(defaultValue);
+
+  return (
+    <>
+      <SearchSelect
+        id={`filter-${field.name}`}
+        label={field.label}
+        value={value}
+        onChange={setValue}
+        queryKey={field.search.queryKey}
+        fetchOptions={field.search.fetchOptions}
+        emptyMessage={field.search.emptyMessage}
+        placeholder={field.placeholder}
+        initialLabel={field.valueLabel}
+      />
+      <input type="hidden" name={field.name} value={value} />
+    </>
+  );
+}
 
 type Props = {
   fields: FilterField[];
@@ -49,7 +80,7 @@ export function FilterDrawer({ fields, searchParams, setSearchParams, title = "F
   };
 
   const displayValue = (field: FilterField, value: string) =>
-    field.options?.find(option => option.value === value)?.label ?? value;
+    field.options?.find(option => option.value === value)?.label ?? field.valueLabel ?? value;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -95,7 +126,13 @@ export function FilterDrawer({ fields, searchParams, setSearchParams, title = "F
               </div>
 
               <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5">
-                {fields.map(field => (
+                {fields.map(field => field.search ? (
+                  <SearchFilterInput
+                    key={field.name}
+                    field={{ ...field, search: field.search }}
+                    defaultValue={searchParams.get(field.name) ?? ''}
+                  />
+                ) : (
                   <div key={field.name} className="space-y-1.5">
                     <label htmlFor={`filter-${field.name}`} className="block text-sm font-medium text-slate-700 dark:text-gray-300">
                       {field.label}

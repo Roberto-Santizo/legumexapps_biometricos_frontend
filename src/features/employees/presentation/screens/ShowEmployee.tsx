@@ -25,19 +25,22 @@ export function ShowEmployee() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const notification = useNotification();
-    const id = params.id!;
+    const pin = params.pin!;
 
     const { data, isLoading, error, dataUpdatedAt } = useQuery({
-        queryKey: ['getEmployeeById', id],
-        queryFn: () => employeesRepositoryProvider.getEmployeeById(id)
+        queryKey: ['getEmployeeByPin', pin],
+        queryFn: () => employeesRepositoryProvider.getEmployeeByPin(pin)
     });
+
+    // Baja y niveles siguen usando el ID interno, disponible tras consultar por PIN
+    const id = data?.id ?? '';
 
     const { mutate, isPending } = useMutation({
         mutationFn: () => employeesRepositoryProvider.inactiveEmployee(id),
         onSuccess: (message) => {
             notification.success(message);
             queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
-            queryClient.removeQueries({ queryKey: ['getEmployeeById', id] });
+            queryClient.removeQueries({ queryKey: ['getEmployeeByPin', pin] });
             queryClient.removeQueries({ queryKey: ['getEmployeeLevels', id] });
             queryClient.invalidateQueries({ queryKey: ['getPositions'] });
             navigate('/empleados');
@@ -51,7 +54,7 @@ export function ShowEmployee() {
         mutationFn: ({ pin, file }: { pin: string; file: File }) => employeesRepositoryProvider.updateEmployeePhoto(pin, file),
         onSuccess: (message) => {
             notification.success(message);
-            queryClient.invalidateQueries({ queryKey: ['getEmployeeById', id] });
+            queryClient.invalidateQueries({ queryKey: ['getEmployeeByPin', pin] });
             queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
         },
         onError: (err) => {
@@ -68,7 +71,7 @@ export function ShowEmployee() {
             setRemoveModal(false);
             queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
             queryClient.invalidateQueries({ queryKey: ['getInactiveEmployees'] });
-            queryClient.removeQueries({ queryKey: ['getEmployeeById', id] });
+            queryClient.removeQueries({ queryKey: ['getEmployeeByPin', pin] });
             queryClient.removeQueries({ queryKey: ['getEmployeeLevels', id] });
             queryClient.invalidateQueries({ queryKey: ['getPositions'] });
             navigate('/empleados');
@@ -121,7 +124,7 @@ export function ShowEmployee() {
                         label="Editar"
                         type="button"
                         icon={<EditIcon className="h-4 w-4 text-white" />}
-                        onClick={() => navigate(`/empleados/${id}/editar`)}
+                        onClick={() => navigate(`/empleados/${pin}/editar`)}
                     />
                 </div>
 

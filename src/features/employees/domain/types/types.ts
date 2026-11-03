@@ -40,4 +40,6 @@ export type UpdateEmployeePayload = Omit<EmployeePayload, 'pin'>;
 
 export type EmployeesFilters = {
     name?: string;
+    pin?: string;
+    auth_dept_id?: string;
 }

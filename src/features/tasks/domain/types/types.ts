@@ -10,6 +10,9 @@ export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 // Valor del parámetro :type de POST /tasks/upload/:type (altas, movimientos o bajas)
 export type TaskUploadType = 'creation' | 'movement' | 'inactivate';
 
+// Tipo de baja de POST /tasks/inactivate (se envía como inactivationType en el payload de la tarea)
+export type InactivationType = 'PERMANENTE' | 'TEMPORAL';
+
 // pin es búsqueda parcial; scheduled_at es el día programado ("YYYY-MM-DD", del input date)
 export type TasksFilters = {
     pin?: string;
@@ -20,13 +23,14 @@ export type TasksFilters = {
 export type TaskForm = {
     planification_id: string;
     scheduled_at: string;
-    employee_id: string;
     pin: string;
     name: string;
     lastName: string;
     position_id: string;
     auth_dept_id: string;
     accLevelIds: string[];
+    // Tipo de baja (solo bajas)
+    inactivationType: InactivationType;
     // Fotografía opcional del alta (jpg, jpeg, png o gif)
     file: File | null;
 }
@@ -38,13 +42,15 @@ export type CreationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'n
     file?: File;
 }
 
-// Body de POST /tasks/movement
-export type MovementTaskPayload = Pick<TaskForm, 'planification_id' | 'employee_id' | 'position_id' | 'auth_dept_id' | 'scheduled_at'> & {
+// Body de POST /tasks/movement; el empleado se identifica por su PIN
+export type MovementTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'position_id' | 'auth_dept_id' | 'scheduled_at'> & {
     accLevelIds: string;
 }
 
-// Body de POST /tasks/inactivate
-export type InactivationTaskPayload = Pick<TaskForm, 'planification_id' | 'employee_id' | 'scheduled_at'>;
+// Body de POST /tasks/inactivate; el empleado se identifica por su PIN
+export type InactivationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'scheduled_at'> & {
+    type: InactivationType;
+};
 
 // Body de PATCH /tasks/:id; solo se envían los campos modificados que apliquen al tipo de tarea
 export type UpdateTaskPayload = Partial<Pick<TaskForm, 'planification_id' | 'scheduled_at' | 'position_id' | 'auth_dept_id' | 'name' | 'lastName'> & {

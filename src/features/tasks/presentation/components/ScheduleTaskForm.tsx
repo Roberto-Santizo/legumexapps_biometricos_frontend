@@ -1,7 +1,7 @@
 import { CustomFilledButton, LoadingData, TextFormField, useNotification } from "@/features/shared/shared";
 import {
-  DepartmentField, EmployeeSearchField, PositionField, ScheduledAtField, TaskAccessLevelsField, TaskPhotoField,
-  emptyTaskForm, scheduleBounds, taskTypeLabels, tasksRepositoryProvider, toCreationTaskPayload, toInactivationTaskPayload, toMovementTaskPayload, useTaskCatalogs,
+  DepartmentPositionFields, EmployeePinField, InactivationTypeField, ScheduledAtField, TaskAccessLevelsField, TaskPhotoField,
+  emptyTaskForm, scheduleBounds, taskTypeLabels, tasksRepositoryProvider, toCreationTaskPayload, toInactivationTaskPayload, toMovementTaskPayload, useAccessLevelsCatalog,
   type TaskForm, type TaskPlanificationRef, type TaskType
 } from "@/features/tasks/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -38,15 +38,15 @@ const useTaskForm = (planification: TaskPlanificationRef) => useForm<TaskForm>({
 });
 
 function CreationTaskForm({ planification, onScheduled }: FormProps) {
-  const { departments, levels, positions } = useTaskCatalogs();
-  const { handleSubmit, register, control, formState: { errors } } = useTaskForm(planification);
+  const levels = useAccessLevelsCatalog();
+  const { handleSubmit, register, control, setValue, formState: { errors } } = useTaskForm(planification);
   const { mutate, isPending } = useScheduleTask(
     (form) => tasksRepositoryProvider.createCreationTask(toCreationTaskPayload(form, planification.id)),
     onScheduled
   );
   const bounds = scheduleBounds(planification);
 
-  if (!departments || !levels || !positions) return <LoadingData />
+  if (!levels) return <LoadingData />
 
   return (
     <form className="flex flex-col gap-5" noValidate onSubmit={handleSubmit(form => mutate(form))}>
@@ -82,9 +82,7 @@ function CreationTaskForm({ planification, onScheduled }: FormProps) {
         />
       </div>
 
-      {/* En el alta la posición es opcional */}
-      <PositionField register={register} errors={errors} items={positions} optional emptyLabel="Sin posición" />
-      <DepartmentField register={register} errors={errors} items={departments} />
+      <DepartmentPositionFields register={register} control={control} setValue={setValue} errors={errors} optionalPosition />
       <TaskAccessLevelsField register={register} errors={errors} items={levels} />
       <ScheduledAtField register={register} errors={errors} min={bounds.min} max={bounds.max} />
       <TaskPhotoField control={control} />
@@ -95,21 +93,20 @@ function CreationTaskForm({ planification, onScheduled }: FormProps) {
 }
 
 function MovementTaskForm({ planification, onScheduled }: FormProps) {
-  const { departments, levels, positions } = useTaskCatalogs();
-  const { handleSubmit, register, control, formState: { errors } } = useTaskForm(planification);
+  const levels = useAccessLevelsCatalog();
+  const { handleSubmit, register, control, setValue, formState: { errors } } = useTaskForm(planification);
   const { mutate, isPending } = useScheduleTask(
     (form) => tasksRepositoryProvider.createMovementTask(toMovementTaskPayload(form, planification.id)),
     onScheduled
   );
   const bounds = scheduleBounds(planification);
 
-  if (!departments || !levels || !positions) return <LoadingData />
+  if (!levels) return <LoadingData />
 
   return (
     <form className="flex flex-col gap-5" noValidate onSubmit={handleSubmit(form => mutate(form))}>
-      <EmployeeSearchField control={control} />
-      <PositionField register={register} errors={errors} items={positions} />
-      <DepartmentField register={register} errors={errors} items={departments} />
+      <EmployeePinField register={register} control={control} errors={errors} />
+      <DepartmentPositionFields register={register} control={control} setValue={setValue} errors={errors} />
       <TaskAccessLevelsField register={register} errors={errors} items={levels} />
       <ScheduledAtField register={register} errors={errors} min={bounds.min} max={bounds.max} />
 
@@ -128,7 +125,8 @@ function InactivationTaskForm({ planification, onScheduled }: FormProps) {
 
   return (
     <form className="flex flex-col gap-5" noValidate onSubmit={handleSubmit(form => mutate(form))}>
-      <EmployeeSearchField control={control} />
+      <EmployeePinField register={register} control={control} errors={errors} />
+      <InactivationTypeField register={register} errors={errors} />
       <ScheduledAtField register={register} errors={errors} min={bounds.min} max={bounds.max} />
 
       <CustomFilledButton

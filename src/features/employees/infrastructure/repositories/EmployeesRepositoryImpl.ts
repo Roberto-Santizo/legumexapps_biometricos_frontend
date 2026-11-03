@@ -12,8 +12,8 @@ export class EmployeesRepositoryImpl implements EmployeesRepository {
         return this.datasource.getEmployees(page, limit, filters);
     }
 
-    getEmployeeById(id: string): Promise<Employee> {
-        return this.datasource.getEmployeeById(id);
+    getEmployeeByPin(pin: string): Promise<Employee> {
+        return this.datasource.getEmployeeByPin(pin);
     }
 
     updateEmployeeById(payload: UpdateEmployeePayload, id: string): Promise<string> {
