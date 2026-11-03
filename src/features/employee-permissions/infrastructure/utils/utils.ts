@@ -60,7 +60,21 @@ export const toPermissionPayload = (form: EmployeePermissionForm): EmployeePermi
     };
 }
 
-export const toUpdatePermissionForm = (permission: EmployeePermission): UpdateEmployeePermissionForm => ({
+// PATCH /permissions/:id rechaza employee_pin, substitute_pin y archivos
+export const toUpdatePermissionPayload = (form: EmployeePermissionForm): UpdateEmployeePermissionForm => ({
+    date: form.date,
+    type: form.type as PermissionType,
+    reason: form.reason.trim(),
+    salary_status: form.salary_status as SalaryStatus,
+    shift_start: form.shift_start,
+    shift_end: form.shift_end
+});
+
+// Valores iniciales del formulario en edición; el trabajador y el comodín no se pueden cambiar
+export const toPermissionForm = (permission: EmployeePermission): EmployeePermissionForm => ({
+    ...emptyPermissionForm,
+    employee_pin: permission.employee.pin,
+    substitute_pin: permission.substitute?.pin ?? '',
     date: permission.date.slice(0, 10),
     type: permission.type,
     reason: permission.reason,
