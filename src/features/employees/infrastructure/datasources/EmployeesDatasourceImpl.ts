@@ -55,9 +55,9 @@ export class EmployeesDatasourceImpl implements EmployeesDatasource {
         }
     }
 
-    async getEmployeeById(id: string): Promise<Employee> {
+    async getEmployeeByPin(pin: string): Promise<Employee> {
         try {
-            const url = `/employees/${id}`;
+            const url = `/employees/${encodeURIComponent(pin)}`;
             const { data } = await this.api.get(url);
             const response = EmployeeListItemSchema.safeParse(data);
 

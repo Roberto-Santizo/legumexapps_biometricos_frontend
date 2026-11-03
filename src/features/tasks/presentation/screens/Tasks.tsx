@@ -1,5 +1,5 @@
 import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Modal, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, useNotification, usePagination } from "@/features/shared/shared";
-import { EyeIcon, Trash2, Upload } from "lucide-react";
+import { EditIcon, EyeIcon, Trash2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -25,6 +25,8 @@ export function Tasks() {
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getTasks'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks'] });
     },
     onError: (err) => {
       notification.error(err.message);
@@ -46,7 +48,7 @@ export function Tasks() {
         <FilterDrawer
           fields={[
             { name: 'pin', label: 'PIN', placeholder: 'Buscar por código de empleado' },
-            { name: 'scheduled_at', label: 'Fecha programada', type: 'datetime-local' },
+            { name: 'scheduled_at', label: 'Fecha programada', type: 'date' },
           ]}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
@@ -86,6 +88,8 @@ export function Tasks() {
                     <ActionsMenu
                       items={[
                         { label: 'Ver', icon: <EyeIcon />, onClick: () => navigate(`/tareas/${task.id}`) },
+                        // Solo las tareas pendientes se pueden editar
+                        { label: 'Editar', icon: <EditIcon />, disabled: task.status !== 'pendiente', onClick: () => navigate(`/tareas/${task.id}/editar`) },
                         { label: 'Eliminar', icon: <Trash2 />, onClick: () => handleDelete(task.id), destructive: true },
                       ]}
                     />

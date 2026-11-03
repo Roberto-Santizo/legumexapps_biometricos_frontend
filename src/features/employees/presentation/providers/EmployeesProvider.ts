@@ -12,8 +12,8 @@ export class EmployeesProvider {
         return this.repository.getEmployees(page, limit, filters);
     }
 
-    getEmployeeById(id: string): Promise<Employee> {
-        return this.repository.getEmployeeById(id);
+    getEmployeeByPin(pin: string): Promise<Employee> {
+        return this.repository.getEmployeeByPin(pin);
     }
 
     updateEmployeeById(payload: UpdateEmployeePayload, id: string): Promise<string> {

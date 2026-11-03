@@ -1,5 +1,5 @@
-import { LoadingData, TextFormField } from "@/features/shared/shared";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import { LoadingData, SearchSelectFormField, TextFormField, type SelectOption } from "@/features/shared/shared";
+import { useWatch, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { departmentsRepositoryProvider } from "@/features/departments/departments";
 import { accessLevelsRepositoryProvider } from "@/features/access-levels/access-levels";
@@ -9,34 +9,44 @@ import { AccessLevelsFormField, type EmployeeForm } from "@/features/employees/e
 // Los catálogos se usan completos en los selectores; el backend no expone un endpoint sin paginar
 const CATALOG_LIMIT = 1000;
 
+// Los departamentos se buscan por nombre en el backend en lugar de cargar el catálogo completo
+const DEPARTMENTS_SEARCH_LIMIT = 20;
+
+const searchDepartments = async (name: string): Promise<SelectOption[]> => {
+  const { data } = await departmentsRepositoryProvider.getDepartments(0, DEPARTMENTS_SEARCH_LIMIT, { name });
+  return data.map(department => ({ value: department.code, label: `${department.name} (${department.code})` }));
+}
+
 type Props = {
   register: UseFormRegister<EmployeeForm>;
+  control: Control<EmployeeForm>;
+  setValue: UseFormSetValue<EmployeeForm>;
   errors: FieldErrors<EmployeeForm>;
   isEdit?: boolean;
   // Posición actual del empleado en edición: se mantiene seleccionable aunque ya tenga empleado
   currentPositionId?: string | null;
+  // Etiqueta del departamento actual en edición, puede no estar en la primera página de la búsqueda
+  currentDepartment?: string;
 }
 
-export function Form({ register, errors, isEdit = false, currentPositionId }: Props) {
-  const { data: departments } = useQuery({
-    queryKey: ['getDepartments', 'catalog'],
-    queryFn: () => departmentsRepositoryProvider.getDepartments(0, CATALOG_LIMIT),
-    select: (response) => response.data
-  });
-
+export function Form({ register, control, setValue, errors, isEdit = false, currentPositionId, currentDepartment }: Props) {
   const { data: levels } = useQuery({
     queryKey: ['getAccessLevels', 'catalog'],
     queryFn: () => accessLevelsRepositoryProvider.getAccessLevels(0, CATALOG_LIMIT),
     select: (response) => response.data
   });
 
-  const { data: positions } = useQuery({
-    queryKey: ['getPositions', 'catalog'],
-    queryFn: () => positionsRepositoryProvider.getPositions(0, CATALOG_LIMIT),
-    select: (response) => response.data
+  const deptCode = useWatch({ control, name: 'deptCode' });
+
+  // Las posiciones se filtran por el código del departamento; sin departamento la lista queda vacía
+  const { data: positions = [], isLoading: isLoadingPositions } = useQuery({
+    queryKey: ['getPositions', 'byDepartment', deptCode],
+    queryFn: () => positionsRepositoryProvider.getPositions(0, CATALOG_LIMIT, { code: deptCode }),
+    select: (response) => response.data,
+    enabled: !!deptCode
   });
 
-  if (!departments || !levels || !positions) return <LoadingData />
+  if (!levels) return <LoadingData />
 
   return (
     <>
@@ -80,38 +90,45 @@ export function Form({ register, errors, isEdit = false, currentPositionId }: Pr
         errorMessage={errors.pin?.message}
       />
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="deptCode">
-          Departamento
-        </label>
-
-        <select
-          id="deptCode"
-          aria-invalid={!!errors.deptCode}
-          className={errors.deptCode ? 'text_form_field_error' : 'text_form_field'}
-          {...register('deptCode', { required: 'Seleccione un departamento' })}
-        >
-          <option value="" disabled>Seleccione un departamento</option>
-          {departments.map(department => (
-            <option key={department.id} value={department.code}>{department.name} ({department.code})</option>
-          ))}
-        </select>
-
-        <p className="text-red-400 text-xs">{errors.deptCode?.message}</p>
-      </div>
+      <SearchSelectFormField<EmployeeForm>
+        label="Departamento"
+        name="deptCode"
+        control={control}
+        queryKey="getDepartments"
+        fetchOptions={searchDepartments}
+        placeholder="Buscar departamento por nombre"
+        emptyMessage="No se encontraron departamentos"
+        initialLabel={currentDepartment}
+        validation={{ required: 'Seleccione un departamento' }}
+        errorMessage={errors.deptCode?.message}
+        // La posición elegida pertenece al departamento anterior
+        onValueChange={() => setValue('position_id', '')}
+      />
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="position_id">
-          Posición
+          Posición {!isEdit && <span className="font-normal text-gray-400 dark:text-gray-500">(opcional)</span>}
         </label>
 
         <select
+          // Se remonta al cargar las posiciones para que react-hook-form aplique el valor actual sobre las nuevas opciones
+          key={isLoadingPositions ? 'loading' : deptCode}
           id="position_id"
+          disabled={!deptCode || isLoadingPositions}
           aria-invalid={!!errors.position_id}
           className={errors.position_id ? 'text_form_field_error' : 'text_form_field'}
-          {...register('position_id', { required: 'Seleccione una posición' })}
+          {...register('position_id', { required: isEdit ? 'Seleccione una posición' : false })}
         >
-          <option value="" disabled>Seleccione una posición</option>
+          {/* Al crear, la posición es opcional y puede asignarse después */}
+          <option value="" disabled={isEdit}>
+            {!deptCode
+              ? 'Seleccione un departamento primero'
+              : isLoadingPositions
+                ? 'Cargando posiciones...'
+                : positions.length === 0
+                  ? 'El departamento no tiene posiciones'
+                  : isEdit ? 'Seleccione una posición' : 'Sin posición'}
+          </option>
           {/* El backend rechaza posiciones que ya tienen un empleado asignado */}
           {positions.map(position => {
             const taken = !!position.employee && position.id !== currentPositionId;

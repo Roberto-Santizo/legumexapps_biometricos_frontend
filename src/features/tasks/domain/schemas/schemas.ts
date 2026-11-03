@@ -5,7 +5,7 @@ export const TaskTypeSchema = z.enum(['alta', 'movimiento', 'baja']);
 
 export const TaskStatusSchema = z.enum(['pendiente', 'completada', 'fallida']);
 
-// GET /tasks devuelve las tareas programadas para ZKBioAccess; scheduled_at llega como "dd-MM-yyyy HH:mm:ss"
+// GET /tasks devuelve las tareas programadas para ZKBioAccess; scheduled_at llega como "YYYY-MM-DD"
 export const TaskSchema = z.object({
     id: z.string(),
     type: TaskTypeSchema,
@@ -16,7 +16,9 @@ export const TaskSchema = z.object({
     // Datos del empleado antes del movimiento; solo viene en tareas de tipo movimiento
     previous: z.record(z.string(), z.unknown()).nullish(),
     scheduled_at: z.string(),
-    created_by: z.string()
+    created_by: z.string(),
+    // null en tareas cargadas por Excel
+    planification_id: z.string().nullish()
 });
 
 export const TaskListSchema = PaginatedResponseSchema(TaskSchema);

@@ -10,21 +10,27 @@ export function UpdateEmployee() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const notification = useNotification();
-  const id = params.id!;
+  const pin = params.pin!;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['getEmployeeById', id],
-    queryFn: () => employeesRepositoryProvider.getEmployeeById(id)
+    queryKey: ['getEmployeeByPin', pin],
+    queryFn: () => employeesRepositoryProvider.getEmployeeByPin(pin)
   });
+
+  // Niveles y PATCH siguen usando el ID interno, disponible tras consultar por PIN
+  const id = data?.id ?? '';
 
   const { data: levels, isLoading: isLoadingLevels } = useQuery({
     queryKey: ['getEmployeeLevels', id],
-    queryFn: () => employeesRepositoryProvider.getEmployeeLevels(id)
+    queryFn: () => employeesRepositoryProvider.getEmployeeLevels(id),
+    enabled: !!id
   });
 
   const {
     handleSubmit,
     register,
+    control,
+    setValue,
     formState: { errors },
     reset
   } = useForm<EmployeeForm>({ defaultValues: emptyEmployeeForm });
@@ -35,10 +41,10 @@ export function UpdateEmployee() {
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getEmployees'] });
-      queryClient.invalidateQueries({ queryKey: ['getEmployeeById', id] });
+      queryClient.invalidateQueries({ queryKey: ['getEmployeeByPin', pin] });
       queryClient.invalidateQueries({ queryKey: ['getEmployeeLevels', id] });
       queryClient.invalidateQueries({ queryKey: ['getPositions'] });
-      navigate(`/empleados/${id}`);
+      navigate(`/empleados/${pin}`);
     },
     onError: (err) => {
       notification.error(err.message);
@@ -68,7 +74,15 @@ export function UpdateEmployee() {
       <Title title="Actualización de empleado" subtitle={`${employeeFullName(data)} · PIN ${data.pin}`} />
 
       <form className="form w-full mx-auto lg:w-2/3" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Form register={register} errors={errors} isEdit={true} currentPositionId={data.position_id} />
+        <Form
+          register={register}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          isEdit={true}
+          currentPositionId={data.position_id}
+          currentDepartment={`${data.department} (${data.departmentCode})`}
+        />
 
         <CustomFilledButton label="Guardar Cambios" type="submit" fullWitdh={true} disabled={isPending} />
       </form>

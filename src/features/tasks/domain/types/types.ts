@@ -10,8 +10,56 @@ export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 // Valor del parámetro :type de POST /tasks/upload/:type (altas, movimientos o bajas)
 export type TaskUploadType = 'creation' | 'movement' | 'inactivate';
 
-// pin es búsqueda parcial; scheduled_at es coincidencia exacta de fecha y hora
+// Tipo de baja de POST /tasks/inactivate (se envía como inactivationType en el payload de la tarea)
+export type InactivationType = 'PERMANENTE' | 'TEMPORAL';
+
+// pin es búsqueda parcial; scheduled_at es el día programado ("YYYY-MM-DD", del input date)
 export type TasksFilters = {
     pin?: string;
     scheduled_at?: string;
+}
+
+// Valores de los formularios de tareas; cada tipo usa solo sus campos. scheduled_at viene de un input date ("YYYY-MM-DD")
+export type TaskForm = {
+    planification_id: string;
+    scheduled_at: string;
+    pin: string;
+    name: string;
+    lastName: string;
+    position_id: string;
+    auth_dept_id: string;
+    accLevelIds: string[];
+    // Tipo de baja (solo bajas)
+    inactivationType: InactivationType;
+    // Fotografía opcional del alta (jpg, jpeg, png o gif)
+    file: File | null;
+}
+
+// Body multipart de POST /tasks/creation; accLevelIds van separados por coma y position_id es opcional
+export type CreationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'name' | 'lastName' | 'auth_dept_id' | 'scheduled_at'> & {
+    position_id?: string;
+    accLevelIds: string;
+    file?: File;
+}
+
+// Body de POST /tasks/movement; el empleado se identifica por su PIN
+export type MovementTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'position_id' | 'auth_dept_id' | 'scheduled_at'> & {
+    accLevelIds: string;
+}
+
+// Body de POST /tasks/inactivate; el empleado se identifica por su PIN
+export type InactivationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'scheduled_at'> & {
+    type: InactivationType;
+};
+
+// Body de PATCH /tasks/:id; solo se envían los campos modificados que apliquen al tipo de tarea
+export type UpdateTaskPayload = Partial<Pick<TaskForm, 'planification_id' | 'scheduled_at' | 'position_id' | 'auth_dept_id' | 'name' | 'lastName'> & {
+    accLevelIds: string;
+}>;
+
+// Datos mínimos de la planificación para programar tareas dentro de su semana
+export type TaskPlanificationRef = {
+    id: string;
+    start_date: string;
+    end_date: string;
 }

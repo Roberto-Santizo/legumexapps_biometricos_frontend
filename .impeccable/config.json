@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-10-26T21:52:47.294Z",
         "reason": "claude: gray text only on unchecked white card; checked state swaps to text-blue-800 via has-checked, same pattern as AccessLevelsFormField"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/features/tasks/presentation/components/TaskFormFields.tsx"
+        ],
+        "createdAt": "2026-10-30T18:21:23.723Z",
+        "reason": "claude: gray text only on neutral unchecked state; has-checked swaps to text-blue-800 on bg-blue-50 (same pattern as employees AccessLevelsFormField)"
       }
     ]
   }

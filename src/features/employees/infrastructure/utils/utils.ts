@@ -12,7 +12,8 @@ export const toEmployeePayload = (form: EmployeeForm): EmployeePayload => ({
     lastName: form.lastName.trim(),
     pin: form.pin.trim(),
     deptCode: form.deptCode,
-    position_id: form.position_id,
+    // Vacío = sin posición; se omite del body
+    position_id: form.position_id || undefined,
     accLevelIds: [form.accLevelIds].flat().join(','),
     accStartTime: toZkDateTime(form.accStartTime),
     accEndTime: toZkDateTime(form.accEndTime),

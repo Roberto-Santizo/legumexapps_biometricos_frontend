@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { Briefcase, Building2, CalendarClock, ChevronRight, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, UsersRound, X } from "lucide-react";
+import { Briefcase, Building2, CalendarClock, CalendarRange, ChevronRight, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, UsersRound, X } from "lucide-react";
 import { logout, ValidRoles } from "@/features/auth/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoles } from "@/features/shared/shared";
@@ -114,6 +114,15 @@ export function CustomSideBar({ open, onClose }: Props) {
               <NavLink to="/transacciones-empleados" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--blue"><Fingerprint aria-hidden="true" /></span>
                 <span className="ios-sidebar__label">Transacciones</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+          )}
+          {canSeeGeneral && (
+            <li className="ios-sidebar__item">
+              <NavLink to="/planificaciones" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--teal"><CalendarRange aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Planificaciones</span>
                 <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
               </NavLink>
             </li>
