@@ -78,42 +78,49 @@ export function SignaturePad({ id, label, value, onChange, onBlur, errorMessage,
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-2">
-        <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
+    <div
+      className={`flex flex-col gap-1.5 rounded-2xl p-1.5 transition-colors duration-200 ease-out motion-reduce:transition-none ${disabled ? 'opacity-60' : ''} ${errorMessage ? 'bg-red-50 dark:bg-red-500/15' : value ? 'bg-emerald-50 dark:bg-emerald-500/15' : 'bg-slate-100 dark:bg-gray-800'}`}
+    >
+      <div className="flex items-center justify-between gap-2 px-1.5 pt-0.5">
+        <label htmlFor={id} className="truncate text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
         {value && (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+          <span className="inline-flex flex-none items-center gap-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
             <CircleCheck className="h-3.5 w-3.5" /> Firmado
           </span>
         )}
       </div>
-
-      <canvas
-        id={id}
-        ref={canvasRef}
-        width={WIDTH}
-        height={HEIGHT}
-        role="img"
-        aria-label={`Área de firma: ${label}`}
-        aria-invalid={!!errorMessage}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        className={`aspect-[3/1] w-full touch-none rounded-xl border-2 border-dashed bg-white ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-crosshair'} ${errorMessage ? 'border-red-400' : 'border-slate-300 dark:border-gray-600'}`}
-      />
-
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-red-400 text-xs">{errorMessage}</p>
-        <button
-          type="button"
-          onClick={() => onChange(null)}
-          disabled={disabled || !value}
-          className="inline-flex flex-none items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer dark:text-gray-400 dark:hover:text-gray-100"
+      <div className="relative overflow-hidden rounded-xl bg-white">
+        <canvas
+          id={id}
+          ref={canvasRef}
+          width={WIDTH}
+          height={HEIGHT}
+          role="img"
+          aria-label={`Área de firma: ${label}`}
+          aria-invalid={!!errorMessage}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          className={`block aspect-[3/1] w-full touch-none ${disabled ? 'cursor-not-allowed' : 'cursor-crosshair'}`}
+        />
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-slate-500 transition-opacity duration-200 ease-out motion-reduce:transition-none ${value ? 'opacity-0' : 'opacity-100'}`}
         >
-          <Eraser className="h-3.5 w-3.5" /> Limpiar
-        </button>
+          Firme aquí
+        </span>
+        {value && !disabled && (
+          <button
+            type="button"
+            onClick={() => onChange(null)}
+            className="absolute right-2 top-2 inline-flex cursor-pointer items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 shadow-sm transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+          >
+            <Eraser className="h-3.5 w-3.5" /> Limpiar
+          </button>
+        )}
       </div>
+      {errorMessage && <p className="px-1.5 pb-0.5 text-xs text-red-700 dark:text-red-300">{errorMessage}</p>}
     </div>
   )
 }

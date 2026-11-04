@@ -1,18 +1,27 @@
-import { DateFormField, SearchSelectFormField, TextFormField, type SelectOption } from "@/features/shared/shared";
+import { useState } from "react";
+import { DateFormField, SearchSelect, SearchSelectFormField, TextFormField, type SelectOption } from "@/features/shared/shared";
 import { useWatch, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from "react-hook-form";
 import { X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { EmployeePreviewCard, employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
+import { departmentsRepositoryProvider } from "@/features/departments/departments";
 import { permissionTypeOptions, salaryStatusOptions, type EmployeePermissionForm } from "@/features/employee-permissions/employee-permissions";
 
-// Los empleados se buscan en el backend en lugar de cargar el catálogo completo
+// Los empleados y departamentos se buscan en el backend en lugar de cargar el catálogo completo
 const EMPLOYEES_SEARCH_LIMIT = 20;
+const DEPARTMENTS_SEARCH_LIMIT = 20;
 
 // Un texto numérico se busca como código (PIN); cualquier otro, por nombre
-const searchEmployees = async (search: string): Promise<SelectOption[]> => {
+const searchEmployees = async (search: string, auth_dept_id = ''): Promise<SelectOption[]> => {
   const filters = /^\d+$/.test(search) ? { pin: search } : { name: search };
-  const { data } = await employeesRepositoryProvider.getEmployees(0, EMPLOYEES_SEARCH_LIMIT, filters);
+  const { data } = await employeesRepositoryProvider.getEmployees(0, EMPLOYEES_SEARCH_LIMIT, { ...filters, auth_dept_id });
   return data.map(employee => ({ value: employee.pin, label: `${employeeFullName(employee)} (${employee.pin})` }));
+}
+
+// El filtro auth_dept_id espera el id del departamento (el formulario de empleados usa el código)
+const searchDepartments = async (name: string): Promise<SelectOption[]> => {
+  const { data } = await departmentsRepositoryProvider.getDepartments(0, DEPARTMENTS_SEARCH_LIMIT, { name });
+  return data.map(department => ({ value: department.id, label: `${department.name} (${department.code})` }));
 }
 
 // El PIN viene del buscador, así que el empleado existe; se muestran sus datos como referencia
@@ -42,18 +51,33 @@ type Props = {
 export function Form({ register, control, setValue, errors, isEdit = false }: Props) {
   const employeePin = useWatch({ control, name: 'employee_pin' });
   const substitutePin = useWatch({ control, name: 'substitute_pin' });
+  // Solo filtra la búsqueda de Trabajador; vive fuera de react-hook-form para no enviarse en el payload
+  const [departmentId, setDepartmentId] = useState('');
 
   return (
     <>
       {!isEdit && (
         <>
+          <SearchSelect
+            id="department_filter"
+            label="Departamento (opcional)"
+            value={departmentId}
+            onChange={setDepartmentId}
+            queryKey={['getDepartments', 'byId']}
+            fetchOptions={searchDepartments}
+            placeholder="Buscar departamento por nombre"
+            emptyMessage="No se encontraron departamentos"
+            // El trabajador elegido puede no pertenecer al nuevo departamento
+            onValueChange={(value) => { if (value) setValue('employee_pin', ''); }}
+          />
+
           <div className="flex flex-col gap-3">
             <SearchSelectFormField<EmployeePermissionForm>
               label="Trabajador"
               name="employee_pin"
               control={control}
-              queryKey={['getEmployees', 'byPin']}
-              fetchOptions={searchEmployees}
+              queryKey={['getEmployees', 'byPin', departmentId]}
+              fetchOptions={(search) => searchEmployees(search, departmentId)}
               placeholder="Buscar por nombre o código"
               emptyMessage="No se encontraron empleados"
               validation={{ required: 'El trabajador es requerido' }}
@@ -68,7 +92,7 @@ export function Form({ register, control, setValue, errors, isEdit = false }: Pr
               name="substitute_pin"
               control={control}
               queryKey={['getEmployees', 'byPin']}
-              fetchOptions={searchEmployees}
+              fetchOptions={(search) => searchEmployees(search)}
               placeholder="Buscar por nombre o código"
               emptyMessage="No se encontraron empleados"
               validation={{
