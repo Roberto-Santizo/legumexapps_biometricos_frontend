@@ -6,10 +6,12 @@ type Props = {
   permissionId: string;
   signer: PermissionSigner;
   alt: string;
+  // Sin marco: la firma se dibuja directo sobre la línea (vista de formulario impreso)
+  bare?: boolean;
 }
 
 // La firma se descarga con el token (no sirve un <img src> directo) y se muestra desde una URL temporal
-export function SignatureImage({ permissionId, signer, alt }: Props) {
+export function SignatureImage({ permissionId, signer, alt, bare = false }: Props) {
   const { data: blob, isLoading, isError } = useQuery({
     queryKey: ['getPermissionSignature', permissionId, signer],
     queryFn: () => employeePermissionsRepositoryProvider.getPermissionSignature(permissionId, signer),
@@ -21,6 +23,12 @@ export function SignatureImage({ permissionId, signer, alt }: Props) {
 
   // libera la URL temporal al cambiarla o al desmontar
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
+
+  if (bare) {
+    if (isLoading) return <div className="h-full w-full animate-pulse rounded bg-slate-100" />
+    if (isError || !url) return <span className="flex h-full items-end text-xs text-slate-400">No se pudo cargar la firma</span>
+    return <img src={url} alt={alt} className="h-full w-full object-contain" />
+  }
 
   if (isLoading) return <div className="aspect-[3/1] w-full animate-pulse rounded-xl bg-slate-100 dark:bg-gray-800" />
   if (isError || !url) return (

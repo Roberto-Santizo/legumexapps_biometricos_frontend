@@ -2,12 +2,12 @@ import { DateFormField, SearchSelectFormField, TextFormField, type SelectOption 
 import { departmentsRepositoryProvider, type Department } from "@/features/departments/departments";
 import type { AccessLevel } from "@/features/access-levels/access-levels";
 import { positionsRepositoryProvider, type Position } from "@/features/positions/positions";
-import { employeeFullName, employeesRepositoryProvider, type Employee } from "@/features/employees/employees";
+import { EmployeePreviewCard, employeesRepositoryProvider } from "@/features/employees/employees";
 import { inactivationTypeLabels, type InactivationType, type TaskForm } from "@/features/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useController, useWatch, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from "react-hook-form";
-import { ImageUp, User, X } from "lucide-react";
+import { ImageUp, X } from "lucide-react";
 
 type FieldProps = {
   register: UseFormRegister<TaskForm>;
@@ -255,25 +255,6 @@ export function TaskAccessLevelsField({ register, errors, items }: SelectProps<A
   )
 }
 
-function EmployeePreviewPhoto({ employee }: { employee: Employee }) {
-  const [failed, setFailed] = useState(false);
-
-  if (!employee.hasPhoto || !employee.photoUrl || failed) return (
-    <div className="flex h-14 w-14 flex-none items-center justify-center rounded-xl bg-slate-100 dark:bg-gray-800">
-      <User className="h-6 w-6 text-slate-400 dark:text-gray-500" aria-label="Sin fotografía" />
-    </div>
-  )
-
-  return (
-    <img
-      src={employee.photoUrl}
-      alt={`Fotografía de ${employeeFullName(employee)}`}
-      onError={() => setFailed(true)}
-      className="h-14 w-14 flex-none rounded-xl border border-slate-200 object-cover dark:border-gray-700"
-    />
-  )
-}
-
 type EmployeePinProps = FieldProps & {
   control: Control<TaskForm>;
 }
@@ -313,17 +294,7 @@ export function EmployeePinField({ register, control, errors }: EmployeePinProps
         errorMessage={errors.pin?.message}
       />
 
-      {found && (
-        <div className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 dark:border-gray-700">
-          <EmployeePreviewPhoto key={found.pin} employee={found} />
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-slate-900 dark:text-gray-100">{employeeFullName(found)}</p>
-            <p className="truncate text-xs text-slate-500 dark:text-gray-400">
-              PIN {found.pin} · {found.position_id ? found.position : 'Sin posición asignada'}
-            </p>
-          </div>
-        </div>
-      )}
+      {found && <EmployeePreviewCard employee={found} />}
     </div>
   )
 }

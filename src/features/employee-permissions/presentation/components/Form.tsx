@@ -1,7 +1,8 @@
 import { DateFormField, SearchSelectFormField, TextFormField, type SelectOption } from "@/features/shared/shared";
 import { useWatch, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from "react-hook-form";
 import { X } from "lucide-react";
-import { employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
+import { useQuery } from "@tanstack/react-query";
+import { EmployeePreviewCard, employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
 import { permissionTypeOptions, salaryStatusOptions, type EmployeePermissionForm } from "@/features/employee-permissions/employee-permissions";
 
 // Los empleados se buscan en el backend en lugar de cargar el catálogo completo
@@ -14,6 +15,21 @@ const searchEmployees = async (search: string): Promise<SelectOption[]> => {
   return data.map(employee => ({ value: employee.pin, label: `${employeeFullName(employee)} (${employee.pin})` }));
 }
 
+// El PIN viene del buscador, así que el empleado existe; se muestran sus datos como referencia
+function SelectedEmployeePreview({ pin }: { pin: string }) {
+  const { data: employee } = useQuery({
+    queryKey: ['getEmployeeByPin', pin],
+    queryFn: () => employeesRepositoryProvider.getEmployeeByPin(pin),
+    enabled: !!pin,
+    retry: false
+  });
+
+  // Evita mostrar el empleado anterior mientras carga el nuevo
+  if (!pin || !employee || employee.pin !== pin) return null;
+
+  return <EmployeePreviewCard employee={employee} />
+}
+
 type Props = {
   register: UseFormRegister<EmployeePermissionForm>;
   control: Control<EmployeePermissionForm>;
@@ -24,25 +40,29 @@ type Props = {
 }
 
 export function Form({ register, control, setValue, errors, isEdit = false }: Props) {
+  const employeePin = useWatch({ control, name: 'employee_pin' });
   const substitutePin = useWatch({ control, name: 'substitute_pin' });
 
   return (
     <>
       {!isEdit && (
         <>
-          <SearchSelectFormField<EmployeePermissionForm>
-            label="Trabajador"
-            name="employee_pin"
-            control={control}
-            queryKey={['getEmployees', 'byPin']}
-            fetchOptions={searchEmployees}
-            placeholder="Buscar por nombre o código"
-            emptyMessage="No se encontraron empleados"
-            validation={{ required: 'El trabajador es requerido' }}
-            errorMessage={errors.employee_pin?.message}
-          />
+          <div className="flex flex-col gap-3">
+            <SearchSelectFormField<EmployeePermissionForm>
+              label="Trabajador"
+              name="employee_pin"
+              control={control}
+              queryKey={['getEmployees', 'byPin']}
+              fetchOptions={searchEmployees}
+              placeholder="Buscar por nombre o código"
+              emptyMessage="No se encontraron empleados"
+              validation={{ required: 'El trabajador es requerido' }}
+              errorMessage={errors.employee_pin?.message}
+            />
+            <SelectedEmployeePreview pin={employeePin} />
+          </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-3">
             <SearchSelectFormField<EmployeePermissionForm>
               label="Comodín (opcional)"
               name="substitute_pin"
@@ -56,6 +76,7 @@ export function Form({ register, control, setValue, errors, isEdit = false }: Pr
               }}
               errorMessage={errors.substitute_pin?.message}
             />
+            <SelectedEmployeePreview pin={substitutePin} />
             {substitutePin && (
               <button
                 type="button"
