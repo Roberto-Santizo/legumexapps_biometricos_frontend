@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
-import { Briefcase, Building2, CalendarClock, CalendarRange, ChevronRight, ClipboardSignature, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, UsersRound, X } from "lucide-react";
+import { BadgeMinus, Briefcase, Building2, CalendarClock, CalendarRange, ChevronRight, ClipboardSignature, Fingerprint, IdCard, Images, KeyRound, LayoutDashboard, LogOut, Network, Tractor, UserX, Users, UsersRound, X } from "lucide-react";
 import { logout, ValidRoles } from "@/features/auth/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoles } from "@/features/shared/shared";
@@ -123,6 +123,15 @@ export function CustomSideBar({ open, onClose }: Props) {
               <NavLink to="/permisos" className="ios-sidebar__row">
                 <span className="ios-sidebar__tile ios-sidebar__tile--orange"><ClipboardSignature aria-hidden="true" /></span>
                 <span className="ios-sidebar__label">Permisos</span>
+                <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
+              </NavLink>
+            </li>
+          )}
+          {canSeeGeneral && (
+            <li className="ios-sidebar__item">
+              <NavLink to="/descuentos" className="ios-sidebar__row">
+                <span className="ios-sidebar__tile ios-sidebar__tile--red"><BadgeMinus aria-hidden="true" /></span>
+                <span className="ios-sidebar__label">Descuentos</span>
                 <ChevronRight className="ios-sidebar__chev" aria-hidden="true" />
               </NavLink>
             </li>

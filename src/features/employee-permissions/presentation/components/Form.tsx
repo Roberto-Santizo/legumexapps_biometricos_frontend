@@ -1,43 +1,10 @@
 import { useState } from "react";
-import { DateFormField, SearchSelect, SearchSelectFormField, TextFormField, type SelectOption } from "@/features/shared/shared";
+import { DateFormField, SearchSelect, SearchSelectFormField, TextFormField } from "@/features/shared/shared";
 import { useWatch, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from "react-hook-form";
 import { X } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { EmployeePreviewCard, employeeFullName, employeesRepositoryProvider } from "@/features/employees/employees";
-import { departmentsRepositoryProvider } from "@/features/departments/departments";
+import { SelectedEmployeePreview, searchEmployeeOptions as searchEmployees } from "@/features/employees/employees";
+import { searchDepartmentOptions as searchDepartments } from "@/features/departments/departments";
 import { permissionTypeOptions, salaryStatusOptions, type EmployeePermissionForm } from "@/features/employee-permissions/employee-permissions";
-
-// Los empleados y departamentos se buscan en el backend en lugar de cargar el catálogo completo
-const EMPLOYEES_SEARCH_LIMIT = 20;
-const DEPARTMENTS_SEARCH_LIMIT = 20;
-
-// Un texto numérico se busca como código (PIN); cualquier otro, por nombre
-const searchEmployees = async (search: string, auth_dept_id = ''): Promise<SelectOption[]> => {
-  const filters = /^\d+$/.test(search) ? { pin: search } : { name: search };
-  const { data } = await employeesRepositoryProvider.getEmployees(0, EMPLOYEES_SEARCH_LIMIT, { ...filters, auth_dept_id });
-  return data.map(employee => ({ value: employee.pin, label: `${employeeFullName(employee)} (${employee.pin})` }));
-}
-
-// El filtro auth_dept_id espera el id del departamento (el formulario de empleados usa el código)
-const searchDepartments = async (name: string): Promise<SelectOption[]> => {
-  const { data } = await departmentsRepositoryProvider.getDepartments(0, DEPARTMENTS_SEARCH_LIMIT, { name });
-  return data.map(department => ({ value: department.id, label: `${department.name} (${department.code})` }));
-}
-
-// El PIN viene del buscador, así que el empleado existe; se muestran sus datos como referencia
-function SelectedEmployeePreview({ pin }: { pin: string }) {
-  const { data: employee } = useQuery({
-    queryKey: ['getEmployeeByPin', pin],
-    queryFn: () => employeesRepositoryProvider.getEmployeeByPin(pin),
-    enabled: !!pin,
-    retry: false
-  });
-
-  // Evita mostrar el empleado anterior mientras carga el nuevo
-  if (!pin || !employee || employee.pin !== pin) return null;
-
-  return <EmployeePreviewCard employee={employee} />
-}
 
 type Props = {
   register: UseFormRegister<EmployeePermissionForm>;
