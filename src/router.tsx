@@ -12,6 +12,8 @@ import { EmployeeTransactions } from "@/features/employee-transactions/employee-
 import { ShowTask, Tasks, UpdateTask } from "@/features/tasks/tasks";
 import { Planifications, ShowPlanification } from "@/features/planifications/planifications";
 import { Photos, UploadPhotos } from "@/features/photos/photos";
+import { CreateEmployeePermission, EmployeePermissions, ShowEmployeePermission, UpdateEmployeePermission } from "@/features/employee-permissions/employee-permissions";
+import { CreateEmployeeDiscount, EmployeeDiscounts, ShowEmployeeDiscount, UpdateEmployeeDiscount } from "@/features/employee-discounts/employee-discounts";
 import { Dashboard } from "@/features/dashboard/dashboard";
 import { Login, ValidRoles } from "@/features/auth/auth";
 import { NotFound, ProtectedLayout, PublicLayout, RoleGuard } from "@/features/shared/shared";
@@ -137,6 +139,24 @@ export default function AppRouter() {
                     <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
                         <Route path="/fotos" element={<Photos />} />
                         <Route path="/fotos/cargar" element={<UploadPhotos />} />
+                    </Route>
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                        <Route path="/permisos" element={<EmployeePermissions />} />
+                        <Route path="/permisos/crear" element={<CreateEmployeePermission />} />
+                        <Route path="/permisos/:id" element={<ShowEmployeePermission />} />
+                        <Route path="/permisos/:id/editar" element={<UpdateEmployeePermission />} />
+                    </Route>
+                </Route>
+
+                <Route element={<ProtectedLayout />}>
+                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                        <Route path="/descuentos" element={<EmployeeDiscounts />} />
+                        <Route path="/descuentos/crear" element={<CreateEmployeeDiscount />} />
+                        <Route path="/descuentos/:id" element={<ShowEmployeeDiscount />} />
+                        <Route path="/descuentos/:id/editar" element={<UpdateEmployeeDiscount />} />
                     </Route>
                 </Route>
             </Routes>
