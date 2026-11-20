@@ -9,7 +9,7 @@ import { AccessLevels, CreateAccessLevel, ShowAccessLevel, UpdateAccessLevel } f
 import { CreateEmployee, Employees, ShowEmployee, UpdateEmployee } from "@/features/employees/employees";
 import { InactiveEmployees, ShowInactiveEmployee } from "@/features/inactive-employees/inactive-employees";
 import { EmployeeTransactions } from "@/features/employee-transactions/employee-transactions";
-import { ShowTask, Tasks, UpdateTask } from "@/features/tasks/tasks";
+import { CreateTask, ShowTask, Tasks, UpdateTask } from "@/features/tasks/tasks";
 import { Planifications, ShowPlanification } from "@/features/planifications/planifications";
 import { Photos, UploadPhotos } from "@/features/photos/photos";
 import { CreateEmployeePermission, EmployeePermissions, ShowEmployeePermission, UpdateEmployeePermission } from "@/features/employee-permissions/employee-permissions";
@@ -123,6 +123,7 @@ export default function AppRouter() {
                 <Route element={<ProtectedLayout />}>
                     <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
                         <Route path="/tareas" element={<Tasks />} />
+                        <Route path="/tareas/crear" element={<CreateTask />} />
                         <Route path="/tareas/:id" element={<ShowTask />} />
                         <Route path="/tareas/:id/editar" element={<UpdateTask />} />
                     </Route>

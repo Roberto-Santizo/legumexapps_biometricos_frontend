@@ -79,7 +79,7 @@ export const taskEditableFields: Record<TaskType, (keyof UpdateTaskPayload)[]> =
 
 const joinLevels = (ids: string[]) => [ids].flat().filter(Boolean).join(',');
 
-export const toCreationTaskPayload = (form: TaskForm, planificationId: string): CreationTaskPayload => ({
+export const toCreationTaskPayload = (form: TaskForm, planificationId?: string): CreationTaskPayload => ({
     planification_id: planificationId,
     pin: form.pin.trim(),
     name: form.name.trim(),
@@ -92,7 +92,7 @@ export const toCreationTaskPayload = (form: TaskForm, planificationId: string): 
     file: form.file ?? undefined
 });
 
-export const toMovementTaskPayload = (form: TaskForm, planificationId: string): MovementTaskPayload => ({
+export const toMovementTaskPayload = (form: TaskForm, planificationId?: string): MovementTaskPayload => ({
     planification_id: planificationId,
     pin: form.pin.trim(),
     position_id: form.position_id,
@@ -101,7 +101,7 @@ export const toMovementTaskPayload = (form: TaskForm, planificationId: string): 
     scheduled_at: form.scheduled_at
 });
 
-export const toInactivationTaskPayload = (form: TaskForm, planificationId: string): InactivationTaskPayload => ({
+export const toInactivationTaskPayload = (form: TaskForm, planificationId?: string): InactivationTaskPayload => ({
     planification_id: planificationId,
     pin: form.pin.trim(),
     scheduled_at: form.scheduled_at,

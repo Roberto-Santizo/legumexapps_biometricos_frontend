@@ -19,4 +19,8 @@ export class PositionsProvider {
     updatePositionById(payload: UpdatePositionForm, id: string): Promise<string> {
         return this.repository.updatePositionById(payload, id);
     }
+
+    uploadPositions(file: File): Promise<string> {
+        return this.repository.uploadPositions(file);
+    }
 }

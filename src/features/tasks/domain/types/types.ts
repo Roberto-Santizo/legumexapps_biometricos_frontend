@@ -36,19 +36,23 @@ export type TaskForm = {
 }
 
 // Body multipart de POST /tasks/creation; accLevelIds van separados por coma y position_id es opcional
-export type CreationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'name' | 'lastName' | 'auth_dept_id' | 'scheduled_at'> & {
+// planification_id es opcional en los tres POST: sin él la tarea queda fuera de una planificación
+export type CreationTaskPayload = Pick<TaskForm, 'pin' | 'name' | 'lastName' | 'auth_dept_id' | 'scheduled_at'> & {
+    planification_id?: string;
     position_id?: string;
     accLevelIds: string;
     file?: File;
 }
 
 // Body de POST /tasks/movement; el empleado se identifica por su PIN
-export type MovementTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'position_id' | 'auth_dept_id' | 'scheduled_at'> & {
+export type MovementTaskPayload = Pick<TaskForm, 'pin' | 'position_id' | 'auth_dept_id' | 'scheduled_at'> & {
+    planification_id?: string;
     accLevelIds: string;
 }
 
 // Body de POST /tasks/inactivate; el empleado se identifica por su PIN
-export type InactivationTaskPayload = Pick<TaskForm, 'planification_id' | 'pin' | 'scheduled_at'> & {
+export type InactivationTaskPayload = Pick<TaskForm, 'pin' | 'scheduled_at'> & {
+    planification_id?: string;
     type: InactivationType;
 };
 

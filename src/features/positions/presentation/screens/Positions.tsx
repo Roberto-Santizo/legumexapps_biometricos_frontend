@@ -1,11 +1,13 @@
-import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination } from "@/features/shared/shared";
-import { EditIcon, EyeIcon, PlusIcon } from "lucide-react";
+import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Modal, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination } from "@/features/shared/shared";
+import { EditIcon, EyeIcon, PlusIcon, Upload } from "lucide-react";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { positionsRepositoryProvider } from "@/features/positions/positions";
+import { positionsRepositoryProvider, UploadPositionsForm } from "@/features/positions/positions";
 
 export function Positions() {
   const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const { page, rowsPerPage } = usePagination(searchParams);
   const code = searchParams.get('code') ?? '';
@@ -30,12 +32,20 @@ export function Positions() {
           setSearchParams={setSearchParams}
         />
 
-        <CustomFilledButton
-          label="Crear Posición"
-          type="button"
-          icon={<PlusIcon className="text-white" />}
-          onClick={() => navigate('/posiciones/crear')}
-        />
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <CustomFilledButton
+            label="Cargar Excel"
+            type="button"
+            icon={<Upload className="h-4 w-4 text-white" />}
+            onClick={() => setModal(true)}
+          />
+          <CustomFilledButton
+            label="Crear Posición"
+            type="button"
+            icon={<PlusIcon className="text-white" />}
+            onClick={() => navigate('/posiciones/crear')}
+          />
+        </div>
       </div>
 
       {isLoading && <LoadingData />}
@@ -82,6 +92,10 @@ export function Positions() {
           />
         </>
       )}
+
+      <Modal modal={modal} closeModal={() => setModal(false)} title="Cargar posiciones desde Excel" width="sm:max-w-xl">
+        <UploadPositionsForm onUploaded={() => setModal(false)} />
+      </Modal>
     </div>
   )
 }

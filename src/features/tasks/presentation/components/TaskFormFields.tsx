@@ -31,7 +31,7 @@ export function ScheduledAtField({ register, errors, min, max }: ScheduledAtProp
         required: 'La fecha es requerida',
         validate: (scheduledAt) => {
           const value = String(scheduledAt ?? '');
-          if (value < min) return 'La fecha debe ser hoy o posterior y estar dentro de la semana';
+          if (value < min) return max ? 'La fecha debe ser hoy o posterior y estar dentro de la semana' : 'La fecha debe ser hoy o posterior';
           if (max && value > max) return 'La fecha debe estar dentro de la semana de la planificación';
           return true;
         }

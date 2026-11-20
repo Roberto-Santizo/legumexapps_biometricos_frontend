@@ -19,4 +19,8 @@ export class PositionsRepositoryImpl implements PositionsRepository {
     updatePositionById(payload: UpdatePositionForm, id: string): Promise<string> {
         return this.datasource.updatePositionById(payload, id);
     }
+
+    uploadPositions(file: File): Promise<string> {
+        return this.datasource.uploadPositions(file);
+    }
 }

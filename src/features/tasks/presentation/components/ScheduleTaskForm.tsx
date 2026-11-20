@@ -9,7 +9,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 type FormProps = {
-  planification: TaskPlanificationRef;
+  // Sin planificación la tarea se programa fuera de una semana (solo exige fecha de hoy o posterior)
+  planification?: TaskPlanificationRef;
   onScheduled: () => void;
 }
 
@@ -33,7 +34,7 @@ function useScheduleTask(mutationFn: (form: TaskForm) => Promise<string>, onSche
   });
 }
 
-const useTaskForm = (planification: TaskPlanificationRef) => useForm<TaskForm>({
+const useTaskForm = (planification?: TaskPlanificationRef) => useForm<TaskForm>({
   defaultValues: { ...emptyTaskForm, scheduled_at: scheduleBounds(planification).min }
 });
 
@@ -41,7 +42,7 @@ function CreationTaskForm({ planification, onScheduled }: FormProps) {
   const levels = useAccessLevelsCatalog();
   const { handleSubmit, register, control, setValue, formState: { errors } } = useTaskForm(planification);
   const { mutate, isPending } = useScheduleTask(
-    (form) => tasksRepositoryProvider.createCreationTask(toCreationTaskPayload(form, planification.id)),
+    (form) => tasksRepositoryProvider.createCreationTask(toCreationTaskPayload(form, planification?.id)),
     onScheduled
   );
   const bounds = scheduleBounds(planification);
@@ -96,7 +97,7 @@ function MovementTaskForm({ planification, onScheduled }: FormProps) {
   const levels = useAccessLevelsCatalog();
   const { handleSubmit, register, control, setValue, formState: { errors } } = useTaskForm(planification);
   const { mutate, isPending } = useScheduleTask(
-    (form) => tasksRepositoryProvider.createMovementTask(toMovementTaskPayload(form, planification.id)),
+    (form) => tasksRepositoryProvider.createMovementTask(toMovementTaskPayload(form, planification?.id)),
     onScheduled
   );
   const bounds = scheduleBounds(planification);
@@ -118,7 +119,7 @@ function MovementTaskForm({ planification, onScheduled }: FormProps) {
 function InactivationTaskForm({ planification, onScheduled }: FormProps) {
   const { handleSubmit, register, control, formState: { errors } } = useTaskForm(planification);
   const { mutate, isPending } = useScheduleTask(
-    (form) => tasksRepositoryProvider.createInactivationTask(toInactivationTaskPayload(form, planification.id)),
+    (form) => tasksRepositoryProvider.createInactivationTask(toInactivationTaskPayload(form, planification?.id)),
     onScheduled
   );
   const bounds = scheduleBounds(planification);
@@ -147,7 +148,7 @@ const forms: Record<TaskType, (props: FormProps) => React.ReactNode> = {
   baja: InactivationTaskForm
 };
 
-// Programa una tarea (alta, movimiento o baja) dentro de la semana de la planificación
+// Programa una tarea (alta, movimiento o baja), dentro de la semana de la planificación si se indica
 export function ScheduleTaskForm({ planification, onScheduled }: FormProps) {
   const [type, setType] = useState<TaskType>('alta');
   const SelectedForm = forms[type];

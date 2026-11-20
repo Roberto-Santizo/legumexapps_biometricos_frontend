@@ -6,4 +6,5 @@ export abstract class PositionsDatasource {
     abstract getPositions(page: number, limit: number, filters: PositionsFilters): Promise<PaginatedResponse<Position>>;
     abstract getPositionById(id: string): Promise<Position>;
     abstract updatePositionById(payload: UpdatePositionForm, id: string): Promise<string>;
+    abstract uploadPositions(file: File): Promise<string>;
 }

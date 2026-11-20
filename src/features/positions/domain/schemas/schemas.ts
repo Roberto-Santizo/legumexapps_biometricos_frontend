@@ -22,3 +22,9 @@ export const PositionEntitySchema = z.object({
     code: z.string(),
     name: z.string()
 });
+
+// POST /position/uploadPositions devuelve el mensaje con la cantidad creada y las posiciones creadas
+export const PositionUploadResponseSchema = z.object({
+    message: z.string(),
+    data: z.array(PositionEntitySchema)
+});

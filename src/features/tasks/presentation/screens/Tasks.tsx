@@ -1,5 +1,5 @@
 import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Modal, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, useNotification, usePagination } from "@/features/shared/shared";
-import { EditIcon, EyeIcon, Trash2, Upload } from "lucide-react";
+import { EditIcon, EyeIcon, PlusIcon, Trash2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -54,12 +54,20 @@ export function Tasks() {
           setSearchParams={setSearchParams}
         />
 
-        <CustomFilledButton
-          label="Cargar Excel"
-          type="button"
-          icon={<Upload className="h-4 w-4 text-white" />}
-          onClick={() => setModal(true)}
-        />
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <CustomFilledButton
+            label="Cargar Excel"
+            type="button"
+            icon={<Upload className="h-4 w-4 text-white" />}
+            onClick={() => setModal(true)}
+          />
+          <CustomFilledButton
+            label="Programar tarea"
+            type="button"
+            icon={<PlusIcon className="h-4 w-4 text-white" />}
+            onClick={() => navigate('/tareas/crear')}
+          />
+        </div>
       </div>
 
       {isLoading && <LoadingData />}

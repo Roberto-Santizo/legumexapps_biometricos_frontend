@@ -1,6 +1,6 @@
 import { getApiErrorMessage, setQueryParams, type PaginatedResponse } from '@/features/shared/shared';
-import { type AxiosInstance } from 'axios';
-import { PositionEntitySchema, PositionSchema, PositionsDatasource, PositionsSchema, type Position, type PositionForm, type PositionsFilters, type UpdatePositionForm } from '@/features/positions/positions';
+import { isAxiosError, type AxiosInstance } from 'axios';
+import { PositionEntitySchema, PositionSchema, PositionsDatasource, PositionUploadResponseSchema, PositionsSchema, type Position, type PositionForm, type PositionsFilters, type UpdatePositionForm } from '@/features/positions/positions';
 
 export class PositionsDatasourceImpl implements PositionsDatasource {
     constructor(private api: AxiosInstance) { }
@@ -67,6 +67,28 @@ export class PositionsDatasourceImpl implements PositionsDatasource {
 
             throw new Error("Información no válida");
         } catch (error) {
+            throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
+        }
+    }
+
+    // POST /position/uploadPositions (multipart, campo `file` .xlsx); si alguna fila falla no se crea ninguna posición
+    async uploadPositions(file: File): Promise<string> {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const { data } = await this.api.post('/position/uploadPositions', formData);
+            const response = PositionUploadResponseSchema.safeParse(data);
+
+            if (response.success) {
+                return response.data.message;
+            }
+
+            throw new Error("Información no válida");
+        } catch (error) {
+            // Los errores por fila llegan como string[]; se separan por salto de línea para listarlos en el modal
+            if (isAxiosError(error) && Array.isArray(error.response?.data?.message)) {
+                throw new Error(error.response.data.message.join('\n'), { cause: error });
+            }
             throw new Error(getApiErrorMessage(error, "Error no controlado"), { cause: error });
         }
     }
