@@ -1,7 +1,7 @@
 import { CustomFilledButton, InfoCard, Modal, Spinner, useNotification } from "@/features/shared/shared";
 import { WeekTasks, formatWeekRange, planificationsRepositoryProvider } from "@/features/planifications/planifications";
-import { ScheduleTaskForm, isPlanificationClosed, tasksRepositoryProvider, type Task } from "@/features/tasks/tasks";
-import { ArrowLeft, CalendarCheck, CalendarClock, CircleAlert, ListChecks, PlusIcon, Trash2 } from "lucide-react";
+import { ScheduleTaskForm, UploadTasksForm, isPlanificationClosed, tasksRepositoryProvider, type Task } from "@/features/tasks/tasks";
+import { ArrowLeft, CalendarCheck, CalendarClock, CircleAlert, ListChecks, PlusIcon, Trash2, Upload } from "lucide-react";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ export function ShowPlanification() {
   const queryClient = useQueryClient();
   const notification = useNotification();
   const [modal, setModal] = useState(false);
+  const [uploadModal, setUploadModal] = useState(false);
   const id = params.id!;
 
   const { data, isLoading, error } = useQuery({
@@ -90,14 +91,25 @@ export function ShowPlanification() {
           </div>
 
           {/* La fecha programada debe ser hoy o posterior, así que una semana pasada ya no admite tareas */}
-          <CustomFilledButton
-            label={closed ? 'Semana finalizada' : 'Programar tarea'}
-            type="button"
-            icon={<PlusIcon className="h-4 w-4 text-white" />}
-            disabled={closed}
-            loading={false}
-            onClick={() => setModal(true)}
-          />
+          <div className="flex flex-wrap gap-2">
+            {!closed && (
+              <CustomFilledButton
+                label="Cargar Excel"
+                type="button"
+                icon={<Upload className="h-4 w-4 text-white" />}
+                loading={false}
+                onClick={() => setUploadModal(true)}
+              />
+            )}
+            <CustomFilledButton
+              label={closed ? 'Semana finalizada' : 'Programar tarea'}
+              type="button"
+              icon={<PlusIcon className="h-4 w-4 text-white" />}
+              disabled={closed}
+              loading={false}
+              onClick={() => setModal(true)}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -136,6 +148,10 @@ export function ShowPlanification() {
 
         <Modal modal={modal} closeModal={() => setModal(false)} title={`Programar tarea · Semana ${data.week}`} width="sm:max-w-xl">
           <ScheduleTaskForm planification={data} onScheduled={() => setModal(false)} />
+        </Modal>
+
+        <Modal modal={uploadModal} closeModal={() => setUploadModal(false)} title={`Programar tareas desde Excel · Semana ${data.week}`} width="sm:max-w-xl">
+          <UploadTasksForm planification={data} onUploaded={() => setUploadModal(false)} />
         </Modal>
       </div>
     )

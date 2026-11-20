@@ -17,11 +17,12 @@ export const taskStatusLabels: Record<TaskStatus, string> = {
     fallida: 'Fallida'
 };
 
-// Columnas que el backend lee de la primera hoja (desde la fila 2) según el tipo de carga
+// Columnas que el backend lee de la primera hoja (desde la fila 2) según el tipo de carga.
+// Semana y año son opcionales (ambos o ninguno); si se indican, la tarea se asocia a esa planificación
 export const taskUploadTypes: { value: TaskUploadType; label: string; columns: string[] }[] = [
-    { value: 'creation', label: 'Altas', columns: ['Posición', 'Código', 'Nombre', 'Código de departamento', 'Nivel de acceso', 'Fecha programada'] },
-    { value: 'movement', label: 'Movimientos', columns: ['Posición', 'Código', 'Código de departamento', 'Nivel de acceso', 'Fecha programada'] },
-    { value: 'inactivate', label: 'Bajas', columns: ['Código', 'Fecha programada'] }
+    { value: 'creation', label: 'Altas', columns: ['Posición (opcional)', 'Código', 'Nombre', 'Código de departamento', 'Nivel de acceso', 'Fecha programada', 'Semana', 'Año'] },
+    { value: 'movement', label: 'Movimientos', columns: ['Posición', 'Código', 'Código de departamento', 'Nivel de acceso', 'Fecha programada', 'Semana', 'Año'] },
+    { value: 'inactivate', label: 'Bajas', columns: ['Código', 'Fecha programada', 'Tipo de baja (PERMANENTE / TEMPORAL)', 'Semana', 'Año'] }
 ];
 
 // Claves del payload / previous que envía el backend, con su etiqueta en pantalla

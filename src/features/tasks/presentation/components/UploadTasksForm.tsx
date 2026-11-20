@@ -1,6 +1,6 @@
 import { CustomFilledButton, XLSX_MIME_TYPE, useNotification } from "@/features/shared/shared";
-import { taskUploadTypes, tasksRepositoryProvider, type TaskUploadType } from "@/features/tasks/tasks";
-import { FileSpreadsheet, Upload, X } from "lucide-react";
+import { scheduleBounds, taskUploadTypes, tasksRepositoryProvider, type TaskPlanificationRef, type TaskUploadType } from "@/features/tasks/tasks";
+import { CalendarRange, FileSpreadsheet, Upload, X } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -11,11 +11,20 @@ const formatSize = (bytes: number) => bytes < 1024 * 1024
 // El backend solo acepta .xlsx; algunos navegadores no informan el MIME, así que también se revisa la extensión
 const isXlsx = (file: File) => file.type === XLSX_MIME_TYPE || file.name.toLowerCase().endsWith('.xlsx');
 
+// Planificación a la que se asocian las filas (el backend la toma de las columnas Semana y Año)
+type UploadPlanificationRef = Pick<TaskPlanificationRef, 'start_date' | 'end_date'> & {
+  week: number;
+  year: number;
+}
+
 type Props = {
+  planification?: UploadPlanificationRef;
   onUploaded: () => void;
 }
 
-export function UploadTasksForm({ onUploaded }: Props) {
+const formatDate = (date: string) => date.split('-').reverse().join('/');
+
+export function UploadTasksForm({ planification, onUploaded }: Props) {
   const notification = useNotification();
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,6 +41,8 @@ export function UploadTasksForm({ onUploaded }: Props) {
     onSuccess: (message) => {
       notification.success(message);
       queryClient.invalidateQueries({ queryKey: ['getTasks'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanifications'] });
+      queryClient.invalidateQueries({ queryKey: ['getPlanificationTasks'] });
       onUploaded();
     },
     onError: (err) => {
@@ -102,6 +113,15 @@ export function UploadTasksForm({ onUploaded }: Props) {
           ))}
         </ol>
       </div>
+
+      {planification && (
+        <div className="flex gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900 dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-200">
+          <CalendarRange className="mt-0.5 h-4 w-4 flex-none" />
+          <p>
+            Para asociar las tareas a esta semana, cada fila debe indicar <strong className="tabular-nums">Semana {planification.week}</strong> y <strong className="tabular-nums">Año {planification.year}</strong>, con una fecha programada entre el <span className="tabular-nums">{formatDate(scheduleBounds(planification).min)}</span> y el <span className="tabular-nums">{formatDate(planification.end_date)}</span>.
+          </p>
+        </div>
+      )}
 
       <div className="space-y-2">
         <label htmlFor={inputId} className="block text-sm font-medium text-slate-700 dark:text-gray-300">Archivo</label>
