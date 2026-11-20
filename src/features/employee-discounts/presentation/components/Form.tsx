@@ -126,7 +126,7 @@ export function Form({ register, control, errors }: Props) {
           label="Fecha del descuento"
           name="date"
           register={register}
-          validation={{ required: 'La fecha es requerida' }}
+          validation={{}}
           errorMessage={errors.date?.message}
         />
       </div>
