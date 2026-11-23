@@ -40,7 +40,7 @@ export function UpdateAccessLevel() {
 
   useEffect(() => {
     if (data) {
-      reset({ name: data.name });
+      reset({ name: data.name }, { keepDirtyValues: true });
     }
   }, [data, reset]);
 

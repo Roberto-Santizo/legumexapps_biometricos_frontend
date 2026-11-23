@@ -8,9 +8,11 @@ web
 
 ## Users
 
-- **RRHH (rol `rrhh`)**: personal de recursos humanos en oficina, escritorio. Consulta y reporta asistencia de empleados.
+- **RRHH (rol `rrhh`)**: personal de recursos humanos en oficina, escritorio. Consulta y reporta asistencia de empleados. Ve todo excepto usuarios.
 - **Admin de TI (rol `admin`)**: gestiona usuarios, roles y dispositivos biométricos.
-- **Empleados (rol `user`)**: consultan sus propios marcajes.
+- **Fincas (rol `fincas`)**: solo la sección Fincas.
+- **Usuario (rol `user`)**: solo transacciones de empleados.
+- **Merlot (rol `merlot`)**: solo descuentos; los crea y consulta, sin editar ni eliminar.
 
 ## Product Purpose
 
@@ -23,12 +25,12 @@ Pieza de la suite interna Legumexapps; no es producto comercial. Su valor es con
 ## Operating Context
 
 - Uso en oficina, desde escritorio (RRHH, TI). Empleados acceden a sus marcajes.
-- Acceso por login (email + contraseña); permisos por rol (`admin`, `rrhh`, `user`, reflejo del enum `ValidRoles` del backend).
+- Acceso por login (email + contraseña); permisos por rol (`admin`, `rrhh`, `fincas`, `user`, `merlot`; uno por usuario; reflejo del enum `ValidRoles` del backend).
 - Backend propio vía `VITE_BASE_URL` (proxy `/api` en desarrollo); despliegue en Vercel.
 
 ## Capabilities and Constraints
 
-- Implementado: login, layout protegido con barra lateral, gestión de usuarios (listar, crear, ver, editar; estado activo/inactivo; asignación de roles, solo `admin`), tema claro/oscuro.
+- Implementado: login, layout protegido con barra lateral, gestión de usuarios (listar, crear, ver, editar; estado activo/inactivo; asignación de un rol, solo `admin`), tema claro/oscuro.
 - Dashboard: aún placeholder ("WorkingOnIt").
 - Pendiente / sin definir: módulos de dispositivos, enrolamiento, marcajes y reportes de asistencia (alcance exacto no confirmado; no inventar).
 - UI solo en español; sin i18n.

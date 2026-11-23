@@ -102,7 +102,7 @@ export function Form({ register, control, setValue, errors, isEdit = false, curr
         validation={{ required: 'Seleccione un departamento' }}
         errorMessage={errors.deptCode?.message}
         // La posición elegida pertenece al departamento anterior
-        onValueChange={() => setValue('position_id', '')}
+        onValueChange={() => setValue('position_id', '', { shouldDirty: true })}
       />
 
       <div className="flex flex-col gap-2">

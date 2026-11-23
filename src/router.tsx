@@ -15,7 +15,7 @@ import { Photos, UploadPhotos } from "@/features/photos/photos";
 import { CreateEmployeePermission, EmployeePermissions, ShowEmployeePermission, UpdateEmployeePermission } from "@/features/employee-permissions/employee-permissions";
 import { CreateEmployeeDiscount, EmployeeDiscounts, ShowEmployeeDiscount, UpdateEmployeeDiscount } from "@/features/employee-discounts/employee-discounts";
 import { Dashboard } from "@/features/dashboard/dashboard";
-import { Login, ValidRoles } from "@/features/auth/auth";
+import { FeatureRoles, Login } from "@/features/auth/auth";
 import { NotFound, ProtectedLayout, PublicLayout, RoleGuard } from "@/features/shared/shared";
 
 export default function AppRouter() {
@@ -36,7 +36,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.users} />}>
                         <Route path="/usuarios" element={<Users />} />
                         <Route path="/usuarios/crear" element={<CreateUser />} />
                         <Route path="/usuarios/:id" element={<ShowUser />} />
@@ -45,7 +45,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/departamentos" element={<Departments />} />
                         <Route path="/departamentos/crear" element={<CreateDepartment />} />
                         <Route path="/departamentos/:id" element={<ShowDepartment />} />
@@ -54,7 +54,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/posiciones" element={<Positions />} />
                         <Route path="/posiciones/crear" element={<CreatePosition />} />
                         <Route path="/posiciones/:id" element={<ShowPosition />} />
@@ -63,7 +63,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.fincas]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.fincas} />}>
                         <Route path="/departamentos-fincas" element={<FincaDepartments />} />
                         <Route path="/departamentos-fincas/crear" element={<CreateFincaDepartment />} />
                         <Route path="/departamentos-fincas/:id" element={<ShowFincaDepartment />} />
@@ -72,7 +72,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.fincas]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.fincas} />}>
                         <Route path="/posiciones-fincas" element={<FincaPositions />} />
                         <Route path="/posiciones-fincas/crear" element={<CreateFincaPosition />} />
                         <Route path="/posiciones-fincas/:id" element={<ShowFincaPosition />} />
@@ -81,7 +81,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.fincas]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.fincas} />}>
                         <Route path="/empleados-fincas" element={<FincaEmployees />} />
                         <Route path="/empleados-fincas/crear" element={<CreateFincaEmployee />} />
                         <Route path="/empleados-fincas/:id" element={<ShowFincaEmployee />} />
@@ -90,7 +90,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/niveles-acceso" element={<AccessLevels />} />
                         <Route path="/niveles-acceso/crear" element={<CreateAccessLevel />} />
                         <Route path="/niveles-acceso/:id" element={<ShowAccessLevel />} />
@@ -99,7 +99,7 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/empleados" element={<Employees />} />
                         <Route path="/empleados/crear" element={<CreateEmployee />} />
                         <Route path="/empleados/:pin" element={<ShowEmployee />} />
@@ -108,20 +108,20 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/empleados-inactivos" element={<InactiveEmployees />} />
                         <Route path="/empleados-inactivos/:id" element={<ShowInactiveEmployee />} />
                     </Route>
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.transactions} />}>
                         <Route path="/transacciones-empleados" element={<EmployeeTransactions />} />
                     </Route>
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/tareas" element={<Tasks />} />
                         <Route path="/tareas/crear" element={<CreateTask />} />
                         <Route path="/tareas/:id" element={<ShowTask />} />
@@ -130,21 +130,21 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/planificaciones" element={<Planifications />} />
                         <Route path="/planificaciones/:id" element={<ShowPlanification />} />
                     </Route>
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/fotos" element={<Photos />} />
                         <Route path="/fotos/cargar" element={<UploadPhotos />} />
                     </Route>
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.general} />}>
                         <Route path="/permisos" element={<EmployeePermissions />} />
                         <Route path="/permisos/crear" element={<CreateEmployeePermission />} />
                         <Route path="/permisos/:id" element={<ShowEmployeePermission />} />
@@ -153,11 +153,13 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<ProtectedLayout />}>
-                    <Route element={<RoleGuard allowed={[ValidRoles.admin, ValidRoles.rrhh]} />}>
+                    <Route element={<RoleGuard allowed={FeatureRoles.discounts} />}>
                         <Route path="/descuentos" element={<EmployeeDiscounts />} />
                         <Route path="/descuentos/crear" element={<CreateEmployeeDiscount />} />
                         <Route path="/descuentos/:id" element={<ShowEmployeeDiscount />} />
-                        <Route path="/descuentos/:id/editar" element={<UpdateEmployeeDiscount />} />
+                        <Route element={<RoleGuard allowed={FeatureRoles.manageDiscounts} />}>
+                            <Route path="/descuentos/:id/editar" element={<UpdateEmployeeDiscount />} />
+                        </Route>
                     </Route>
                 </Route>
             </Routes>

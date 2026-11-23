@@ -39,7 +39,7 @@ export function UpdateEmployeeDiscount() {
   });
 
   useEffect(() => {
-    if (data) reset(toDiscountForm(data));
+    if (data) reset(toDiscountForm(data), { keepDirtyValues: true });
   }, [data, reset]);
 
   const onSubmit = (form: EmployeeDiscountForm) => mutate(toDiscountPayload(form));

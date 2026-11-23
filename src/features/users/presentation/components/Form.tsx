@@ -37,7 +37,7 @@ export function Form({ register, errors, isEdit = false }: Props) {
         errorMessage={errors.email?.message}
       />
 
-      <RolesFormField register={register} errorMessage={errors.roles?.message} />
+      <RolesFormField register={register} errorMessage={errors.roles?.[0]?.message} />
 
       <PasswordFormField<UserForm>
         label={isEdit ? "Contraseña (dejar vacío para no cambiarla)" : "Contraseña"}

@@ -40,7 +40,8 @@ export function UpdateUser() {
   useEffect(() => {
     if (data) {
       const { name, email, roles } = data;
-      reset({ name, email, roles, password: '' });
+      // Con varios roles previos no se preselecciona ninguno, para elegir explícitamente cuál conservar
+      reset({ name, email, roles: roles.length === 1 ? roles : [], password: '' }, { keepDirtyValues: true });
     }
   }, [data, reset]);
 

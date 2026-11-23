@@ -1,14 +1,17 @@
-import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Modal, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination } from "@/features/shared/shared";
+import { ActionsMenu, CustomFilledButton, FilterDrawer, LoadingData, Modal, Pagination, Table, Tbody, Td, Th, Thead, Title, Tr, usePagination, useRoles } from "@/features/shared/shared";
 import { EditIcon, EyeIcon, FileSpreadsheet, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { FeatureRoles } from "@/features/auth/auth";
 import { DiscountAmount, DiscountEmployee, DiscountsReportForm, employeeDiscountsRepositoryProvider, formatDiscountDate } from "@/features/employee-discounts/employee-discounts";
 
 const FILTERS = ['code', 'date'] as const;
 
 export function EmployeeDiscounts() {
   const navigate = useNavigate();
+  const { hasRole } = useRoles();
+  const canManage = hasRole(...FeatureRoles.manageDiscounts);
   const [modal, setModal] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const { page, rowsPerPage } = usePagination(searchParams);
@@ -71,7 +74,7 @@ export function EmployeeDiscounts() {
                     <ActionsMenu
                       items={[
                         { label: 'Ver', icon: <EyeIcon />, onClick: () => navigate(`/descuentos/${discount.id}`) },
-                        { label: 'Editar', icon: <EditIcon />, onClick: () => navigate(`/descuentos/${discount.id}/editar`) },
+                        ...(canManage ? [{ label: 'Editar', icon: <EditIcon />, onClick: () => navigate(`/descuentos/${discount.id}/editar`) }] : []),
                       ]}
                     />
                   </Td>

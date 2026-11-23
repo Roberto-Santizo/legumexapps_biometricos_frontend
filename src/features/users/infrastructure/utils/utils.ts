@@ -1,10 +1,12 @@
 import type { Option } from "@/features/shared/shared";
-import { ValidRoles } from "@/features/auth/auth";
+import { ValidRoles, type Role } from "@/features/auth/auth";
 
-const roleLabels: Record<string, string> = {
+const roleLabels: Record<Role, string> = {
     admin: 'Administrador',
     rrhh: 'Recursos Humanos',
+    fincas: 'Fincas',
     user: 'Usuario',
+    merlot: 'Merlot',
 };
 
 export const roleOptions = (): Option[] => {
@@ -14,4 +16,4 @@ export const roleOptions = (): Option[] => {
     }));
 }
 
-export const roleLabel = (role: string) => roleLabels[role] ?? role;
+export const roleLabel = (role: string) => roleLabels[role as Role] ?? role;

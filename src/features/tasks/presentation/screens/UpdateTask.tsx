@@ -70,7 +70,7 @@ export function UpdateTask() {
         lastName: String(payload.lastName ?? ''),
         auth_dept_id: departments.find(department => department.code === payload.deptCode)?.id ?? '',
         accLevelIds: String(payload.accLevelIds ?? '').split(',').filter(Boolean)
-      });
+      }, { keepDirtyValues: true });
     }
   }, [task, departments, reset]);
 

@@ -1,5 +1,6 @@
-import { CustomFilledButton, Spinner, ZoomablePhoto, useNotification } from "@/features/shared/shared";
+import { CustomFilledButton, Spinner, ZoomablePhoto, useNotification, useRoles } from "@/features/shared/shared";
 import { DiscountAmount, employeeDiscountsRepositoryProvider, formatDiscountLongDate } from "@/features/employee-discounts/employee-discounts";
+import { FeatureRoles } from "@/features/auth/auth";
 import { employeeFullName, useEmployeeByPin } from "@/features/employees/employees";
 import { ArrowLeft, CalendarDays, EditIcon, Trash2 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +13,8 @@ export function ShowEmployeeDiscount() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const notification = useNotification();
+  const { hasRole } = useRoles();
+  const canManage = hasRole(...FeatureRoles.manageDiscounts);
   const id = params.id!;
 
   const { data, isLoading, error } = useQuery({
@@ -54,23 +57,25 @@ export function ShowEmployeeDiscount() {
           <button type="button" onClick={() => navigate('/descuentos')} className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-slate-500 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer dark:text-gray-400 dark:hover:text-gray-100">
             <ArrowLeft className="h-4 w-4" /> Descuentos
           </button>
-          <div className="flex gap-2">
-            <CustomFilledButton
-              label="Eliminar"
-              type="button"
-              icon={<Trash2 className="h-4 w-4 text-white" />}
-              disabled={isDeleting}
-              loading={isDeleting}
-              className="bg-red-600! hover:bg-red-700! focus:ring-red-500!"
-              onClick={handleDelete}
-            />
-            <CustomFilledButton
-              label="Editar"
-              type="button"
-              icon={<EditIcon className="h-4 w-4 text-white" />}
-              onClick={() => navigate(`/descuentos/${id}/editar`)}
-            />
-          </div>
+          {canManage && (
+            <div className="flex gap-2">
+              <CustomFilledButton
+                label="Eliminar"
+                type="button"
+                icon={<Trash2 className="h-4 w-4 text-white" />}
+                disabled={isDeleting}
+                loading={isDeleting}
+                className="bg-red-600! hover:bg-red-700! focus:ring-red-500!"
+                onClick={handleDelete}
+              />
+              <CustomFilledButton
+                label="Editar"
+                type="button"
+                icon={<EditIcon className="h-4 w-4 text-white" />}
+                onClick={() => navigate(`/descuentos/${id}/editar`)}
+              />
+            </div>
+          )}
         </div>
 
         {/* Comprobante pensado para mostrárselo al trabajador: el monto es lo primero que se lee */}

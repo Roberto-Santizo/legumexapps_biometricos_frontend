@@ -40,7 +40,7 @@ export function UpdateFincaPosition() {
   useEffect(() => {
     if (data) {
       const { position_code, position_name } = data;
-      reset({ position_code, position_name });
+      reset({ position_code, position_name }, { keepDirtyValues: true });
     }
   }, [data, reset]);
 

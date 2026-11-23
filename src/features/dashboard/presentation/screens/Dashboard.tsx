@@ -1,21 +1,25 @@
 import { FilterDrawer, Title, useRoles, WorkingOnIt } from "@/features/shared/shared";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/config/config";
-import { ValidRoles } from "@/features/auth/auth";
+import { FeatureRoles, getHomePath } from "@/features/auth/auth";
 import { Building2, Briefcase, CalendarClock, Fingerprint, Images, TriangleAlert, UserX, Users } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { dashboardRepositoryProvider, formatDay, formatNumber, Panel, PanelError, PanelSkeleton, percentage, SegmentBar, StatCard, StatCardSkeleton, TaskList, type DashboardFilters } from "@/features/dashboard/dashboard";
 
 export function Dashboard() {
     const user = useSelector((state: RootState) => state.auth.user)!;
-    const { hasRole } = useRoles();
+    const { roles, hasRole } = useRoles();
+    const homePath = getHomePath(roles);
+
+    // Los roles sin dashboard entran directo a su módulo
+    if (homePath !== '/dashboard') return <Navigate to={homePath} replace />
 
     return (
         <div className="space-y-5">
             <Title title={`Bienvenido, ${user.name}`} subtitle="Plataforma de Biométricos" />
             {/* Los endpoints del dashboard solo están disponibles para admin y rrhh */}
-            {hasRole(ValidRoles.admin, ValidRoles.rrhh) ? <DashboardMetrics /> : <WorkingOnIt />}
+            {hasRole(...FeatureRoles.general) ? <DashboardMetrics /> : <WorkingOnIt />}
         </div>
     )
 }

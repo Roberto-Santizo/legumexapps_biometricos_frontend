@@ -45,7 +45,7 @@ export function UpdateFincaEmployee() {
 
   useEffect(() => {
     if (data && areas) {
-      reset(toFincaEmployeeForm(data, areas));
+      reset(toFincaEmployeeForm(data, areas), { keepDirtyValues: true });
     }
   }, [data, areas, reset]);
 

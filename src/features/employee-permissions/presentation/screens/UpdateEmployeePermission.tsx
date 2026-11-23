@@ -40,7 +40,7 @@ export function UpdateEmployeePermission() {
   });
 
   useEffect(() => {
-    if (data) reset(toPermissionForm(data));
+    if (data) reset(toPermissionForm(data), { keepDirtyValues: true });
   }, [data, reset]);
 
   const onSubmit = (form: EmployeePermissionForm) => mutate(toUpdatePermissionPayload(form));

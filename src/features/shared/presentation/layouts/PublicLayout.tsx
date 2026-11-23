@@ -1,12 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { getHomePath } from "@/features/auth/auth";
 import type { RootState } from "@/config/config";
 
 export function PublicLayout() {
   const isSignedIn = useSelector((state: RootState) => state.auth.isSignedIn);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  if (isSignedIn) {
-    return <Navigate to={'/dashboard'} replace />
+  if (isSignedIn && user) {
+    return <Navigate to={getHomePath(user.roles)} replace />
   }
 
   return (

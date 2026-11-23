@@ -40,7 +40,7 @@ export function UpdateDepartment() {
   useEffect(() => {
     if (data) {
       const { code, name } = data;
-      reset({ code, name });
+      reset({ code, name }, { keepDirtyValues: true });
     }
   }, [data, reset]);
 

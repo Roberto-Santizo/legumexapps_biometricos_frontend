@@ -8,8 +8,8 @@ type Props = {
 
 export function RolesFormField({ register, errorMessage }: Props) {
     return (
-        <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Roles</span>
+        <div role="radiogroup" aria-labelledby="role-label" className="flex flex-col gap-2">
+            <span id="role-label" className="text-sm font-medium text-gray-700 dark:text-gray-300">Rol</span>
 
             <div className="flex flex-wrap gap-3">
                 {roleOptions().map(option => (
@@ -18,12 +18,11 @@ export function RolesFormField({ register, errorMessage }: Props) {
                         className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:border-gray-300 has-checked:border-blue-500 has-checked:bg-blue-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:has-checked:bg-blue-500/15"
                     >
                         <input
-                            type="checkbox"
+                            type="radio"
                             value={option.value}
                             className="accent-blue-600"
-                            {...register('roles', {
-                                validate: (roles) => (Array.isArray(roles) && roles.length > 0) || 'Seleccione al menos un rol'
-                            })}
+                            // El backend recibe un arreglo, pero solo se permite un rol por usuario
+                            {...register('roles.0', { required: 'Seleccione un rol' })}
                         />
                         {option.label}
                     </label>

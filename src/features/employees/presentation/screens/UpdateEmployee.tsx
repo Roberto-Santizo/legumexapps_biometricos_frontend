@@ -62,7 +62,7 @@ export function UpdateEmployee() {
         position_id: data.position_id ?? '',
         // Solo se permite un nivel: se preselecciona el primero asignado
         accLevelIds: levels[0]?.level_id ?? ''
-      });
+      }, { keepDirtyValues: true });
     }
   }, [data, levels, reset]);
 

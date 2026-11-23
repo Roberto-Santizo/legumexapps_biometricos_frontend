@@ -40,7 +40,7 @@ export function UpdateFincaDepartment() {
   useEffect(() => {
     if (data) {
       const { dept_code, dept_name } = data;
-      reset({ dept_code, dept_name });
+      reset({ dept_code, dept_name }, { keepDirtyValues: true });
     }
   }, [data, reset]);
 
